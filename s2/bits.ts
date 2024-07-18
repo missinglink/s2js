@@ -1,3 +1,109 @@
+/**
+ * byte returns the byte at offset n (left-to-right)
+ */
+const byte = (i: bigint, o: offset): uint8 => {
+  const offset = BigInt((7 - o) * 8)
+  const mask = 0b11111111n << offset
+  return Number((i & mask) >> offset) as uint8
+}
+
+/**
+ * trailingZeros8 returns the number of trailing zero bits in byte
+ */
+const trailingZeros8 = (byte: uint8): number => {
+  const lsb = byte & -byte
+  if (lsb === 0) return 8
+  return 31 - Math.clz32(lsb)
+}
+
+/**
+ * trailingZeros returns the number of trailing zero bits in an bigint
+ */
+export const findLSBSetNonZero64 = (i: bigint): position => {
+  for (let n = 7; n >= 0; n--) {
+    const z = trailingZeros8(byte(i, n as offset))
+    if (z < 8) return ((7 - n) * 8 + z) as position
+  }
+  return 64 as position
+}
+
+/**
+ * Types
+ */
+
+/** bit value */
+export type bit = 0 | 1
+
+/** byte offset */
+export type offset = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+
+/** bit position */
+export type position =
+  | 0
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | 20
+  | 21
+  | 22
+  | 23
+  | 24
+  | 25
+  | 26
+  | 27
+  | 28
+  | 29
+  | 30
+  | 31
+  | 32
+  | 33
+  | 34
+  | 35
+  | 36
+  | 37
+  | 38
+  | 39
+  | 40
+  | 41
+  | 42
+  | 43
+  | 44
+  | 45
+  | 46
+  | 47
+  | 48
+  | 49
+  | 50
+  | 51
+  | 52
+  | 53
+  | 54
+  | 55
+  | 56
+  | 57
+  | 58
+  | 59
+  | 60
+  | 61
+  | 62
+  | 63
+
 export type uint8 =
   | 0
   | 1

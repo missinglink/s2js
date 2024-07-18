@@ -1,4 +1,4 @@
-import * as uint64 from '../int/uint64'
+import { findLSBSetNonZero64 } from './bits'
 export type cellid = bigint
 
 /**
@@ -40,7 +40,7 @@ export const pos = (ci: cellid): cellid => {
  * Returns the subdivision level of this cell id, in the range [0, MAX_LEVEL].
  */
 export const level = (ci: cellid): number => {
-  return MAX_LEVEL - (uint64.trailingZeros(ci) >>> 1)
+  return MAX_LEVEL - (findLSBSetNonZero64(ci) >>> 1)
 }
 
 /**
@@ -55,15 +55,21 @@ export const parent = (ci: cellid, level: number): cellid => {
  * Returns true is cell id is valid.
  */
 export const valid = (ci: cellid): boolean => {
-  return uint64.valid(ci) && face(ci) <= NUM_FACES && (uint64.lsb(ci) & 0x1555555555555555n) != 0n
+  if (typeof ci !== 'bigint' || BigInt.asUintN(64, ci) != ci) return false
+  return face(ci) <= NUM_FACES && (lsb(ci) & 0x1555555555555555n) != 0n
 }
 
 // Bitwise
 
 /**
+ * Returns the least significant bit that is set
+ */
+const lsb = (ci: cellid) => ci & -ci
+
+/**
  * Returns the lowest-numbered bit that is on for cells at the given level.
  */
-export const lsbForLevel = (level: number): cellid => {
+const lsbForLevel = (level: number): cellid => {
   return 1n << BigInt(2 * (MAX_LEVEL - level))
 }
 
@@ -73,14 +79,14 @@ export const lsbForLevel = (level: number): cellid => {
  * Returns the minimum CellID that is contained within this cell.
  */
 export const rangeMin = (ci: cellid) => {
-  return ci - (uint64.lsb(ci) - 1n)
+  return ci - (lsb(ci) - 1n)
 }
 
 /**
  * Returns the maximum CellID that is contained within this cell.
  */
 export const rangeMax = (ci: cellid): cellid => {
-  return ci + (uint64.lsb(ci) - 1n)
+  return ci + (lsb(ci) - 1n)
 }
 
 /**
