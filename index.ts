@@ -6,3 +6,4 @@
  * @module s2js
  */
 export * as r1 from './r1/_index'
+export * as r2 from './r2/_index'
