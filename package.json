@@ -1,0 +1,17 @@
+{
+  "name": "s2js",
+  "version": "0.0.0-development",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/s2.esm.js",
+  "scripts": {
+    "test": "node --import tsx --test **/*_test.ts"
+  },
+  "author": "Peter Johnson",
+  "license": "AGPL",
+  "description": "javascript port of s2 geometry",
+  "devDependencies": {
+    "@types/node": "^20.14.11",
+    "tsx": "^4.16.2"
+  }
+}

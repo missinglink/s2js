@@ -1,0 +1,5 @@
+name: Push
+on: push
+jobs:
+  unit-tests:
+    uses: ./.github/workflows/_test.yml

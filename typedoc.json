@@ -1,0 +1,9 @@
+{
+  "out": "docs",
+  "cleanOutputDir": true,
+  "excludeExternals": true,
+  "theme": "default",
+  "readme": "none",
+  "hideGenerator": true,
+  "entryPoints": ["index.ts"]
+}
