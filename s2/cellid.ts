@@ -96,10 +96,10 @@ export const toToken = (ci: cellid): string => {
 
 /**
  * Returns a cell id given a hex-encoded string.
+ * @category Constructors
  */
 export const fromToken = (t: string): cellid => {
   if (t.length > 16) return 0n
-
   let ci = BigInt('0x' + t)
   if (t.length < 16) ci = ci << BigInt(4 * (16 - t.length))
   return ci
