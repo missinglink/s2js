@@ -130,6 +130,7 @@ export const fromToken = (t: string): cellid => {
 /**
  * Returns a cell id given its face in the range [0,5], the 61-bit Hilbert curve position pos within that face, and the level in the range [0,MAX_LEVEL].
  * The position in the cell id will be truncated to correspond to the Hilbert curve position at the center of the returned cell.
+ * @category Constructors
  */
 export const fromFacePosLevel = (face: number, pos: number, level: number): cellid => {
   return parent((BigInt(face) << BigInt(POS_BITS)) + BigInt(pos || 1), level)

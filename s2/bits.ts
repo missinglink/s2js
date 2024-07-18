@@ -1,5 +1,5 @@
 /**
- * byte returns the byte at offset n (left-to-right)
+ * Returns the byte at offset n (left-to-right).
  */
 const byte = (i: bigint, o: offset): uint8 => {
   const offset = BigInt((7 - o) * 8)
@@ -8,7 +8,7 @@ const byte = (i: bigint, o: offset): uint8 => {
 }
 
 /**
- * trailingZeros8 returns the number of trailing zero bits in byte
+ * Returns the number of trailing zero bits in byte.
  */
 const trailingZeros8 = (byte: uint8): number => {
   const lsb = byte & -byte
@@ -17,7 +17,7 @@ const trailingZeros8 = (byte: uint8): number => {
 }
 
 /**
- * trailingZeros returns the number of trailing zero bits in an bigint
+ * Returns the number of trailing zero bits in an bigint.
  */
 export const findLSBSetNonZero64 = (i: bigint): position => {
   for (let n = 7; n >= 0; n--) {
@@ -31,13 +31,13 @@ export const findLSBSetNonZero64 = (i: bigint): position => {
  * Types
  */
 
-/** bit value */
+/** Bit value [0-1] */
 export type bit = 0 | 1
 
-/** byte offset */
+/** Byte offset [0-7] */
 export type offset = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 
-/** bit position */
+/** Bit position [0-63] */
 export type position =
   | 0
   | 1
@@ -104,6 +104,7 @@ export type position =
   | 62
   | 63
 
+/** Unsigned 8-bit integer [0-255] */
 export type uint8 =
   | 0
   | 1
