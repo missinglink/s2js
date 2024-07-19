@@ -3,3 +3,4 @@
  * @module r2
  */
 export { Point } from './Point'
+export { Rect } from './Rect'
