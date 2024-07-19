@@ -2,9 +2,7 @@
 
 s2js is a Javascript port of the s2 spherical geometry library originally written in C++ at Google.
 
-git: https://github.com/missinglink/s2js
-npm: https://www.npmjs.com/package/s2js
-docs: https://missinglink.github.io/s2js
+| [github](https://github.com/missinglink/s2js) | [npm](https://www.npmjs.com/package/s2js) | [documentation](https://missinglink.github.io/s2js) |
 
 ### Installation
 
