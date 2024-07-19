@@ -138,6 +138,26 @@ export class Interval {
   }
 
   /**
+   * Reports whether the interval can be transformed into the given interval by moving each endpoint a small distance.
+   * The empty interval is considered to be positioned arbitrarily on the real line, so any interval with a small enough length will match the empty interval.
+   */
+  approxEqual(oi: Interval): boolean {
+    if (this.isEmpty()) return oi.length() <= 2 * 1e-15
+    if (oi.isEmpty()) return this.length() <= 2 * 1e-15
+    return Math.abs(oi.lo - this.lo) <= 1e-15 && Math.abs(oi.hi - this.hi) <= 1e-15
+  }
+
+  /**
+   * Returns the Hausdorff distance to the given interval. For two intervals x and y, this distance is defined as:
+   * h(x, y) = max_{p in x} min_{q in y} d(p, q).
+   */
+  directedHausdorffDistance(oi: Interval): number {
+    if (this.isEmpty()) return 0
+    if (oi.isEmpty()) return Infinity
+    return Math.max(0, Math.max(this.hi - oi.hi, oi.lo - this.lo))
+  }
+
+  /**
    * Truncates {lo, hi} floats to n digits of precision.
    */
   trunc(n: number = 15): Interval {

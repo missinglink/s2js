@@ -120,6 +120,48 @@ test('expanded', t => {
   ok(UNIT.expanded(-0.51).equal(EMPTY))
 })
 
+test('approxEqual', t => {
+  // Choose two values lo and hi such that it's okay to shift an endpoint by
+  // kLo (i.e., the resulting interval is equivalent) but not by kHi.
+  const lo = 4 * 2.220446049250313e-16 // < max_error default
+  const hi = 6 * 2.220446049250313e-16 // > max_error default
+
+  // Empty intervals.
+  ok(EMPTY.approxEqual(EMPTY))
+  ok(new Interval(0, 0).approxEqual(EMPTY))
+  ok(EMPTY.approxEqual(new Interval(0, 0)))
+  ok(new Interval(1, 1).approxEqual(EMPTY))
+  ok(EMPTY.approxEqual(new Interval(1, 1)))
+  ok(!EMPTY.approxEqual(new Interval(0, 1)))
+  ok(EMPTY.approxEqual(new Interval(1, 1 + 2 * lo)))
+  ok(!EMPTY.approxEqual(new Interval(1, 1 + 2 * hi)))
+
+  // Singleton intervals.
+  ok(new Interval(1, 1).approxEqual(new Interval(1, 1)))
+  ok(new Interval(1, 1).approxEqual(new Interval(1 - lo, 1 - lo)))
+  ok(new Interval(1, 1).approxEqual(new Interval(1 + lo, 1 + lo)))
+  ok(!new Interval(1, 1).approxEqual(new Interval(1 - hi, 1)))
+  ok(!new Interval(1, 1).approxEqual(new Interval(1, 1 + hi)))
+  ok(new Interval(1, 1).approxEqual(new Interval(1 - lo, 1 + lo)))
+  ok(!new Interval(0, 0).approxEqual(new Interval(1, 1)))
+
+  // Other intervals.
+  ok(new Interval(1 - lo, 2 + lo).approxEqual(new Interval(1, 2)))
+  ok(new Interval(1 + lo, 2 - lo).approxEqual(new Interval(1, 2)))
+  ok(!new Interval(1 - hi, 2 + lo).approxEqual(new Interval(1, 2)))
+  ok(!new Interval(1 + hi, 2 - lo).approxEqual(new Interval(1, 2)))
+  ok(!new Interval(1 - lo, 2 + hi).approxEqual(new Interval(1, 2)))
+  ok(!new Interval(1 + lo, 2 - hi).approxEqual(new Interval(1, 2)))
+})
+
+test('directedHausdorffDistance', t => {
+  equal(EMPTY.directedHausdorffDistance(EMPTY), 0)
+  equal(UNIT.directedHausdorffDistance(EMPTY), Infinity)
+  equal(new Interval(1, 1).directedHausdorffDistance(new Interval(1, 1)), 0)
+  equal(new Interval(1, 3).directedHausdorffDistance(new Interval(1, 1)), 2)
+  equal(new Interval(1, 1).directedHausdorffDistance(new Interval(3, 5)), 2)
+})
+
 test('toString', t => {
   equal(new Interval(2, 4.5).toString(), '[2.0000000, 4.5000000]')
 })
