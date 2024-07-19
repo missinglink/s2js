@@ -1,5 +1,6 @@
 {
   "name": "s2js",
+  "description": "javascript port of s2 geometry",
   "version": "0.0.0-development",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -9,9 +10,12 @@
   },
   "author": "Peter Johnson",
   "license": "AGPL",
-  "description": "javascript port of s2 geometry",
+  "repository": "github:missinglink/s2js",
   "devDependencies": {
     "@types/node": "^20.14.11",
     "tsx": "^4.16.2"
+  },
+  "esm.sh": {
+    "bundle": false
   }
 }
