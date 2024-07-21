@@ -1,3 +1,4 @@
+import type { angle } from './_types'
 import { DEGREE } from './angle_constants'
 
 /**
@@ -34,7 +35,6 @@ import { DEGREE } from './angle_constants'
  *
  * @module angle
  */
-export type angle = number
 
 /**
  * Returns the angle in radians.

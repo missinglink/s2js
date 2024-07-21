@@ -1,4 +1,4 @@
-import type { angle } from './angle'
+import type { angle } from './_types'
 
 // angle units.
 export const RADIAN: angle = 1
