@@ -1,1 +1,1 @@
-export type cellid = bigint
+export type CellID = bigint

@@ -1,8 +1,8 @@
-import type { angle } from './_types'
+import type { Angle } from './_types'
 
 // angle units.
-export const RADIAN: angle = 1
-export const DEGREE: angle = (Math.PI / 180) * RADIAN
-export const E5: angle = 1e-5 * DEGREE
-export const E6: angle = 1e-6 * DEGREE
-export const E7: angle = 1e-7 * DEGREE
+export const RADIAN: Angle = 1
+export const DEGREE: Angle = (Math.PI / 180) * RADIAN
+export const E5: Angle = 1e-5 * DEGREE
+export const E6: Angle = 1e-6 * DEGREE
+export const E7: Angle = 1e-7 * DEGREE

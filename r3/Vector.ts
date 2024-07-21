@@ -1,4 +1,4 @@
-import type { angle } from '../s1/_types'
+import type { Angle } from '../s1/_types'
 import { RADIAN } from '../s1/angle_constants'
 import { X_AXIS, Y_AXIS, Z_AXIS } from './Vector_constants'
 import type { axis } from './Vector_constants'
@@ -93,7 +93,7 @@ export class Vector {
   }
 
   /** Returns the angle between v and ov. */
-  angle(ov: Vector): angle {
+  angle(ov: Vector): Angle {
     return Math.atan2(this.cross(ov).norm(), this.dot(ov)) * RADIAN
   }
 

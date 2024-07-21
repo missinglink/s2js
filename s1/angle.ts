@@ -1,4 +1,4 @@
-import type { angle } from './_types'
+import type { Angle } from './_types'
 import { DEGREE } from './angle_constants'
 
 /**
@@ -39,36 +39,36 @@ import { DEGREE } from './angle_constants'
 /**
  * Returns the angle in radians.
  */
-export const radians = (a: angle): number => a
+export const radians = (a: Angle): number => a
 
 /**
  * Returns the angle in degrees.
  */
-export const degrees = (a: angle): number => a / DEGREE
+export const degrees = (a: Angle): number => a / DEGREE
 
 /**
  * Returns the value rounded to nearest as an int32.
  * This does not match C++ exactly for the case of x.5.
  */
-export const round = (a: angle): number => Math.round(a) || 0
+export const round = (a: Angle): number => Math.round(a) || 0
 
 /** Returns an angle larger than any finite angle. */
-export const infAngle = (): angle => Infinity
+export const infAngle = (): Angle => Infinity
 
 /** Reports whether this Angle is infinite. */
-export const isInf = (a: angle): boolean => a == Infinity
+export const isInf = (a: Angle): boolean => a == Infinity
 
 /** Returns the angle in hundred thousandths of degrees. */
-export const e5 = (a: angle): number => round(degrees(a) * 1e5)
+export const e5 = (a: Angle): number => round(degrees(a) * 1e5)
 
 /** Returns the angle in millionths of degrees. */
-export const e6 = (a: angle): number => round(degrees(a) * 1e6)
+export const e6 = (a: Angle): number => round(degrees(a) * 1e6)
 
 /** Returns the angle in ten millionths of degrees. */
-export const e7 = (a: angle): number => round(degrees(a) * 1e7)
+export const e7 = (a: Angle): number => round(degrees(a) * 1e7)
 
 /** Returns the absolute value of the angle. */
-export const abs = (a: angle): angle => Math.abs(a)
+export const abs = (a: Angle): Angle => Math.abs(a)
 
 /**
  * Returns an equivalent angle in (-π, π].
@@ -76,7 +76,7 @@ export const abs = (a: angle): angle => Math.abs(a)
  * note: javascript `%` is not equivalent to `ieee754_remainder`.
  * @todo: performance optimization
  * */
-export const normalized = (a: angle): angle => {
+export const normalized = (a: Angle): Angle => {
   if (a > -Math.PI && a <= Math.PI) return a || 0
   while (a > Math.PI) a -= Math.PI * 2
   while (a <= -Math.PI) a += Math.PI * 2
@@ -87,7 +87,7 @@ export const normalized = (a: angle): angle => {
 /**
  * Generates a human readable string.
  */
-export const toString = (a: angle): string => degrees(a).toFixed(7)
+export const toString = (a: Angle): string => degrees(a).toFixed(7)
 
 /** Reports whether the two angles are the same up to a small tolerance. */
-export const approxEqual = (a: angle, oa: angle, epsilon = 1e-15): boolean => Math.abs(a - oa) <= epsilon
+export const approxEqual = (a: Angle, oa: Angle, epsilon = 1e-15): boolean => Math.abs(a - oa) <= epsilon

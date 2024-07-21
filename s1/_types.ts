@@ -1,1 +1,1 @@
-export type angle = number
+export type Angle = number
