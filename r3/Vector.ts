@@ -1,7 +1,6 @@
 import type { Angle } from '../s1/_types'
 import { RADIAN } from '../s1/angle_constants'
-import { X_AXIS, Y_AXIS, Z_AXIS } from './Vector_constants'
-import type { axis } from './Vector_constants'
+export type Axis = number
 
 /**
  * Vector represents a point in ℝ³
@@ -104,32 +103,32 @@ export class Vector {
   ortho(): Vector {
     const ov = new Vector(0, 0, 0)
     const lc = this.largestComponent()
-    if (lc === X_AXIS) ov.z = 1
-    else if (lc === Y_AXIS) ov.x = 1
+    if (lc === Vector.X_AXIS) ov.z = 1
+    else if (lc === Vector.Y_AXIS) ov.x = 1
     else ov.y = 1
     return this.cross(ov).normalize()
   }
 
-  /** Returns the axis that represents the largest component in this vector. */
-  largestComponent(): axis {
+  /** Returns the Axis that represents the largest component in this vector. */
+  largestComponent(): Axis {
     const t = this.abs()
     if (t.x > t.y) {
-      if (t.x > t.z) return X_AXIS
-      return Z_AXIS
+      if (t.x > t.z) return Vector.X_AXIS
+      return Vector.Z_AXIS
     }
-    if (t.y > t.z) return Y_AXIS
-    return Z_AXIS
+    if (t.y > t.z) return Vector.Y_AXIS
+    return Vector.Z_AXIS
   }
 
-  /** Returns the axis that represents the smallest component in this vector. */
-  smallestComponent(): axis {
+  /** Returns the Axis that represents the smallest component in this vector. */
+  smallestComponent(): Axis {
     const t = this.abs()
     if (t.x < t.y) {
-      if (t.x < t.z) return X_AXIS
-      return Z_AXIS
+      if (t.x < t.z) return Vector.X_AXIS
+      return Vector.Z_AXIS
     }
-    if (t.y < t.z) return Y_AXIS
-    return Z_AXIS
+    if (t.y < t.z) return Vector.Y_AXIS
+    return Vector.Z_AXIS
   }
 
   /**
@@ -159,4 +158,27 @@ export class Vector {
     // Both are equal
     return 0
   }
+
+  /**
+   * @categoryDescription Axis
+   * The three axes of ℝ³.
+   */
+
+  /**
+   * X Axis
+   * @category Axis
+   */
+  static X_AXIS: Axis = 0
+
+  /**
+   * Y Axis
+   * @category Axis
+   */
+  static Y_AXIS: Axis = 1
+
+  /**
+   * Z Axis
+   * @category Axis
+   */
+  static Z_AXIS: Axis = 2
 }

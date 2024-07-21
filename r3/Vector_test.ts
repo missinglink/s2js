@@ -1,7 +1,6 @@
 import test from 'node:test'
 import { deepEqual, equal, ok } from 'node:assert/strict'
 import { Vector } from './Vector'
-import { X_AXIS, Y_AXIS, Z_AXIS } from './Vector_constants'
 
 test('norm', t => {
   deepEqual(new Vector(0, 0, 0).norm(), 0)
@@ -219,18 +218,18 @@ test('ortho alignment', t => {
 })
 
 test('largest/smallest components', t => {
-  equal(new Vector(0, 0, 0).largestComponent(), Z_AXIS)
-  equal(new Vector(0, 0, 0).smallestComponent(), Z_AXIS)
-  equal(new Vector(1, 0, 0).largestComponent(), X_AXIS)
-  equal(new Vector(1, 0, 0).smallestComponent(), Z_AXIS)
-  equal(new Vector(1, -1, 0).largestComponent(), Y_AXIS)
-  equal(new Vector(1, -1, 0).smallestComponent(), Z_AXIS)
-  equal(new Vector(-1, -1.1, -1.1).largestComponent(), Z_AXIS)
-  equal(new Vector(-1, -1.1, -1.1).smallestComponent(), X_AXIS)
-  equal(new Vector(0.5, -0.4, -0.5).largestComponent(), Z_AXIS)
-  equal(new Vector(0.5, -0.4, -0.5).smallestComponent(), Y_AXIS)
-  equal(new Vector(1e-15, 1e-14, 1e-13).largestComponent(), Z_AXIS)
-  equal(new Vector(1e-15, 1e-14, 1e-13).smallestComponent(), X_AXIS)
+  equal(new Vector(0, 0, 0).largestComponent(), Vector.Z_AXIS)
+  equal(new Vector(0, 0, 0).smallestComponent(), Vector.Z_AXIS)
+  equal(new Vector(1, 0, 0).largestComponent(), Vector.X_AXIS)
+  equal(new Vector(1, 0, 0).smallestComponent(), Vector.Z_AXIS)
+  equal(new Vector(1, -1, 0).largestComponent(), Vector.Y_AXIS)
+  equal(new Vector(1, -1, 0).smallestComponent(), Vector.Z_AXIS)
+  equal(new Vector(-1, -1.1, -1.1).largestComponent(), Vector.Z_AXIS)
+  equal(new Vector(-1, -1.1, -1.1).smallestComponent(), Vector.X_AXIS)
+  equal(new Vector(0.5, -0.4, -0.5).largestComponent(), Vector.Z_AXIS)
+  equal(new Vector(0.5, -0.4, -0.5).smallestComponent(), Vector.Y_AXIS)
+  equal(new Vector(1e-15, 1e-14, 1e-13).largestComponent(), Vector.Z_AXIS)
+  equal(new Vector(1e-15, 1e-14, 1e-13).smallestComponent(), Vector.X_AXIS)
 })
 
 test('cmp', t => {
