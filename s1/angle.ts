@@ -70,12 +70,18 @@ export const e7 = (a: angle): number => round(degrees(a) * 1e7)
 /** Returns the absolute value of the angle. */
 export const abs = (a: angle): angle => Math.abs(a)
 
-/** Returns an equivalent angle in (-π, π]. */
+/**
+ * Returns an equivalent angle in (-π, π].
+ *
+ * note: javascript `%` is not equivalent to `ieee754_remainder`.
+ * @todo: performance optimization
+ * */
 export const normalized = (a: angle): angle => {
-  const rad = a % (2 * Math.PI)
-  if (rad == -Math.PI) return Math.PI
-  if (rad < -Math.PI) return -rad - Math.PI
-  return rad
+  if (a > -Math.PI && a <= Math.PI) return a || 0
+  while (a > Math.PI) a -= Math.PI * 2
+  while (a <= -Math.PI) a += Math.PI * 2
+  if (a == -Math.PI) a = Math.PI
+  return a || 0
 }
 
 /**

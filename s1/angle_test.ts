@@ -53,6 +53,16 @@ test('normalize correctly canonicalizes angles', t => {
   equal(angle.normalized(180 * DEGREE), 180 * DEGREE)
   equal(angle.normalized(540 * DEGREE), 180 * DEGREE)
   equal(angle.normalized(-270 * DEGREE), 90 * DEGREE)
+  equal(angle.normalized(900 * DEGREE), 180 * DEGREE)
+  equal(angle.normalized(-900 * DEGREE), 180 * DEGREE)
+  equal(angle.normalized(Math.PI), Math.PI)
+  equal(angle.normalized(-Math.PI), Math.PI)
+  equal(angle.normalized(Math.PI * 2), 0)
+  equal(angle.normalized(-Math.PI * 2), 0)
+  equal(angle.normalized(Math.PI + 0.1), -Math.PI + 0.1)
+  equal(angle.normalized(-Math.PI - 0.1), Math.PI - 0.1)
+  equal(angle.normalized(0), 0)
+  equal(angle.normalized(-0), 0)
 })
 
 test('toString', t => {
