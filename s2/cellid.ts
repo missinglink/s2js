@@ -1,4 +1,4 @@
-import { findLSBSetNonZero64 } from './bits'
+import { findLSBSetNonZero64 } from '../r1/math'
 import { FACE_BITS, MAX_LEVEL, NUM_FACES, POS_BITS } from './cellid_constants'
 
 export type CellID = bigint

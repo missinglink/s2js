@@ -33,3 +33,15 @@ export const nextAfter = (x: number, y: number): number => {
 
 /** Returns true IFF a is within epsilon distance of b. */
 export const float64Near = (a: number, b: number, epsilon: number = 1e-14) => Math.abs(a - b) <= epsilon
+
+/**
+ * Returns the number of trailing zero bits in a 64-bit bigint.
+ */
+export const findLSBSetNonZero64 = (i: bigint): number => {
+  const lsb = i & -i & 0xffffffffffffffffn
+  if (lsb === 0n) return 64
+  const lo = Math.clz32(Number(lsb & 0xffffffffn))
+  if (lo < 32) return 31 - lo
+  const hi = Math.clz32(Number((lsb >> 32n) & 0xffffffffn))
+  return 63 - hi
+}
