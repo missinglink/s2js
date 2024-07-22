@@ -1,6 +1,7 @@
-import type { CellID } from './_types'
 import { findLSBSetNonZero64 } from './bits'
 import { FACE_BITS, MAX_LEVEL, NUM_FACES, POS_BITS } from './cellid_constants'
+
+export type CellID = bigint
 
 /**
  * Returns the cube face for this cell id, in the range [0,5].
