@@ -1,5 +1,6 @@
 import type { Angle } from './_types'
 import { DEGREE } from './angle_constants'
+import { remainder } from '../r1/math'
 
 /**
  * Angle represents a 1D angle. The internal representation is a double precision value in radians, so conversion to and from radians is exact.
@@ -69,20 +70,6 @@ export const e7 = (a: Angle): number => round(degrees(a) * 1e7)
 
 /** Returns the absolute value of the angle. */
 export const abs = (a: Angle): Angle => Math.abs(a)
-
-/** Computes the IEEE 754 floating-point remainder of x / y. */
-function remainder(x: number, y: number): number {
-  if (isNaN(x) || isNaN(y) || !isFinite(x) || y === 0) return NaN
-
-  const quotient = x / y
-  let n = Math.round(quotient)
-
-  // When quotient is exactly halfway between two integers, round to the nearest even integer
-  if (Math.abs(quotient - n) === 0.5) n = 2 * Math.round(quotient / 2)
-
-  const rem = x - n * y
-  return !rem ? Math.sign(x) * 0 : rem
-}
 
 /** Returns an equivalent angle in (-π, π]. */
 export const normalized = (a: Angle): Angle => {
