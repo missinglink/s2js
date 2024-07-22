@@ -1,4 +1,4 @@
-import type { Angle } from '../s1/_types'
+import type { Angle } from '../s1/angle'
 import { RADIAN } from '../s1/angle_constants'
 export type Axis = number
 

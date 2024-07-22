@@ -1,6 +1,7 @@
-import type { Angle } from './_types'
 import { DEGREE } from './angle_constants'
 import { remainder } from '../r1/math'
+
+export type Angle = number
 
 /**
  * Angle represents a 1D angle. The internal representation is a double precision value in radians, so conversion to and from radians is exact.

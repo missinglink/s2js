@@ -3,3 +3,4 @@
  * @module s1
  */
 export * as angle from './angle'
+export * as chordangle from './chordangle'

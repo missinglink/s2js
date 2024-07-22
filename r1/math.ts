@@ -32,4 +32,4 @@ export const nextAfter = (x: number, y: number): number => {
 }
 
 /** Returns true IFF a is within epsilon distance of b. */
-export const float64Near = (a: number, b: number, epsilon: number) => Math.abs(a - b) <= epsilon;
+export const float64Near = (a: number, b: number, epsilon: number = 1e-14) => Math.abs(a - b) <= epsilon
