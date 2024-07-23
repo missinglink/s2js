@@ -11,3 +11,4 @@
  * @module s2
  */
 export * as cellid from './cellid'
+export { LatLng } from './LatLng'
