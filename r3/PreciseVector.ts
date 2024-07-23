@@ -1,6 +1,7 @@
 import { BigFloat32 as BigFloat } from 'bigfloat'
 import type { Axis } from './Vector'
 import { Vector } from './Vector'
+export { BigFloat }
 
 /**
  * Represents a point in ℝ³ using high-precision values.

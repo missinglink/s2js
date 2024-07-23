@@ -91,10 +91,17 @@ export class Point {
   }
 
   /**
+   * Reports whether this point equals another point.
+   */
+  equals(op: Point): boolean {
+    return this.x == op.x && this.y == op.y && this.z == op.z
+  }
+
+  /**
    * Reports whether this point is similar enough to be equal to another point.
    */
-  approxEqual(other: Point): boolean {
-    return this.vector.angle(other.vector) <= EPSILON
+  approxEqual(op: Point): boolean {
+    return this.vector.angle(op.vector) <= EPSILON
   }
 
   /**
