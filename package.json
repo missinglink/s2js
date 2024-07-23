@@ -17,5 +17,8 @@
   },
   "esm.sh": {
     "bundle": false
+  },
+  "dependencies": {
+    "bigfloat": "^0.1.1"
   }
 }

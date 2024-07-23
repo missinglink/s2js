@@ -3,3 +3,4 @@
  * @module r3
  */
 export { Vector } from './Vector'
+export { PreciseVector } from './PreciseVector'
