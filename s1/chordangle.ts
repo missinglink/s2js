@@ -234,7 +234,6 @@ export const sub = (c: ChordAngle, oc: ChordAngle): ChordAngle => {
  * Returns the sine of this chord angle.
  * This method is more efficient than converting to Angle and performing the computation.
  */
-// export const sin = (c: ChordAngle): number => Math.sin(angle(c))
 export const sin = (c: ChordAngle): number => Math.sqrt(sin2(c)) || 0
 
 /**
