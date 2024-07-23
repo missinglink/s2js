@@ -20,6 +20,27 @@ export class Point {
   }
 
   /**
+   * Returns the x dimension value.
+   */
+  get x(): number {
+    return this.vector.x
+  }
+
+  /**
+   * Returns the y dimension value.
+   */
+  get y(): number {
+    return this.vector.y
+  }
+
+  /**
+   * Returns the z dimension value.
+   */
+  get z(): number {
+    return this.vector.z
+  }
+
+  /**
    * Point represents a point on the unit sphere as a normalized 3D vector.
    * Fields should be treated as read-only. Use one of the factory methods for creation.
    * @category Constructors
@@ -74,5 +95,25 @@ export class Point {
    */
   approxEqual(other: Point): boolean {
     return this.vector.angle(other.vector) <= EPSILON
+  }
+
+  /**
+   * Returns a unit-length vector that is orthogonal to this point.
+   * Satisfies Ortho(-a) = -Ortho(a) for all a.
+   *
+   * Note that Vector3 also defines an "Ortho" method, but this one is
+   * preferred for use in S2 code because it explicitly tries to avoid result
+   * coordinates that are zero. (This is a performance optimization that
+   * reduces the amount of time spent in functions that handle degeneracies.)
+   */
+  static ortho(a: Point): Point {
+    const lc = a.vector.largestComponent()
+    const op = new Vector(0.012, 0.0053, 0.00457)
+
+    if (lc === Vector.X_AXIS) op.z = 1
+    else if (lc === Vector.Y_AXIS) op.x = 1
+    else op.y = 1
+
+    return Point.fromVector(a.vector.cross(op).normalize())
   }
 }
