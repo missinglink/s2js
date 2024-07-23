@@ -6,7 +6,8 @@
   "typings": "dist/index.d.ts",
   "module": "dist/s2.esm.js",
   "scripts": {
-    "test": "node --import tsx --test **/*_test.ts"
+    "test": "node --import tsx --test **/*_test.ts",
+    "coverage": "npx c8 npm test"
   },
   "author": "Peter Johnson",
   "license": "AGPL",
