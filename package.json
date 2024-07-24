@@ -6,6 +6,8 @@
   "typings": "dist/index.d.ts",
   "module": "dist/s2.esm.js",
   "scripts": {
+    "build": "npx tsdx build --entry index.ts",
+    "docs": "npx typedoc",
     "test": "node --import tsx --test **/*_test.ts",
     "coverage": "npx c8 npm test"
   },

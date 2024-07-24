@@ -12,6 +12,9 @@ jobs:
     uses: ./.github/workflows/_test.yml
   release:
     name: Semantic Release
+    environment:
+      name: Publish NPM Module
+      url: https://www.npmjs.com/package/s2js
     runs-on: ubuntu-latest
     needs: unit-tests
     permissions:
@@ -27,9 +30,13 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: "lts/*"
-      - run: npm install
-      - run: npx tsdx build --entry index.ts
+          node-version: 'lts/*'
+      - name: Install Dependencies
+        run: npm install
+      - name: Ensure docs are valid
+        run: npm run docs
+      - name: Transpile to Javascript
+        run: npm run build
       - name: Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
