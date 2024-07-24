@@ -41,7 +41,7 @@ export class Rect {
       new Point(this.x.lo, this.y.lo),
       new Point(this.x.hi, this.y.lo),
       new Point(this.x.hi, this.y.hi),
-      new Point(this.x.lo, this.y.hi)
+      new Point(this.x.lo, this.y.hi),
     ]
   }
 
