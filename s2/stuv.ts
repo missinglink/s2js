@@ -125,11 +125,6 @@ import { MAX_LEVEL, MAX_SIZE } from './cellid_constants'
 import { Point } from './Point'
 
 /**
- * Obtained by multiplying "s" and "t" by 2**31 and rounding to the nearest unsigned integer.
- */
-export type SITI = number
-
-/**
  * The maximum value of an si- or ti-coordinate.
  * It is one shift more than MaxSize.
  * The range of valid (si,ti) values is [0..maxSiTi].
