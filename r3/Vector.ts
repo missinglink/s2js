@@ -132,6 +132,13 @@ export class Vector {
   }
 
   /**
+   * Reports whether this Vector equals another Vector.
+   */
+  equals(ov: Vector): boolean {
+    return this.x == ov.x && this.y == ov.y && this.z == ov.z
+  }
+
+  /**
    * Compares v and ov lexicographically and returns:
    *
    * 	-1 if v <  ov

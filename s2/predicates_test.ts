@@ -7,7 +7,7 @@ import { CLOCKWISE, COUNTERCLOCKWISE, INDETERMINATE } from './predicates'
 import { Point } from './Point'
 import { Vector } from '../r3/Vector'
 import * as matrix from './matrix3x3.ts'
-import { randomFrame } from './test.ts'
+import { randomFrame } from './testing.ts'
 
 describe('s2.predicates', () => {
   test('sign', () => {

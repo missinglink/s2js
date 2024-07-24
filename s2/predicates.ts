@@ -22,7 +22,7 @@ export const EPSILON = 1e-15
  * A smaller number for values that require more precision,
  * equivalent to C++ DBL_EPSILON.
  */
-const DBL_EPSILON = 2.220446049250313e-16
+export const DBL_EPSILON = 2.220446049250313e-16
 
 /**
  * C++ value for S2 rounding_epsilon().

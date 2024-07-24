@@ -1,6 +1,10 @@
 import { Vector } from '../r3/Vector'
+import type { Angle } from '../s1/angle'
+import type { ChordAngle } from '../s1/chordangle'
 import { LatLng } from './LatLng'
-import { EPSILON } from './predicates'
+import type { Matrix3x3 } from './matrix3x3'
+import { getFrame, fromFrame } from './matrix3x3'
+import { CLOCKWISE, COUNTERCLOCKWISE, EPSILON, robustSign } from './predicates'
 
 /**
  * Point represents a point on the unit sphere as a normalized 3D vector.
@@ -91,10 +95,59 @@ export class Point {
   }
 
   /**
+   * Returns a Point that is orthogonal to both p and op. This is similar to
+   * p.Cross(op) (the true cross product) except that it does a better job of
+   * ensuring orthogonality when the Point is nearly parallel to op, it returns
+   * a non-zero result even when p == op or p == -op and the result is a Point.
+   *
+   * It satisfies the following properties (f == PointCross):
+   *
+   * 	(1) f(p, op) != 0 for all p, op
+   * 	(2) f(op,p) == -f(p,op) unless p == op or p == -op
+   * 	(3) f(-p,op) == -f(p,op) unless p == op or p == -op
+   * 	(4) f(p,-op) == -f(p,op) unless p == op or p == -op
+   */
+  pointCross(op: Point): Point {
+    let v = this.vector.add(op.vector).cross(op.vector.sub(this.vector))
+    if (v.x === 0 && v.y === 0 && v.z === 0) v = this.vector.ortho()
+    return Point.fromVector(v)
+  }
+
+  /**
+   * Returns true if the edges OA, OB, and OC are encountered in that
+   * order while sweeping CCW around the point O.
+   *
+   * You can think of this as testing whether A <= B <= C with respect to the
+   * CCW ordering around O that starts at A, or equivalently, whether B is
+   * contained in the range of angles (inclusive) that starts at A and extends
+   * CCW to C. Properties:
+   *
+   * 	(1) If OrderedCCW(a,b,c,o) && OrderedCCW(b,a,c,o), then a == b
+   * 	(2) If OrderedCCW(a,b,c,o) && OrderedCCW(a,c,b,o), then b == c
+   * 	(3) If OrderedCCW(a,b,c,o) && OrderedCCW(c,b,a,o), then a == b == c
+   * 	(4) If a == b or b == c, then OrderedCCW(a,b,c,o) is true
+   * 	(5) Otherwise if a == c, then OrderedCCW(a,b,c,o) is false
+   */
+  static orderedCCW(a: Point, b: Point, c: Point, o: Point): boolean {
+    let sum = 0
+    if (robustSign(b, o, a) !== CLOCKWISE) sum++
+    if (robustSign(c, o, b) !== CLOCKWISE) sum++
+    if (robustSign(a, o, c) === COUNTERCLOCKWISE) sum++
+    return sum >= 2
+  }
+
+  /**
+   * Returns the angle between this point and another point.
+   */
+  distance(b: Point): Angle {
+    return this.vector.angle(b.vector)
+  }
+
+  /**
    * Reports whether this point equals another point.
    */
   equals(op: Point): boolean {
-    return this.x == op.x && this.y == op.y && this.z == op.z
+    return this.vector.equals(op.vector)
   }
 
   /**
@@ -102,6 +155,40 @@ export class Point {
    */
   approxEqual(op: Point): boolean {
     return this.vector.angle(op.vector) <= EPSILON
+  }
+
+  /**
+   * Constructs a ChordAngle corresponding to the distance between the two given points.
+   */
+  static chordAngleBetweenPoints(x: Point, y: Point): ChordAngle {
+    return Math.min(4.0, x.vector.sub(y.vector).norm2())
+  }
+
+  /**
+   * Generates a slice of points shaped as a regular polygon with the specified number of vertices,
+   * all located on a circle of the specified angular radius around the center.
+   */
+  static regularPoints(center: Point, radius: Angle, numVertices: number): Point[] {
+    return this.regularPointsForFrame(getFrame(center), radius, numVertices)
+  }
+
+  /**
+   * Generates a slice of points shaped as a regular polygon with the specified number of vertices,
+   * all on a circle of the specified angular radius around the center.
+   */
+  static regularPointsForFrame(frame: Matrix3x3, radius: Angle, numVertices: number): Point[] {
+    const z = Math.cos(radius)
+    const r = Math.sin(radius)
+    const radianStep = (2 * Math.PI) / numVertices
+    const vertices: Point[] = []
+
+    for (let i = 0; i < numVertices; i++) {
+      const angle = i * radianStep
+      const p = Point.fromVector(new Vector(r * Math.cos(angle), r * Math.sin(angle), z))
+      vertices.push(Point.fromVector(fromFrame(frame, p).vector.normalize()))
+    }
+
+    return vertices
   }
 
   /**
@@ -122,5 +209,12 @@ export class Point {
     else op.y = 1
 
     return Point.fromVector(a.vector.cross(op).normalize())
+  }
+
+  /**
+   * Sorts the array of Points in place.
+   */
+  static sortPoints(points: Point[]): void {
+    points.sort((a, b) => a.vector.cmp(b.vector))
   }
 }

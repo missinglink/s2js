@@ -18,3 +18,12 @@ export const MAX_LEVEL = 30
  * The extra bit (61 rather than 60) lets us encode each cell as its Hilbert curve position at the cell center (which is halfway along the portion of the Hilbert curve that fills that cell).
  */
 export const POS_BITS = 2 * MAX_LEVEL + 1
+
+/**
+ * MaxSize is the maximum index of a valid leaf cell plus one. The range of
+ * valid leaf cell indices is [0..MaxSize-1].
+ */
+export const MAX_SIZE = Number(1n << BigInt(MAX_LEVEL))
+
+//
+// export const WRAP_OFFSET = BigInt(NUM_FACES) << BigInt(POS_BITS)
