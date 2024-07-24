@@ -300,9 +300,6 @@ export const faceXYZtoUVW = (face: number, p: Point): Point => {
  * Transforms the (si, ti) coordinates to a (not necessarily unit length) Point on the given face.
  */
 export const faceSiTiToXYZ = (face: number, si: number, ti: number): Point => {
-  if (si !== si >>> 0 || si < 0) throw new Error(`si must be number, got ${si}`)
-  if (ti !== ti >>> 0 || ti < 0) throw new Error(`ti must be number, got ${ti}`)
-
   return Point.fromVector(faceUVToXYZ(face, stToUV(siTiToST(si)), stToUV(siTiToST(ti))))
 }
 
