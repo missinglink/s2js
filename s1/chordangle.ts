@@ -78,7 +78,7 @@ import type { Angle } from './angle'
 import * as _angle from './angle'
 import { RADIAN } from './angle_constants'
 import { MAX_LENGTH2, NEGATIVE_CHORDANGLE, STRAIGHT_CHORDANGLE } from './chordangle_constants'
-import { DOUBLE_EPSILON } from './Interval_constants'
+import { DBL_EPSILON } from './Interval_constants'
 import { nextAfter } from '../r1/math'
 
 export type ChordAngle = number
@@ -180,13 +180,13 @@ export const maxPointError = (c: ChordAngle): number => {
    * of (16 * dblEpsilon**2) because the lengths of the input points may differ
    * from 1 by up to (2*dblEpsilon) each. (This is the maximum error in Normalize).
    */
-  return 4.5 * DOUBLE_EPSILON * c + 16 * DOUBLE_EPSILON * DOUBLE_EPSILON
+  return 4.5 * DBL_EPSILON * c + 16 * DBL_EPSILON * DBL_EPSILON
 }
 
 /**
  * Returns the maximum error for a ChordAngle constructed as an Angle distance.
  */
-export const maxAngleError = (c: ChordAngle): number => DOUBLE_EPSILON * c
+export const maxAngleError = (c: ChordAngle): number => DBL_EPSILON * c
 
 /**
  * Adds the other ChordAngle to this one and returns the resulting value.

@@ -4,3 +4,4 @@
  */
 export * as angle from './angle'
 export * as chordangle from './chordangle'
+export { Interval } from './Interval'

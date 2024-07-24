@@ -93,7 +93,7 @@ export class Interval {
 
   /**
    * Returns the interval containing all points common to i and j.
-   * @note Empty intervals do not need to be special-cased.
+   * Empty intervals do not need to be special-cased.
    */
   intersection(j: Interval): Interval {
     return new Interval(Math.max(this.lo, j.lo), Math.min(this.hi, j.hi))
