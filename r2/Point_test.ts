@@ -4,27 +4,27 @@ import { Point } from './Point'
 
 export const MAX_FLOAT32 = Math.pow(2, 127) * (2 - 1 / Math.pow(2, 23))
 
-test('add', t => {
+test('add', (t) => {
   deepEqual(new Point(0, 0).add(new Point(0, 0)), new Point(0, 0))
   deepEqual(new Point(0, 1).add(new Point(0, 0)), new Point(0, 1))
   deepEqual(new Point(1, 1).add(new Point(4, 3)), new Point(5, 4))
   deepEqual(new Point(-4, 7).add(new Point(1, 5)), new Point(-3, 12))
 })
 
-test('sub', t => {
+test('sub', (t) => {
   deepEqual(new Point(0, 0).sub(new Point(0, 0)), new Point(0, 0))
   deepEqual(new Point(0, 1).sub(new Point(0, 0)), new Point(0, 1))
   deepEqual(new Point(1, 1).sub(new Point(4, 3)), new Point(-3, -2))
   deepEqual(new Point(-4, 7).sub(new Point(1, 5)), new Point(-5, 2))
 })
 
-test('mul', t => {
+test('mul', (t) => {
   deepEqual(new Point(0, 0).mul(0), new Point(0, 0))
   deepEqual(new Point(0, 1).mul(1), new Point(0, 1))
   deepEqual(new Point(1, 1).mul(5), new Point(5, 5))
 })
 
-test('ortho', t => {
+test('ortho', (t) => {
   deepEqual(new Point(0, 0).ortho(), new Point(-0, 0))
   deepEqual(new Point(0, 1).ortho(), new Point(-1, 0))
   deepEqual(new Point(1, 1).ortho(), new Point(-1, 1))
@@ -32,14 +32,14 @@ test('ortho', t => {
   deepEqual(new Point(1, Math.sqrt(3)).ortho(), new Point(-Math.sqrt(3), 1))
 })
 
-test('dot', t => {
+test('dot', (t) => {
   equal(new Point(0, 0).dot(new Point(0, 0)), 0)
   equal(new Point(0, 1).dot(new Point(0, 0)), 0)
   equal(new Point(1, 1).dot(new Point(4, 3)), 7)
   equal(new Point(-4, 7).dot(new Point(1, 5)), 31)
 })
 
-test('cross', t => {
+test('cross', (t) => {
   equal(new Point(0, 0).cross(new Point(0, 0)), 0)
   equal(new Point(0, 1).cross(new Point(0, 0)), 0)
   equal(new Point(1, 1).cross(new Point(-1, -1)), 0)
@@ -47,7 +47,7 @@ test('cross', t => {
   equal(new Point(1, 5).cross(new Point(-2, 3)), 13)
 })
 
-test('norm', t => {
+test('norm', (t) => {
   equal(new Point(0, 0).norm(), 0)
   equal(new Point(0, 1).norm(), 1)
   equal(new Point(-1, 0).norm(), 1)
@@ -60,7 +60,7 @@ test('norm', t => {
   equal(new Point(1e14, MAX_FLOAT32 - 1).norm(), MAX_FLOAT32)
 })
 
-test('normalize', t => {
+test('normalize', (t) => {
   deepEqual(new Point().normalize(), new Point(0, 0))
   deepEqual(new Point(0, 0).normalize(), new Point(0, 0))
   deepEqual(new Point(0, 1).normalize(), new Point(0, 1))
@@ -74,13 +74,13 @@ test('normalize', t => {
   deepEqual(new Point(1e4, MAX_FLOAT32 - 1).normalize().trunc(), new Point(0, 1))
 })
 
-test('trunc', t => {
+test('trunc', (t) => {
   deepEqual(new Point().trunc(), new Point(0, 0))
   deepEqual(new Point(0.0000000000000001, 0.0000000000000001).trunc(), new Point(0, 0))
   deepEqual(new Point(0.00000000001, 0.00000000001).trunc(10), new Point(0, 0))
 })
 
-test('toString', t => {
+test('toString', (t) => {
   equal(new Point().toString(), '(0.000000000000, 0.000000000000)')
   equal(new Point(0.0000000000000001, 0.0000000000000001).toString(), '(0.000000000000, 0.000000000000)')
   equal(new Point(-1, 1).toString(), '(-1.000000000000, 1.000000000000)')

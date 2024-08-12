@@ -2,7 +2,7 @@ import test from 'node:test'
 import { deepEqual, equal, ok } from 'node:assert/strict'
 import { Vector } from './Vector'
 
-test('norm', t => {
+test('norm', (t) => {
   deepEqual(new Vector(0, 0, 0).norm(), 0)
   deepEqual(new Vector(0, 1, 0).norm(), 1)
   deepEqual(new Vector(3, -4, 12).norm(), 13)
@@ -13,13 +13,13 @@ test('norm', t => {
     new Vector(
       -0,
       4.3145006366056343748277397783556100978621924913975e-196,
-      4.3145006366056343748277397783556100978621924913975e-196
+      4.3145006366056343748277397783556100978621924913975e-196,
     ).norm(),
-    0
+    0,
   )
 })
 
-test('norm2', t => {
+test('norm2', (t) => {
   deepEqual(new Vector(0, 0, 0).norm2(), 0)
   deepEqual(new Vector(0, 1, 0).norm2(), 1)
   deepEqual(new Vector(1, 1, 1).norm2(), 3)
@@ -33,13 +33,13 @@ test('norm2', t => {
     new Vector(
       -0,
       4.3145006366056343748277397783556100978621924913975e-196,
-      4.3145006366056343748277397783556100978621924913975e-196
+      4.3145006366056343748277397783556100978621924913975e-196,
     ).norm2(),
-    0
+    0,
   )
 })
 
-test('normalize', t => {
+test('normalize', (t) => {
   let v = new Vector(1, 0, 0)
   let nv = v.normalize()
   equal(v.x * nv.y, v.y * nv.x, 'normalize() did not preserve direction')
@@ -74,12 +74,12 @@ test('normalize', t => {
   v = new Vector(
     -0,
     4.3145006366056343748277397783556100978621924913975e-196,
-    4.3145006366056343748277397783556100978621924913975e-196
+    4.3145006366056343748277397783556100978621924913975e-196,
   )
   deepEqual(v.normalize(), new Vector(0, 0, 0))
 })
 
-test('isUnit', t => {
+test('isUnit', (t) => {
   ok(!new Vector(0, 0, 0).isUnit())
   ok(new Vector(0, 1, 0).isUnit())
   ok(new Vector(1 + 2 * 1e-14, 0, 0).isUnit())
@@ -88,7 +88,7 @@ test('isUnit', t => {
   ok(new Vector(1, 1e-16, 1e-32).isUnit())
 })
 
-test('dot', t => {
+test('dot', (t) => {
   equal(new Vector(1, 0, 0).dot(new Vector(1, 0, 0)), 1)
   equal(new Vector(1, 0, 0).dot(new Vector(0, 1, 0)), 0)
   equal(new Vector(0, 1, 0).dot(new Vector(1, 0, 0)), 0)
@@ -100,28 +100,28 @@ test('dot', t => {
   equal(new Vector(-0.3, 0.4, -1.2).dot(new Vector(1, 2, 2)), -1.9)
 })
 
-test('cross', t => {
+test('cross', (t) => {
   deepEqual(new Vector(1, 0, 0).cross(new Vector(1, 0, 0)), new Vector(0, 0, 0))
   deepEqual(new Vector(1, 0, 0).cross(new Vector(0, 1, 0)), new Vector(0, 0, 1))
   deepEqual(new Vector(0, 1, 0).cross(new Vector(1, 0, 0)), new Vector(0, 0, -1))
   deepEqual(new Vector(1, 2, 3).cross(new Vector(-4, 5, -6)), new Vector(-27, -6, 13))
 })
 
-test('add', t => {
+test('add', (t) => {
   deepEqual(new Vector(0, 0, 0).add(new Vector(0, 0, 0)), new Vector(0, 0, 0))
   deepEqual(new Vector(1, 0, 0).add(new Vector(0, 0, 0)), new Vector(1, 0, 0))
   deepEqual(new Vector(1, 2, 3).add(new Vector(4, 5, 7)), new Vector(5, 7, 10))
   deepEqual(new Vector(1, -3, 5).add(new Vector(1, -6, -6)), new Vector(2, -9, -1))
 })
 
-test('sub', t => {
+test('sub', (t) => {
   deepEqual(new Vector(0, 0, 0).sub(new Vector(0, 0, 0)), new Vector(0, 0, 0))
   deepEqual(new Vector(1, 0, 0).sub(new Vector(0, 0, 0)), new Vector(1, 0, 0))
   deepEqual(new Vector(1, 2, 3).sub(new Vector(4, 5, 7)), new Vector(-3, -3, -4))
   deepEqual(new Vector(1, -3, 5).sub(new Vector(1, -6, -6)), new Vector(0, 3, 11))
 })
 
-test('distance', t => {
+test('distance', (t) => {
   equal(new Vector(1, 0, 0).distance(new Vector(1, 0, 0)), 0)
   equal(new Vector(1, 0, 0).distance(new Vector(0, 1, 0)), 1.4142135623730951)
   equal(new Vector(0, 1, 0).distance(new Vector(1, 0, 0)), 1.4142135623730951)
@@ -134,7 +134,7 @@ test('distance', t => {
   equal(new Vector(-0.3, 0.4, -1.2).distance(new Vector(1, 2, 2)), 3.8065732621348563)
 })
 
-test('mul', t => {
+test('mul', (t) => {
   deepEqual(new Vector(0, 0, 0).mul(3), new Vector(0, 0, 0))
   deepEqual(new Vector(1, 0, 0).mul(1), new Vector(1, 0, 0))
   deepEqual(new Vector(1, 0, 0).mul(0), new Vector(0, 0, 0))
@@ -143,7 +143,7 @@ test('mul', t => {
   deepEqual(new Vector(1, -3, 5).mul(2), new Vector(2, -6, 10))
 })
 
-test('angle', t => {
+test('angle', (t) => {
   equal(new Vector(1, 0, 0).angle(new Vector(1, 0, 0)), 0)
   equal(new Vector(1, 0, 0).angle(new Vector(0, 1, 0)), Math.PI / 2)
   equal(new Vector(0, 1, 0).angle(new Vector(1, 0, 0)), Math.PI / 2)
@@ -155,7 +155,7 @@ test('angle', t => {
   equal(new Vector(2, 3, -1).angle(new Vector(1, 2, 3)), 1.2055891055045298)
 })
 
-test('ortho', t => {
+test('ortho', (t) => {
   let v = new Vector(1, 0, 0)
   equal(v.dot(v.ortho()), 0)
   equal(v.ortho().norm(), 1)
@@ -181,20 +181,20 @@ test('ortho', t => {
   equal(v.ortho().norm(), 0.9999999999999998) // ~1
 })
 
-test('ortho alignment', t => {
+test('ortho alignment', (t) => {
   deepEqual(new Vector(1, 0, 0).ortho(), new Vector(0, -1, 0))
   deepEqual(new Vector(0, 1, 0).ortho(), new Vector(0, 0, -1))
   deepEqual(new Vector(0, 0, 1).ortho(), new Vector(-1, 0, 0))
 })
 
-test('ortho alignment', t => {
+test('ortho alignment', (t) => {
   const cases = [
     [new Vector(0, 0, 0), new Vector(0, 0, 0)],
     [new Vector(0, 0, 0), new Vector(0, 1, 2)],
     [new Vector(1, 0, 0), new Vector(0, 1, 0)],
     [new Vector(1, 0, 0), new Vector(0, 1, 1)],
     [new Vector(1, 1, 1), new Vector(-1, -1, -1)],
-    [new Vector(1, 2, 2), new Vector(-0.3, 0.4, -1.2)]
+    [new Vector(1, 2, 2), new Vector(-0.3, 0.4, -1.2)],
   ]
 
   cases.forEach(([v1, v2]) => {
@@ -217,7 +217,7 @@ test('ortho alignment', t => {
   deepEqual(new Vector(0, 0, 1).ortho(), new Vector(-1, 0, 0))
 })
 
-test('largest/smallest components', t => {
+test('largest/smallest components', (t) => {
   equal(new Vector(0, 0, 0).largestComponent(), Vector.Z_AXIS)
   equal(new Vector(0, 0, 0).smallestComponent(), Vector.Z_AXIS)
   equal(new Vector(1, 0, 0).largestComponent(), Vector.X_AXIS)
@@ -232,7 +232,7 @@ test('largest/smallest components', t => {
   equal(new Vector(1e-15, 1e-14, 1e-13).smallestComponent(), Vector.X_AXIS)
 })
 
-test('cmp', t => {
+test('cmp', (t) => {
   equal(new Vector(0, 0, 0).cmp(new Vector(0, 0, 0)), 0)
   equal(new Vector(0, 0, 0).cmp(new Vector(1, 0, 0)), -1)
   equal(new Vector(0, 1, 0).cmp(new Vector(0, 0, 0)), 1)

@@ -1,4 +1,4 @@
-import type { ChordAngle } from "./chordangle"
+import type { ChordAngle } from './chordangle'
 
 /**
  * Represents a zero angle.

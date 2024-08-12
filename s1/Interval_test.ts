@@ -1173,7 +1173,7 @@ describe('s1.Interval', () => {
         a: Interval.fromEndpoints(
           2 - lo,
 
-          1 + lo
+          1 + lo,
         ),
         b: Interval.fromEndpoints(2, 1),
         want: true,

@@ -230,7 +230,7 @@ export class Rect {
   static fromCenterSize(center: Point, size: Point): Rect {
     return new Rect(
       new Interval(center.x - size.x / 2, center.x + size.x / 2),
-      new Interval(center.y - size.y / 2, center.y + size.y / 2)
+      new Interval(center.y - size.y / 2, center.y + size.y / 2),
     )
   }
 

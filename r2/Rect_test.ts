@@ -15,49 +15,49 @@ const RECT_MID = Rect.fromPoints(new Point(0.25, 0.5), new Point(0.25, 0.5))
 const RECT_SW = Rect.fromPoints(SW, SW)
 const RECT_NE = Rect.fromPoints(NE, NE)
 
-test('empty', t => {
+test('empty', (t) => {
   ok(EMPTY.isValid())
   ok(EMPTY.isEmpty())
 })
 
-test('constructors', t => {
+test('constructors', (t) => {
   ok(
     Rect.fromCenterSize(new Point(0.3, 0.5), new Point(0.2, 0.4)).approxEqual(
-      Rect.fromPoints(new Point(0.2, 0.3), new Point(0.4, 0.7))
-    )
+      Rect.fromPoints(new Point(0.2, 0.3), new Point(0.4, 0.7)),
+    ),
   )
   ok(
     Rect.fromCenterSize(new Point(1, 0.1), new Point(0, 2)).approxEqual(
-      Rect.fromPoints(new Point(1, -0.9), new Point(1, 1.1))
-    )
+      Rect.fromPoints(new Point(1, -0.9), new Point(1, 1.1)),
+    ),
   )
   ok(
     Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1)).approxEqual(
-      Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1))
-    )
+      Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1)),
+    ),
   )
   ok(
     Rect.fromPoints(new Point(0.15, 0.3), new Point(0.35, 0.9)).approxEqual(
-      Rect.fromPoints(new Point(0.15, 0.9), new Point(0.35, 0.3))
-    )
+      Rect.fromPoints(new Point(0.15, 0.9), new Point(0.35, 0.3)),
+    ),
   )
   ok(
     Rect.fromPoints(new Point(0.12, 0), new Point(0.83, 0.5)).approxEqual(
-      Rect.fromPoints(new Point(0.83, 0), new Point(0.12, 0.5))
-    )
+      Rect.fromPoints(new Point(0.83, 0), new Point(0.12, 0.5)),
+    ),
   )
 })
 
-test('center', t => {
+test('center', (t) => {
   deepEqual(EMPTY.center(), new Point(0.5, 0.5))
   deepEqual(RECT.center(), new Point(0.25, 0.5))
 })
 
-test('vertices', t => {
+test('vertices', (t) => {
   deepEqual(RECT.vertices(), [SW, SE, NE, NW])
 })
 
-test('containsPoint', t => {
+test('containsPoint', (t) => {
   ok(RECT.containsPoint(new Point(0.2, 0.4)))
   ok(!RECT.containsPoint(new Point(0.2, 0.8)))
   ok(!RECT.containsPoint(new Point(-0.1, 0.4)))
@@ -66,7 +66,7 @@ test('containsPoint', t => {
   ok(RECT.containsPoint(new Point(RECT.x.hi, RECT.y.hi)))
 })
 
-test('interiorContainsPoint', t => {
+test('interiorContainsPoint', (t) => {
   // Check corners are not contained.
   ok(!RECT.interiorContainsPoint(SW))
   ok(!RECT.interiorContainsPoint(NE))
@@ -78,7 +78,7 @@ test('interiorContainsPoint', t => {
   ok(RECT.interiorContainsPoint(new Point(0.125, 0.6)))
 })
 
-test('contains', t => {
+test('contains', (t) => {
   ok(RECT.contains(RECT_MID))
   ok(RECT.contains(RECT_SW))
   ok(RECT.contains(RECT_NE))
@@ -87,22 +87,22 @@ test('contains', t => {
   ok(!RECT.contains(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).contains(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
-    )
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).contains(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
-    )
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).contains(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
-    )
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+    ),
   )
 })
 
-test('interiorContains', t => {
+test('interiorContains', (t) => {
   ok(RECT.interiorContains(RECT_MID))
   ok(!RECT.interiorContains(RECT_SW))
   ok(!RECT.interiorContains(RECT_NE))
@@ -111,22 +111,22 @@ test('interiorContains', t => {
   ok(!RECT.interiorContains(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).interiorContains(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
-    )
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).interiorContains(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
-    )
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).interiorContains(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
-    )
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+    ),
   )
 })
 
-test('intersects', t => {
+test('intersects', (t) => {
   ok(RECT.intersects(RECT_MID))
   ok(RECT.intersects(RECT_SW))
   ok(RECT.intersects(RECT_NE))
@@ -135,22 +135,22 @@ test('intersects', t => {
   ok(RECT.intersects(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).intersects(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
-    )
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).intersects(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
-    )
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).intersects(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
-    )
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+    ),
   )
 })
 
-test('interiorIntersects', t => {
+test('interiorIntersects', (t) => {
   ok(RECT.interiorIntersects(RECT_MID))
   ok(!RECT.interiorIntersects(RECT_SW))
   ok(!RECT.interiorIntersects(RECT_NE))
@@ -159,94 +159,94 @@ test('interiorIntersects', t => {
   ok(!RECT.interiorIntersects(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).interiorIntersects(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
-    )
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).interiorIntersects(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
-    )
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+    ),
   )
   ok(
     !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).interiorIntersects(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
-    )
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+    ),
   )
 })
 
-test('union', t => {
+test('union', (t) => {
   deepEqual(RECT.union(RECT_MID), RECT)
   deepEqual(RECT.union(RECT_SW), RECT)
   deepEqual(RECT.union(RECT_NE), RECT)
   deepEqual(
     RECT.union(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.75, 0.3))),
-    Rect.fromPoints(new Point(0, 0.1), new Point(0.75, 0.75))
+    Rect.fromPoints(new Point(0, 0.1), new Point(0.75, 0.75)),
   )
   deepEqual(
     RECT.union(Rect.fromPoints(new Point(0.5, 0.1), new Point(0.7, 0.3))),
-    Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75))
+    Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75)),
   )
   deepEqual(
     RECT.union(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))),
-    Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75))
+    Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75)),
   )
   deepEqual(
     Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).union(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
     ),
-    Rect.fromPoints(new Point(0.1, 0.2), new Point(0.2, 0.8))
+    Rect.fromPoints(new Point(0.1, 0.2), new Point(0.2, 0.8)),
   )
   deepEqual(
     Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).union(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
     ),
-    Rect.fromPoints(new Point(0, 0), new Point(0.4, 0.5))
+    Rect.fromPoints(new Point(0, 0), new Point(0.4, 0.5)),
   )
   deepEqual(
     Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).union(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
     ),
-    Rect.fromPoints(new Point(0, 0), new Point(0.3, 0.4))
+    Rect.fromPoints(new Point(0, 0), new Point(0.3, 0.4)),
   )
 })
 
-test('intersection', t => {
+test('intersection', (t) => {
   deepEqual(RECT.intersection(RECT_MID), RECT_MID)
   deepEqual(RECT.intersection(RECT_SW), RECT_SW)
   deepEqual(RECT.intersection(RECT_NE), RECT_NE)
   deepEqual(
     RECT.intersection(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.75, 0.3))),
-    Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.3))
+    Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.3)),
   )
   deepEqual(
     RECT.intersection(Rect.fromPoints(new Point(0.5, 0.1), new Point(0.7, 0.3))),
-    Rect.fromPoints(new Point(0.5, 0.25), new Point(0.5, 0.3))
+    Rect.fromPoints(new Point(0.5, 0.25), new Point(0.5, 0.3)),
   )
   deepEqual(
     RECT.intersection(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))),
-    Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.25))
+    Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.25)),
   )
   deepEqual(
     Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).intersection(
-      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
     ),
-    EMPTY
+    EMPTY,
   )
   deepEqual(
     Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).intersection(
-      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
     ),
-    EMPTY
+    EMPTY,
   )
   deepEqual(
     Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).intersection(
-      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
     ),
-    EMPTY
+    EMPTY,
   )
 })
 
-test('addPoint', t => {
+test('addPoint', (t) => {
   let r = Rect.empty()
   r = r.addPoint(SW)
   r = r.addPoint(SE)
@@ -255,7 +255,7 @@ test('addPoint', t => {
   ok(RECT.approxEqual(r))
 })
 
-test('clampPoint', t => {
+test('clampPoint', (t) => {
   const r = new Rect(new Interval(0, 0.5), new Interval(0.25, 0.75))
 
   deepEqual(r.clampPoint(new Point(-0.01, 0.24)), new Point(0, 0.25))
@@ -270,35 +270,27 @@ test('clampPoint', t => {
   deepEqual(r.clampPoint(new Point(0.33, 0.37)), new Point(0.33, 0.37))
 })
 
-test('expanded (empty)', t => {
+test('expanded (empty)', (t) => {
   ok(EMPTY.expanded(new Point(0.1, 0.3)).isEmpty())
   ok(EMPTY.expanded(new Point(-0.1, -0.3)).isEmpty())
-  ok(
-    Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
-      .expanded(new Point(-0.1, -0.3))
-      .isEmpty()
-  )
-  ok(
-    Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
-      .expanded(new Point(0.1, -0.2))
-      .isEmpty()
-  )
+  ok(Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7)).expanded(new Point(-0.1, -0.3)).isEmpty())
+  ok(Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7)).expanded(new Point(0.1, -0.2)).isEmpty())
 })
 
-test('expanded', t => {
+test('expanded', (t) => {
   ok(
     Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
       .expanded(new Point(0.1, 0.3))
-      .approxEqual(Rect.fromPoints(new Point(0.1, 0.1), new Point(0.4, 1.0)))
+      .approxEqual(Rect.fromPoints(new Point(0.1, 0.1), new Point(0.4, 1.0))),
   )
   ok(
     Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
       .expanded(new Point(0.1, -0.1))
-      .approxEqual(Rect.fromPoints(new Point(0.1, 0.5), new Point(0.4, 0.6)))
+      .approxEqual(Rect.fromPoints(new Point(0.1, 0.5), new Point(0.4, 0.6))),
   )
   ok(
     Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
       .expanded(new Point(0.1, 0.1))
-      .approxEqual(Rect.fromPoints(new Point(0.1, 0.3), new Point(0.4, 0.8)))
+      .approxEqual(Rect.fromPoints(new Point(0.1, 0.3), new Point(0.4, 0.8))),
   )
 })

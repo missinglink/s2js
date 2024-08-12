@@ -60,7 +60,7 @@ export const mul = (m: Matrix3x3, p: Point): Point => {
   return new Point(
     m[0][0] * p.x + m[0][1] * p.y + m[0][2] * p.z,
     m[1][0] * p.x + m[1][1] * p.y + m[1][2] * p.z,
-    m[2][0] * p.x + m[2][1] * p.y + m[2][2] * p.z
+    m[2][0] * p.x + m[2][1] * p.y + m[2][2] * p.z,
   )
 }
 

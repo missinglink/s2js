@@ -30,7 +30,7 @@ function initLookupCell(
   j: number,
   origOrientation: number,
   pos: number,
-  orientation: number
+  orientation: number,
 ) {
   if (level == LOOKUP_BITS) {
     const ij = (i << LOOKUP_BITS) + j

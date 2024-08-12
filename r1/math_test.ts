@@ -2,7 +2,7 @@ import test from 'node:test'
 import { equal, ok } from 'node:assert/strict'
 import { remainder, nextAfter, float64Near, findLSBSetNonZero64 } from './math'
 
-test('remainder', t => {
+test('remainder', (t) => {
   equal(remainder(5.1, 2), -0.9000000000000004)
   equal(remainder(5.5, 2), -0.5)
   equal(remainder(-5.5, 2), 0.5)
@@ -15,7 +15,7 @@ test('remainder', t => {
   equal(remainder(-5, 2), -1)
 })
 
-test('nextAfter', t => {
+test('nextAfter', (t) => {
   equal(nextAfter(0, 1), 5e-324)
   equal(nextAfter(0, -1), -5e-324)
   equal(nextAfter(1, 2), 1.0000000000000002)
@@ -27,14 +27,14 @@ test('nextAfter', t => {
   equal(nextAfter(1, Number.NaN), NaN)
 })
 
-test('float64Near', t => {
+test('float64Near', (t) => {
   ok(float64Near(0, 0, 0))
-  ok(float64Near(1e-10, 1e-10*2, 1e-10))
+  ok(float64Near(1e-10, 1e-10 * 2, 1e-10))
   ok(!float64Near(1e-10, 1e-9, 1e-10))
-  ok(!float64Near(1e-5, 1e-4, 1e-5/10))
+  ok(!float64Near(1e-5, 1e-4, 1e-5 / 10))
 })
 
-test('findLSBSetNonZero64', t => {
+test('findLSBSetNonZero64', (t) => {
   equal(findLSBSetNonZero64(0b0000000000000000000000000000000000000000000000000000000000000001n), 0)
   equal(findLSBSetNonZero64(0b0000000000000000000000000000000000000000000000000000000000000010n), 1)
   equal(findLSBSetNonZero64(0b0000000000000000000000000000000000000000000000000000000000000100n), 2)

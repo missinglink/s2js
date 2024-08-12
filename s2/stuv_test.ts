@@ -39,8 +39,20 @@ describe('s2.stuv', () => {
     const step = 1 / 1024.0
     for (let face = 0; face < 6; face++) {
       for (let x = -1.0; x <= 1; x += step) {
-        ok(Math.abs(faceUVToXYZ(face, x, -1).cross(faceUVToXYZ(face, x, 1)).angle(uNorm(face, x))) < EPSILON)
-        ok(Math.abs(faceUVToXYZ(face, -1, x).cross(faceUVToXYZ(face, 1, x)).angle(vNorm(face, x))) < EPSILON)
+        ok(
+          Math.abs(
+            faceUVToXYZ(face, x, -1)
+              .cross(faceUVToXYZ(face, x, 1))
+              .angle(uNorm(face, x)),
+          ) < EPSILON,
+        )
+        ok(
+          Math.abs(
+            faceUVToXYZ(face, -1, x)
+              .cross(faceUVToXYZ(face, 1, x))
+              .angle(vNorm(face, x)),
+          ) < EPSILON,
+        )
       }
     }
   })
@@ -119,8 +131,16 @@ describe('s2.stuv', () => {
 
   test('UVW axis', () => {
     for (let face = 0; face < 6; face++) {
-      ok(faceUVToXYZ(face, 1, 0).sub(faceUVToXYZ(face, 0, 0)).equals(uAxis(face).vector))
-      ok(faceUVToXYZ(face, 0, 1).sub(faceUVToXYZ(face, 0, 0)).equals(vAxis(face).vector))
+      ok(
+        faceUVToXYZ(face, 1, 0)
+          .sub(faceUVToXYZ(face, 0, 0))
+          .equals(uAxis(face).vector),
+      )
+      ok(
+        faceUVToXYZ(face, 0, 1)
+          .sub(faceUVToXYZ(face, 0, 0))
+          .equals(vAxis(face).vector),
+      )
       ok(faceUVToXYZ(face, 0, 0).equals(unitNorm(face).vector))
       equal(uAxis(face).vector.cross(vAxis(face).vector).dot(unitNorm(face).vector), 1)
       ok(uAxis(face).equals(uvwAxis(face, 0)))

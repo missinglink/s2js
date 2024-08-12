@@ -129,7 +129,7 @@ describe('s2.predicates', () => {
         equal(
           exactSign(a, b, c, true),
           sign,
-          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(a, b, c, true)}, want ${sign}`
+          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(a, b, c, true)}, want ${sign}`,
         )
       } else {
         failureCount++

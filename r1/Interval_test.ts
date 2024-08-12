@@ -8,26 +8,26 @@ const NEG_UNIT = new Interval(-1, 0)
 const HALF = new Interval(0.5, 0.5)
 const EMPTY = Interval.empty()
 
-test('isEmpty', t => {
+test('isEmpty', (t) => {
   ok(!UNIT.isEmpty(), 'should not be empty')
   ok(!NEG_UNIT.isEmpty(), 'should not be empty')
   ok(!HALF.isEmpty(), 'should not be empty')
   ok(EMPTY.isEmpty(), 'should not empty')
 })
 
-test('center', t => {
+test('center', (t) => {
   equal(UNIT.center(), 0.5)
   equal(NEG_UNIT.center(), -0.5)
   equal(HALF.center(), 0.5)
 })
 
-test('length', t => {
+test('length', (t) => {
   equal(UNIT.length(), 1)
   equal(NEG_UNIT.length(), 1)
   equal(HALF.length(), 0)
 })
 
-test('contains', t => {
+test('contains', (t) => {
   ok(UNIT.contains(0.5))
   ok(UNIT.interiorContains(0.5))
 
@@ -38,7 +38,7 @@ test('contains', t => {
   ok(!UNIT.interiorContains(1))
 })
 
-test('operations', t => {
+test('operations', (t) => {
   ok(EMPTY.containsInterval(EMPTY))
   ok(EMPTY.interiorContainsInterval(EMPTY))
   ok(!EMPTY.intersects(EMPTY))
@@ -81,46 +81,46 @@ test('operations', t => {
   ok(!HALF.interiorIntersects(i))
 })
 
-test('intersection', t => {
-  ok(UNIT.intersection(HALF).equal(HALF))
-  ok(UNIT.intersection(NEG_UNIT).equal(new Interval(0, 0)))
-  ok(NEG_UNIT.intersection(HALF).equal(EMPTY))
-  ok(UNIT.intersection(EMPTY).equal(EMPTY))
-  ok(EMPTY.intersection(UNIT).equal(EMPTY))
+test('intersection', (t) => {
+  ok(UNIT.intersection(HALF).equals(HALF))
+  ok(UNIT.intersection(NEG_UNIT).equals(new Interval(0, 0)))
+  ok(NEG_UNIT.intersection(HALF).equals(EMPTY))
+  ok(UNIT.intersection(EMPTY).equals(EMPTY))
+  ok(EMPTY.intersection(UNIT).equals(EMPTY))
 })
 
-test('union', t => {
-  ok(new Interval(99, 100).union(EMPTY).equal(new Interval(99, 100)))
-  ok(EMPTY.union(new Interval(99, 100)).equal(new Interval(99, 100)))
-  ok(new Interval(5, 3).union(new Interval(0, -2)).equal(EMPTY))
-  ok(new Interval(0, -2).union(new Interval(5, 3)).equal(EMPTY))
-  ok(UNIT.union(UNIT).equal(UNIT))
-  ok(UNIT.union(NEG_UNIT).equal(new Interval(-1, 1)))
-  ok(NEG_UNIT.union(UNIT).equal(new Interval(-1, 1)))
-  ok(HALF.union(UNIT).equal(UNIT))
+test('union', (t) => {
+  ok(new Interval(99, 100).union(EMPTY).equals(new Interval(99, 100)))
+  ok(EMPTY.union(new Interval(99, 100)).equals(new Interval(99, 100)))
+  ok(new Interval(5, 3).union(new Interval(0, -2)).equals(EMPTY))
+  ok(new Interval(0, -2).union(new Interval(5, 3)).equals(EMPTY))
+  ok(UNIT.union(UNIT).equals(UNIT))
+  ok(UNIT.union(NEG_UNIT).equals(new Interval(-1, 1)))
+  ok(NEG_UNIT.union(UNIT).equals(new Interval(-1, 1)))
+  ok(HALF.union(UNIT).equals(UNIT))
 })
 
-test('addPoint', t => {
-  ok(EMPTY.addPoint(5).equal(new Interval(5, 5)))
-  ok(new Interval(5, 5).addPoint(-1).equal(new Interval(-1, 5)))
-  ok(new Interval(-1, 5).addPoint(0).equal(new Interval(-1, 5)))
-  ok(new Interval(-1, 5).addPoint(6).equal(new Interval(-1, 6)))
+test('addPoint', (t) => {
+  ok(EMPTY.addPoint(5).equals(new Interval(5, 5)))
+  ok(new Interval(5, 5).addPoint(-1).equals(new Interval(-1, 5)))
+  ok(new Interval(-1, 5).addPoint(0).equals(new Interval(-1, 5)))
+  ok(new Interval(-1, 5).addPoint(6).equals(new Interval(-1, 6)))
 })
 
-test('clampPoint', t => {
+test('clampPoint', (t) => {
   equal(new Interval(0.1, 0.4).clampPoint(0.3), 0.3)
   equal(new Interval(0.1, 0.4).clampPoint(-7.0), 0.1)
   equal(new Interval(0.1, 0.4).clampPoint(0.6), 0.4)
 })
 
-test('expanded', t => {
-  ok(EMPTY.expanded(0.45).equal(EMPTY))
-  ok(UNIT.expanded(0.5).equal(new Interval(-0.5, 1.5)))
-  ok(UNIT.expanded(-0.5).equal(new Interval(0.5, 0.5)))
-  ok(UNIT.expanded(-0.51).equal(EMPTY))
+test('expanded', (t) => {
+  ok(EMPTY.expanded(0.45).equals(EMPTY))
+  ok(UNIT.expanded(0.5).equals(new Interval(-0.5, 1.5)))
+  ok(UNIT.expanded(-0.5).equals(new Interval(0.5, 0.5)))
+  ok(UNIT.expanded(-0.51).equals(EMPTY))
 })
 
-test('approxEqual', t => {
+test('approxEqual', (t) => {
   // Choose two values lo and hi such that it's okay to shift an endpoint by
   // kLo (i.e., the resulting interval is equivalent) but not by kHi.
   const lo = 4 * 2.220446049250313e-16 // < max_error default
@@ -154,7 +154,7 @@ test('approxEqual', t => {
   ok(!new Interval(1 + lo, 2 - hi).approxEqual(new Interval(1, 2)))
 })
 
-test('directedHausdorffDistance', t => {
+test('directedHausdorffDistance', (t) => {
   equal(EMPTY.directedHausdorffDistance(EMPTY), 0)
   equal(UNIT.directedHausdorffDistance(EMPTY), Infinity)
   equal(new Interval(1, 1).directedHausdorffDistance(new Interval(1, 1)), 0)
@@ -162,6 +162,6 @@ test('directedHausdorffDistance', t => {
   equal(new Interval(1, 1).directedHausdorffDistance(new Interval(3, 5)), 2)
 })
 
-test('toString', t => {
+test('toString', (t) => {
   equal(new Interval(2, 4.5).toString(), '[2.0000000, 4.5000000]')
 })

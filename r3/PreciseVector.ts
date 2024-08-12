@@ -117,7 +117,7 @@ export class PreciseVector {
     return new PreciseVector(
       this.y.mul(ov.z).sub(this.z.mul(ov.y)),
       this.z.mul(ov.x).sub(this.x.mul(ov.z)),
-      this.x.mul(ov.y).sub(this.y.mul(ov.x))
+      this.x.mul(ov.y).sub(this.y.mul(ov.x)),
     )
   }
 

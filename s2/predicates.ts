@@ -7,7 +7,7 @@ import * as chordangle from '../s1/chordangle'
 /**
  * Direction is an indication of the ordering of a set of points.
  */
-type Direction = number
+export type Direction = number
 export const CLOCKWISE: Direction = -1
 export const INDETERMINATE: Direction = 0
 export const COUNTERCLOCKWISE: Direction = 1
@@ -27,7 +27,7 @@ export const DBL_EPSILON = 2.220446049250313e-16
 /**
  * C++ value for S2 rounding_epsilon().
  */
-const DBL_ERROR = 1.110223024625156e-16
+export const DBL_ERROR = 1.110223024625156e-16
 
 /**
  * Maximum error in computing (AxB).C where all vectors are unit length.
@@ -287,7 +287,7 @@ export const symbolicallyPerturbedSign = (
   a: PreciseVector,
   b: PreciseVector,
   c: PreciseVector,
-  bCrossC: PreciseVector
+  bCrossC: PreciseVector,
 ): Direction => {
   // This method requires that the points are sorted in lexicographically
   // increasing order. This is because every possible Point has its own
@@ -434,7 +434,7 @@ export const compareDistances = (x: Point, a: Point, b: Point): number => {
   sign = exactCompareDistances(
     PreciseVector.fromVector(x.vector),
     PreciseVector.fromVector(a.vector),
-    PreciseVector.fromVector(b.vector)
+    PreciseVector.fromVector(b.vector),
   )
   if (sign !== 0) return sign
 

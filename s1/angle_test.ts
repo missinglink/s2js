@@ -3,11 +3,11 @@ import { equal, ok } from 'node:assert/strict'
 import * as angle from './angle'
 import { DEGREE, RADIAN, E5, E6, E7 } from './angle_constants'
 
-test('empty', t => {
+test('empty', (t) => {
   equal(0, angle.radians(0))
 })
 
-test('PI radians exactly 180 degrees', t => {
+test('PI radians exactly 180 degrees', (t) => {
   equal(angle.radians(Math.PI * RADIAN), Math.PI, '(π * Radian).Radians() was %v, want π')
   equal(angle.degrees(Math.PI * RADIAN), 180, '(π * Radian).Degrees() was %v, want 180')
   equal(angle.radians(180 * DEGREE), Math.PI, '(180 * Degree).Radians() was %v, want π')
@@ -20,7 +20,7 @@ test('PI radians exactly 180 degrees', t => {
   equal(angle.radians(-45 * DEGREE), -Math.PI / 4, '(-45 * Degree).Radians() was %v, want -π/4')
 })
 
-test('E5/E6/E7 representation', t => {
+test('E5/E6/E7 representation', (t) => {
   ok(Math.abs(angle.radians(-45 * DEGREE) - angle.radians(-4500000 * E5)) <= 1e-15)
   equal(angle.radians(-60 * DEGREE), angle.radians(-60000000 * E6))
   equal(angle.radians(-75 * DEGREE), angle.radians(-750000000 * E7))
@@ -46,7 +46,7 @@ test('E5/E6/E7 representation', t => {
   equal(angle.e7(-0.499999999 * 1e-7 * DEGREE), 0)
 })
 
-test('normalize correctly canonicalizes angles', t => {
+test('normalize correctly canonicalizes angles', (t) => {
   equal(angle.normalized(360 * DEGREE), 0 * DEGREE)
   equal(angle.normalized(-90 * DEGREE), -90 * DEGREE)
   equal(angle.normalized(-180 * DEGREE), 180 * DEGREE)
@@ -65,11 +65,11 @@ test('normalize correctly canonicalizes angles', t => {
   equal(angle.normalized(-0), 0)
 })
 
-test('toString', t => {
+test('toString', (t) => {
   equal(angle.toString(180 * DEGREE), '180.0000000')
 })
 
-test('degrees vs. radians', t => {
+test('degrees vs. radians', (t) => {
   // This test tests the exactness of specific values between degrees and radians.
   for (let k = -8; k <= 8; k++) {
     equal(45 * k * DEGREE, ((k * Math.PI) / 4) * RADIAN)

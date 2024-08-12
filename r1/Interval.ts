@@ -26,7 +26,7 @@ export class Interval {
   /**
    * Returns true iff the interval contains the same points as oi.
    */
-  equal(oi: Interval): boolean {
+  equals(oi: Interval): boolean {
     return (this.lo == oi.lo && this.hi == oi.hi) || (this.isEmpty() && oi.isEmpty())
   }
 
