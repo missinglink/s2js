@@ -9,7 +9,7 @@ function preciseEq(a: BigFloat, b: BigFloat): boolean {
   return a.cmp(b) === 0
 }
 
-describe('s2.PreciseVector', () => {
+describe('r3.PreciseVector', () => {
   test('roundtrip', () => {
     const tests = [new Vector(0, 0, 0), new Vector(1, 2, 3), new Vector(3, -4, 12), new Vector(1, 1e-16, 1e-32)]
 

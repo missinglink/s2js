@@ -4,7 +4,7 @@ import { Point } from './Point'
 import * as matrix from './matrix3x3'
 import { float64Near } from '../r1/math'
 
-describe('s2.Matrix3x3', () => {
+describe('s2.matrix3x3', () => {
   test('col', () => {
     const tests = [
       {
