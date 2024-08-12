@@ -2,6 +2,9 @@
   "name": "s2js",
   "description": "javascript port of s2 geometry",
   "version": "0.0.0-development",
+  "author": "Peter Johnson",
+  "license": "AGPL",
+  "repository": "github:missinglink/s2js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/s2.esm.js",
@@ -9,19 +12,23 @@
     "build": "npx tsdx build --entry index.ts",
     "docs": "npx typedoc",
     "test": "node --import tsx --test **/*_test.ts",
-    "coverage": "npx c8 npm test"
+    "coverage": "npx c8 npm test",
+    "lint": "npx prettier --check .",
+    "format": "npx prettier --write .",
+    "postinstall": "git config core.hooksPath .githooks",
+    "pre-commit": "npx lint-staged"
   },
-  "author": "Peter Johnson",
-  "license": "AGPL",
-  "repository": "github:missinglink/s2js",
   "devDependencies": {
     "@types/node": "^20.14.11",
     "tsx": "^4.16.2"
   },
-  "esm.sh": {
-    "bundle": false
-  },
   "dependencies": {
     "bigfloat": "^0.1.1"
+  },
+  "lint-staged": {
+    "*.{ts,md}": "prettier --write"
+  },
+  "esm.sh": {
+    "bundle": false
   }
 }
