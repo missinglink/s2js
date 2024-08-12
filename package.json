@@ -11,7 +11,7 @@
   "scripts": {
     "build": "npx tsdx build --entry index.ts",
     "docs": "npx typedoc",
-    "test": "node --import tsx --test **/*_test.ts",
+    "test": "node --import tsx --test [^_]**/[^_]*_test.ts",
     "coverage": "npx c8 npm test",
     "lint": "npx prettier --check .",
     "format": "npx prettier --write .",
