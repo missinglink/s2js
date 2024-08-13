@@ -158,6 +158,41 @@ export class Point {
   }
 
   /**
+   * Reports the angle between two vectors with better precision when
+   * the two are nearly parallel.
+   *
+   * The .Angle() member function uses atan(|AxB|, A.B) to compute the angle
+   * between A and B, which can lose about half its precision when A and B are
+   * nearly (anti-)parallel.
+   *
+   * Kahan provides a much more stable form:
+   *
+   * 	2*atan2(| A*|B| - |A|*B |, | A*|B| + |A|*B |)
+   *
+   * Since Points are unit magnitude by construction we can simplify further:
+   *
+   * 	2*atan2(|A-B|,|A+B|)
+   *
+   * This likely can't replace Vectors Angle since it requires four magnitude
+   * calculations, each of which takes 5 operations + a square root, plus 6
+   * operations to find the sum and difference of the vectors, for a total of 26 +
+   * 4 square roots. Vectors Angle requires 19 + 1 square root.
+   *
+   * Since we always have unit vectors, we can elide two of those magnitude
+   * calculations for a total of 16 + 2 square roots which is competitive with
+   * Vectors Angle performance.
+   *
+   * Reference: Kahan, W. (2006, Jan 11). "How Futile are Mindless Assessments of
+   * Roundoff in Floating-Point Computation?" (p. 47).
+   * https://people.eecs.berkeley.edu/~wkahan/Mindless.pdf
+   *
+   * The 2 points must be normalized.
+   */
+  stableAngle(op: Point): Angle {
+    return 2 * Math.atan2(this.vector.sub(op.vector).norm(), this.vector.add(op.vector).norm())
+  }
+
+  /**
    * Constructs a ChordAngle corresponding to the distance between the two given points.
    */
   static chordAngleBetweenPoints(x: Point, y: Point): ChordAngle {
