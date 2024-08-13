@@ -45,3 +45,31 @@ export const findLSBSetNonZero64 = (i: bigint): number => {
   const hi = Math.clz32(Number((lsb >> 32n) & 0xffffffffn))
   return 63 - hi
 }
+
+/**
+ * Returns the result of multiplying `frac` by 2 raised to the power of `exp`.
+ */
+export const ldexp = (frac: number, exp: number): number => {
+  return frac * Math.pow(2, exp)
+}
+
+/**
+ * Returns the binary exponent of the absolute value of x.
+ * This is the exponent of the value when expressed as a normalized
+ * floating-point number.
+ *
+ * - For a normal positive floating-point number x, Ilogb returns floor(log2(x)).
+ * - For zero, it returns -Infinity.
+ * - For infinity, it returns Infinity.
+ * - For NaN, it returns NaN.
+ */
+export const ilogb = (x: number): number => {
+  if (isNaN(x)) return NaN
+  if (x === 0) return -Infinity
+  if (!isFinite(x)) return Infinity
+
+  x = Math.abs(x)
+
+  if (x < Number.MIN_VALUE) return -1074 // Special case for denormalized numbers
+  return Math.floor(Math.log2(x))
+}

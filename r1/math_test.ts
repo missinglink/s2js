@@ -1,6 +1,6 @@
 import { test, describe } from 'node:test'
 import { equal, ok } from 'node:assert/strict'
-import { remainder, nextAfter, float64Near, findLSBSetNonZero64 } from './math'
+import { remainder, nextAfter, float64Near, findLSBSetNonZero64, ldexp, ilogb } from './math'
 
 describe('r1.math', () => {
   test('remainder', (t) => {
@@ -52,5 +52,61 @@ describe('r1.math', () => {
     equal(findLSBSetNonZero64(0b1000000000000000000000000000000000000000000000000000000000000000n), 63)
     equal(findLSBSetNonZero64(0b0000000000000000000000000000000000000000000000000000000000000000n), 64)
     equal(findLSBSetNonZero64(0b1000000000000000000000000000000000000000000000000000000000000000000n), 64)
+  })
+
+  test('ldexp', () => {
+    // Test with positive exponent
+    equal(ldexp(1.5, 2), 6)
+    equal(ldexp(0.75, 1), 1.5)
+
+    // Test with negative exponent
+    equal(ldexp(1.5, -2), 0.375)
+    equal(ldexp(4, -1), 2)
+
+    // Test with zero exponent
+    equal(ldexp(1.5, 0), 1.5)
+    equal(ldexp(0.5, 0), 0.5)
+
+    // Test with zero fraction
+    equal(ldexp(0, 10), 0)
+    equal(ldexp(0, -10), 0)
+
+    // Test with large exponent
+    equal(ldexp(1, 20), 1048576)
+    equal(ldexp(2, 10), 2048)
+
+    // Test with small fraction
+    equal(ldexp(0.125, 3), 1)
+    equal(ldexp(0.25, -2), 0.0625)
+  })
+
+  test('ilogb', () => {
+    // Test with positive numbers
+    equal(ilogb(1), 0)
+    equal(ilogb(2), 1)
+    equal(ilogb(4), 2)
+    equal(ilogb(8), 3)
+
+    // Test with numbers less than 1
+    equal(ilogb(0.5), -1)
+    equal(ilogb(0.25), -2)
+    equal(ilogb(0.125), -3)
+
+    // Test with large numbers
+    equal(ilogb(1024), 10)
+    equal(ilogb(2048), 11)
+
+    // Test with numbers close to zero
+    equal(ilogb(Number.MIN_VALUE), -1074) // Smallest positive number
+
+    // Test with zero
+    equal(ilogb(0), -Infinity)
+
+    // Test with Infinity
+    equal(ilogb(Infinity), Infinity)
+    equal(ilogb(-Infinity), Infinity)
+
+    // Test with NaN
+    ok(isNaN(ilogb(NaN)))
   })
 })
