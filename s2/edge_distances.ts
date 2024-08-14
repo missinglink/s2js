@@ -147,7 +147,7 @@ export const interpolateAtDistance = (ax: Angle, a: Point, b: Point): Point => {
     a.vector
       .mul(Math.cos(aRad))
       .add(tangent.mul(Math.sin(aRad) / tangent.norm()))
-      .normalize(),
+      .normalize()
   )
 }
 
@@ -212,7 +212,7 @@ export const _updateMinDistance = (
   a: Point,
   b: Point,
   minDist: ChordAngle,
-  alwaysUpdate: boolean,
+  alwaysUpdate: boolean
 ): Response => {
   const { dist: d, less: ok } = interiorDist(x, a, b, minDist, alwaysUpdate)
   if (ok) {

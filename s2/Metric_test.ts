@@ -19,7 +19,7 @@ import {
   MinAreaMetric,
   MinDiagMetric,
   MinEdgeMetric,
-  MinWidthMetric,
+  MinWidthMetric
 } from './Metric_constants'
 
 describe('s2.Metric', () => {
@@ -68,7 +68,7 @@ describe('s2.Metric', () => {
       { min: MinWidthMetric, avg: AvgWidthMetric, max: MaxWidthMetric },
       { min: MinEdgeMetric, avg: AvgEdgeMetric, max: MaxEdgeMetric },
       { min: MinDiagMetric, avg: AvgDiagMetric, max: MaxDiagMetric },
-      { min: MinAreaMetric, avg: AvgAreaMetric, max: MaxAreaMetric },
+      { min: MinAreaMetric, avg: AvgAreaMetric, max: MaxAreaMetric }
     ]
 
     tests.forEach((test) => {

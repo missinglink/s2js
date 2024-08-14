@@ -287,7 +287,7 @@ export const symbolicallyPerturbedSign = (
   a: PreciseVector,
   b: PreciseVector,
   c: PreciseVector,
-  bCrossC: PreciseVector,
+  bCrossC: PreciseVector
 ): Direction => {
   // This method requires that the points are sorted in lexicographically
   // increasing order. This is because every possible Point has its own
@@ -434,7 +434,7 @@ export const compareDistances = (x: Point, a: Point, b: Point): number => {
   sign = exactCompareDistances(
     PreciseVector.fromVector(x.vector),
     PreciseVector.fromVector(a.vector),
-    PreciseVector.fromVector(b.vector),
+    PreciseVector.fromVector(b.vector)
   )
   if (sign !== 0) return sign
 

@@ -13,7 +13,7 @@ import {
   minUpdateDistanceMaxError,
   project,
   updateMaxDistance,
-  updateMinDistance,
+  updateMinDistance
 } from './edge_distances'
 
 describe('s2.edge_distances', () => {
@@ -24,106 +24,106 @@ describe('s2.edge_distances', () => {
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: 0,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(0, 1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: 0,
-        want: new Vector(0, 1, 0),
+        want: new Vector(0, 1, 0)
       },
       {
         x: new Vector(1, 3, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: 0,
-        want: new Vector(1, 3, 0),
+        want: new Vector(1, 3, 0)
       },
       {
         x: new Vector(0, 0, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(0, 0, -1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(-1, -1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: 0.75 * Math.PI,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(0, 1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(1, 1, 0),
         distRad: Math.PI / 4,
-        want: new Vector(1, 1, 0),
+        want: new Vector(1, 1, 0)
       },
       {
         x: new Vector(0, -1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(1, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(0, -1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(-1, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(1, 0, 0),
+        want: new Vector(1, 0, 0)
       },
       {
         x: new Vector(-1, -1, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(-1, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(-1, 1, 0),
+        want: new Vector(-1, 1, 0)
       },
       {
         x: new Vector(1, 1, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: Math.asin(Math.sqrt(1.0 / 3.0)),
-        want: new Vector(1, 1, 0),
+        want: new Vector(1, 1, 0)
       },
       {
         x: new Vector(1, 1, -1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
         distRad: Math.asin(Math.sqrt(1.0 / 3.0)),
-        want: new Vector(1, 1, 0),
+        want: new Vector(1, 1, 0)
       },
       {
         x: new Vector(-1, 0, 0),
         a: new Vector(1, 1, 0),
         b: new Vector(1, 1, 0),
         distRad: 0.75 * Math.PI,
-        want: new Vector(1, 1, 0),
+        want: new Vector(1, 1, 0)
       },
       {
         x: new Vector(0, 0, -1),
         a: new Vector(1, 1, 0),
         b: new Vector(1, 1, 0),
         distRad: Math.PI / 2,
-        want: new Vector(1, 1, 0),
+        want: new Vector(1, 1, 0)
       },
       {
         x: new Vector(-1, 0, 0),
         a: new Vector(1, 0, 0),
         b: new Vector(1, 0, 0),
         distRad: Math.PI,
-        want: new Vector(1, 0, 0),
-      },
+        want: new Vector(1, 0, 0)
+      }
     ]
 
     tests.forEach((test) => {
@@ -144,14 +144,14 @@ describe('s2.edge_distances', () => {
       const { dist: minDistance2, less: ok2 } = updateMinDistance(x, a, b, chordangle.infChordAngle())
       ok(
         ok2,
-        `UpdateMinDistance(${x}, ${a}, ${b}, ${chordangle.infChordAngle()}) = ${minDistance2}, want ${chordangle.infChordAngle()}`,
+        `UpdateMinDistance(${x}, ${a}, ${b}, ${chordangle.infChordAngle()}) = ${minDistance2}, want ${chordangle.infChordAngle()}`
       )
 
       ok(
         float64Near(test.distRad, chordangle.angle(minDistance2), 1e-15),
         `MinDistance between ${x} and ${a}, ${b} = ${chordangle.angle(minDistance2)}, want ${
           test.distRad
-        } within ${1e-15}`,
+        } within ${1e-15}`
       )
     })
   })
@@ -164,7 +164,7 @@ describe('s2.edge_distances', () => {
     let { dist: minDistance1, less: ok1 } = updateMinDistance(x, a, b, chordangle.infChordAngle())
     ok(
       ok1,
-      `UpdateMinDistance(${x}, ${a}, ${b}, ${chordangle.infChordAngle()}) = ${minDistance1}, want ${chordangle.infChordAngle()}`,
+      `UpdateMinDistance(${x}, ${a}, ${b}, ${chordangle.infChordAngle()}) = ${minDistance1}, want ${chordangle.infChordAngle()}`
     )
 
     minDistance1 = chordangle.successor(minDistance1)
@@ -180,20 +180,20 @@ describe('s2.edge_distances', () => {
         x: new Point(1, -4.6547732744037044e-11, -5.6374428459823598e-89),
         a: new Point(1, -8.9031850507928352e-11, 0),
         b: new Point(-0.99999999999996347, 2.7030110029169596e-7, 1.555092348806121e-99),
-        minDist,
+        minDist
       },
       {
         x: new Point(1, -4.7617930898495072e-13, 0),
         a: new Point(-1, -1.6065916409055676e-10, 0),
         b: new Point(1, 0, 9.9964883247706732e-35),
-        minDist,
+        minDist
       },
       {
         x: new Point(1, 0, 0),
         a: new Point(1, -8.4965026896454536e-11, 0),
         b: new Point(-0.99999999999966138, 8.2297529603339328e-7, 9.6070344113320997e-21),
-        minDist,
-      },
+        minDist
+      }
     ]
 
     tests.forEach((test) => {
@@ -208,74 +208,74 @@ describe('s2.edge_distances', () => {
         x: new Vector(1, 0, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.PI / 2,
+        distRad: Math.PI / 2
       },
       {
         x: new Vector(1, 0, -1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.PI / 2,
+        distRad: Math.PI / 2
       },
       {
         x: new Vector(0, 1, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.PI / 2,
+        distRad: Math.PI / 2
       },
       {
         x: new Vector(0, 1, -1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.PI / 2,
+        distRad: Math.PI / 2
       },
       {
         x: new Vector(1, 1, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.asin(Math.sqrt(2 / 3)),
+        distRad: Math.asin(Math.sqrt(2 / 3))
       },
       {
         x: new Vector(1, 1, -1),
         a: new Vector(1, 0, 0),
         b: new Vector(0, 1, 0),
-        distRad: Math.asin(Math.sqrt(2 / 3)),
+        distRad: Math.asin(Math.sqrt(2 / 3))
       },
       {
         x: new Vector(1, 0, 0),
         a: new Vector(1, 1, 0),
         b: new Vector(1, -1, 0),
-        distRad: Math.PI / 4,
+        distRad: Math.PI / 4
       },
       {
         x: new Vector(0, 1, 0),
         a: new Vector(1, 1, 0),
         b: new Vector(1, 1, 0),
-        distRad: Math.PI / 4,
+        distRad: Math.PI / 4
       },
       {
         x: new Vector(0, 0, 1),
         a: new Vector(0, 1, 1),
         b: new Vector(0, -1, 1),
-        distRad: Math.PI / 4,
+        distRad: Math.PI / 4
       },
       {
         x: new Vector(0, 0, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(1, 0, -1),
-        distRad: (3 * Math.PI) / 4,
+        distRad: (3 * Math.PI) / 4
       },
       {
         x: new Vector(0, 0, 1),
         a: new Vector(1, 0, 0),
         b: new Vector(1, 1, -Math.SQRT2),
-        distRad: (3 * Math.PI) / 4,
+        distRad: (3 * Math.PI) / 4
       },
       {
         x: new Vector(0, 0, 1),
         a: new Vector(0, 0, -1),
         b: new Vector(0, 0, -1),
-        distRad: Math.PI,
-      },
+        distRad: Math.PI
+      }
     ]
 
     tests.forEach((test) => {
@@ -286,20 +286,20 @@ describe('s2.edge_distances', () => {
       const { dist: maxDistance1, less: ok1 } = updateMaxDistance(x, a, b, STRAIGHT_CHORDANGLE)
       ok(
         !ok1,
-        `UpdateMaxDistance(${x}, ${a}, ${b}, ${STRAIGHT_CHORDANGLE}) = ${maxDistance1}, want ${STRAIGHT_CHORDANGLE}`,
+        `UpdateMaxDistance(${x}, ${a}, ${b}, ${STRAIGHT_CHORDANGLE}) = ${maxDistance1}, want ${STRAIGHT_CHORDANGLE}`
       )
 
       const { dist: maxDistance2, less: ok2 } = updateMaxDistance(x, a, b, NEGATIVE_CHORDANGLE)
       ok(
         ok2,
-        `UpdateMaxDistance(${x}, ${a}, ${b}, ${NEGATIVE_CHORDANGLE}) = ${maxDistance2}, want > ${NEGATIVE_CHORDANGLE}`,
+        `UpdateMaxDistance(${x}, ${a}, ${b}, ${NEGATIVE_CHORDANGLE}) = ${maxDistance2}, want > ${NEGATIVE_CHORDANGLE}`
       )
 
       ok(
         float64Near(test.distRad, chordangle.angle(maxDistance2), 1e-15),
         `MaxDistance between ${x} and ${a}, ${b} = ${chordangle.angle(maxDistance2)}, want ${
           test.distRad
-        } within ${1e-15}`,
+        } within ${1e-15}`
       )
     })
   })
@@ -334,7 +334,7 @@ describe('s2.edge_distances', () => {
       { a: i, b: new Point(1, 1, 0), dist: 3, want: new Point(-1, 1, 0) },
       { a: i, b: new Point(1, 1, 0), dist: 4, want: new Point(-1, 0, 0) },
       { a: i, b: new Point(-1, 1, 0), dist: 2, want: new Point(0, -1, 0) },
-      { a: i, b: p, dist: 1000, want: j },
+      { a: i, b: p, dist: 1000, want: j }
     ]
 
     tests.forEach((test) => {
@@ -345,7 +345,7 @@ describe('s2.edge_distances', () => {
       const got = interpolate(test.dist, test.a, test.b)
       ok(
         pointsApproxEqual(got, test.want, 3e-15),
-        `Interpolate(${test.dist}, ${test.a}, ${test.b}) = ${got}, want ${test.want}`,
+        `Interpolate(${test.dist}, ${test.a}, ${test.b}) = ${got}, want ${test.want}`
       )
     })
   })
@@ -364,7 +364,7 @@ describe('s2.edge_distances', () => {
       got = interpolate(1 - f, a, b)
       ok(
         pointsApproxEqual(got, wantRem, 3e-15),
-        `long edge Interpolate(${1 - f}, ${a}, ${b}) = ${got}, want ${wantRem}`,
+        `long edge Interpolate(${1 - f}, ${a}, ${b}) = ${got}, want ${wantRem}`
       )
     }
   })
@@ -378,7 +378,7 @@ describe('s2.edge_distances', () => {
         float64Near(actual.distance(p1), dist * Math.PI, 3e-15),
         `antipodal points Interpolate(${dist}, ${p1}, ${Point.fromVector(p1.vector.mul(-1))}) = ${actual}, want ${
           dist * Math.PI
-        }`,
+        }`
       )
     }
   })
@@ -404,7 +404,7 @@ describe('s2.edge_distances', () => {
       { actual: Math.PI / 2, maxErr: 2e-15 },
       { actual: Math.PI / 2 + 1e-8, maxErr: 2e-15 },
       { actual: Math.PI - 1e-5, maxErr: 2e-10 },
-      { actual: Math.PI, maxErr: 0 },
+      { actual: Math.PI, maxErr: 0 }
     ]
 
     tests.forEach((test) => {

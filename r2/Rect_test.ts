@@ -24,28 +24,28 @@ describe('r2.Rect', () => {
   test('constructors', (t) => {
     ok(
       Rect.fromCenterSize(new Point(0.3, 0.5), new Point(0.2, 0.4)).approxEqual(
-        Rect.fromPoints(new Point(0.2, 0.3), new Point(0.4, 0.7)),
-      ),
+        Rect.fromPoints(new Point(0.2, 0.3), new Point(0.4, 0.7))
+      )
     )
     ok(
       Rect.fromCenterSize(new Point(1, 0.1), new Point(0, 2)).approxEqual(
-        Rect.fromPoints(new Point(1, -0.9), new Point(1, 1.1)),
-      ),
+        Rect.fromPoints(new Point(1, -0.9), new Point(1, 1.1))
+      )
     )
     ok(
       Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1)).approxEqual(
-        Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1)),
-      ),
+        Rect.fromPoints(new Point(0.1, 0), new Point(0.25, 1))
+      )
     )
     ok(
       Rect.fromPoints(new Point(0.15, 0.3), new Point(0.35, 0.9)).approxEqual(
-        Rect.fromPoints(new Point(0.15, 0.9), new Point(0.35, 0.3)),
-      ),
+        Rect.fromPoints(new Point(0.15, 0.9), new Point(0.35, 0.3))
+      )
     )
     ok(
       Rect.fromPoints(new Point(0.12, 0), new Point(0.83, 0.5)).approxEqual(
-        Rect.fromPoints(new Point(0.83, 0), new Point(0.12, 0.5)),
-      ),
+        Rect.fromPoints(new Point(0.83, 0), new Point(0.12, 0.5))
+      )
     )
   })
 
@@ -88,18 +88,18 @@ describe('r2.Rect', () => {
     ok(!RECT.contains(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).contains(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
-      ),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).contains(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
-      ),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).contains(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
-      ),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      )
     )
   })
 
@@ -112,18 +112,18 @@ describe('r2.Rect', () => {
     ok(!RECT.interiorContains(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).interiorContains(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
-      ),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).interiorContains(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
-      ),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).interiorContains(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
-      ),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      )
     )
   })
 
@@ -136,18 +136,18 @@ describe('r2.Rect', () => {
     ok(RECT.intersects(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).intersects(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
-      ),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).intersects(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
-      ),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).intersects(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
-      ),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      )
     )
   })
 
@@ -160,18 +160,18 @@ describe('r2.Rect', () => {
     ok(!RECT.interiorIntersects(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))))
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).interiorIntersects(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
-      ),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).interiorIntersects(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
-      ),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
+      )
     )
     ok(
       !Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).interiorIntersects(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
-      ),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
+      )
     )
   })
 
@@ -181,33 +181,33 @@ describe('r2.Rect', () => {
     deepEqual(RECT.union(RECT_NE), RECT)
     deepEqual(
       RECT.union(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.75, 0.3))),
-      Rect.fromPoints(new Point(0, 0.1), new Point(0.75, 0.75)),
+      Rect.fromPoints(new Point(0, 0.1), new Point(0.75, 0.75))
     )
     deepEqual(
       RECT.union(Rect.fromPoints(new Point(0.5, 0.1), new Point(0.7, 0.3))),
-      Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75)),
+      Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75))
     )
     deepEqual(
       RECT.union(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))),
-      Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75)),
+      Rect.fromPoints(new Point(0, 0.1), new Point(0.7, 0.75))
     )
     deepEqual(
       Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).union(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
       ),
-      Rect.fromPoints(new Point(0.1, 0.2), new Point(0.2, 0.8)),
+      Rect.fromPoints(new Point(0.1, 0.2), new Point(0.2, 0.8))
     )
     deepEqual(
       Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).union(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
       ),
-      Rect.fromPoints(new Point(0, 0), new Point(0.4, 0.5)),
+      Rect.fromPoints(new Point(0, 0), new Point(0.4, 0.5))
     )
     deepEqual(
       Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).union(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
       ),
-      Rect.fromPoints(new Point(0, 0), new Point(0.3, 0.4)),
+      Rect.fromPoints(new Point(0, 0), new Point(0.3, 0.4))
     )
   })
 
@@ -217,33 +217,33 @@ describe('r2.Rect', () => {
     deepEqual(RECT.intersection(RECT_NE), RECT_NE)
     deepEqual(
       RECT.intersection(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.75, 0.3))),
-      Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.3)),
+      Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.3))
     )
     deepEqual(
       RECT.intersection(Rect.fromPoints(new Point(0.5, 0.1), new Point(0.7, 0.3))),
-      Rect.fromPoints(new Point(0.5, 0.25), new Point(0.5, 0.3)),
+      Rect.fromPoints(new Point(0.5, 0.25), new Point(0.5, 0.3))
     )
     deepEqual(
       RECT.intersection(Rect.fromPoints(new Point(0.45, 0.1), new Point(0.7, 0.25))),
-      Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.25)),
+      Rect.fromPoints(new Point(0.45, 0.25), new Point(0.5, 0.25))
     )
     deepEqual(
       Rect.fromPoints(new Point(0.1, 0.2), new Point(0.1, 0.3)).intersection(
-        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8)),
+        Rect.fromPoints(new Point(0.15, 0.7), new Point(0.2, 0.8))
       ),
-      EMPTY,
+      EMPTY
     )
     deepEqual(
       Rect.fromPoints(new Point(0.1, 0.2), new Point(0.4, 0.5)).intersection(
-        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1)),
+        Rect.fromPoints(new Point(0, 0), new Point(0.2, 0.1))
       ),
-      EMPTY,
+      EMPTY
     )
     deepEqual(
       Rect.fromPoints(new Point(0.0, 0.0), new Point(0.1, 0.3)).intersection(
-        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4)),
+        Rect.fromPoints(new Point(0.2, 0.1), new Point(0.3, 0.4))
       ),
-      EMPTY,
+      EMPTY
     )
   })
 
@@ -282,17 +282,17 @@ describe('r2.Rect', () => {
     ok(
       Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
         .expanded(new Point(0.1, 0.3))
-        .approxEqual(Rect.fromPoints(new Point(0.1, 0.1), new Point(0.4, 1.0))),
+        .approxEqual(Rect.fromPoints(new Point(0.1, 0.1), new Point(0.4, 1.0)))
     )
     ok(
       Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
         .expanded(new Point(0.1, -0.1))
-        .approxEqual(Rect.fromPoints(new Point(0.1, 0.5), new Point(0.4, 0.6))),
+        .approxEqual(Rect.fromPoints(new Point(0.1, 0.5), new Point(0.4, 0.6)))
     )
     ok(
       Rect.fromPoints(new Point(0.2, 0.4), new Point(0.3, 0.7))
         .expanded(new Point(0.1, 0.1))
-        .approxEqual(Rect.fromPoints(new Point(0.1, 0.3), new Point(0.4, 0.8))),
+        .approxEqual(Rect.fromPoints(new Point(0.1, 0.3), new Point(0.4, 0.8)))
     )
   })
 })

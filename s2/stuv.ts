@@ -381,7 +381,7 @@ const faceUVWAxes = [
   [new Point(-1, 0, 0), new Point(0, -1, 0), new Point(0, 0, 1)],
   [new Point(0, 0, -1), new Point(0, -1, 0), new Point(-1, 0, 0)],
   [new Point(0, 0, -1), new Point(1, 0, 0), new Point(0, -1, 0)],
-  [new Point(0, 1, 0), new Point(1, 0, 0), new Point(0, 0, -1)],
+  [new Point(0, 1, 0), new Point(1, 0, 0), new Point(0, 0, -1)]
 ]
 
 /** The precomputed neighbors of each face. */
@@ -389,33 +389,33 @@ const faceUVWFaces = [
   [
     [4, 1],
     [5, 2],
-    [3, 0],
+    [3, 0]
   ],
   [
     [0, 3],
     [5, 2],
-    [4, 1],
+    [4, 1]
   ],
   [
     [0, 3],
     [1, 4],
-    [5, 2],
+    [5, 2]
   ],
   [
     [2, 5],
     [1, 4],
-    [0, 3],
+    [0, 3]
   ],
   [
     [2, 5],
     [3, 0],
-    [1, 4],
+    [1, 4]
   ],
   [
     [4, 1],
     [3, 0],
-    [2, 5],
-  ],
+    [2, 5]
+  ]
 ]
 
 /**

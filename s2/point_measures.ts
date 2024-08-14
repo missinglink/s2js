@@ -34,9 +34,9 @@ export const pointArea = (a: Point, b: Point, c: Point): number => {
       Math.sqrt(
         Math.max(
           0.0,
-          Math.tan(0.5 * s) * Math.tan(0.5 * (s - sa)) * Math.tan(0.5 * (s - sb)) * Math.tan(0.5 * (s - sc)),
-        ),
-      ),
+          Math.tan(0.5 * s) * Math.tan(0.5 * (s - sa)) * Math.tan(0.5 * (s - sb)) * Math.tan(0.5 * (s - sc))
+        )
+      )
     )
   )
 }

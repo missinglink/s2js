@@ -54,7 +54,7 @@ export class Rect {
   static rectFromLatLng(p: LatLng): Rect {
     return new Rect(
       new R1Interval(angle.radians(p.lat), angle.radians(p.lat)),
-      new S1Interval(angle.radians(p.lng), angle.radians(p.lng)),
+      new S1Interval(angle.radians(p.lng), angle.radians(p.lng))
     )
   }
 

@@ -24,7 +24,7 @@ describe('s1.chordangle', () => {
       [STRAIGHT_CHORDANGLE, chordangle.infChordAngle(), true, false],
 
       [chordangle.infChordAngle(), chordangle.infChordAngle(), false, true],
-      [chordangle.infChordAngle(), STRAIGHT_CHORDANGLE, false, false],
+      [chordangle.infChordAngle(), STRAIGHT_CHORDANGLE, false, false]
     ]
 
     tests.forEach(([a, b, isLessThan, isEqual]) => {
@@ -48,7 +48,7 @@ describe('s1.chordangle', () => {
       [0, false, true, false, false],
       [NEGATIVE_CHORDANGLE, true, false, false, true],
       [STRAIGHT_CHORDANGLE, false, false, false, false],
-      [chordangle.infChordAngle(), false, false, true, true],
+      [chordangle.infChordAngle(), false, false, true, true]
     ]
 
     tests.forEach(([have, isNegative, isZero, isInf, isSpecial]) => {
@@ -64,12 +64,12 @@ describe('s1.chordangle', () => {
     equal(
       chordangle.successor(STRAIGHT_CHORDANGLE),
       chordangle.infChordAngle(),
-      'StraightChordAngle.Successor() should be Infinity',
+      'StraightChordAngle.Successor() should be Infinity'
     )
     equal(
       chordangle.successor(chordangle.infChordAngle()),
       chordangle.infChordAngle(),
-      'InfChordAngle.Successor() should be Infinity',
+      'InfChordAngle.Successor() should be Infinity'
     )
 
     let x = NEGATIVE_CHORDANGLE
@@ -83,13 +83,13 @@ describe('s1.chordangle', () => {
     equal(
       chordangle.predecessor(chordangle.infChordAngle()),
       STRAIGHT_CHORDANGLE,
-      'InfChordAngle.Predecessor() should be StraightChordAngle',
+      'InfChordAngle.Predecessor() should be StraightChordAngle'
     )
     equal(chordangle.predecessor(0), NEGATIVE_CHORDANGLE, 'Zero ChordAngle.Predecessor() should be NegativeChordAngle')
     equal(
       chordangle.predecessor(NEGATIVE_CHORDANGLE),
       NEGATIVE_CHORDANGLE,
-      'NegativeChordAngle.Predecessor() should be NegativeChordAngle',
+      'NegativeChordAngle.Predecessor() should be NegativeChordAngle'
     )
 
     let x = chordangle.infChordAngle()
@@ -108,7 +108,7 @@ describe('s1.chordangle', () => {
     equal(
       chordangle.fromAngle(angle.infAngle()),
       chordangle.infChordAngle(),
-      'converting infinite Angle to ChordAngle should yield infinite Angle',
+      'converting infinite Angle to ChordAngle should yield infinite Angle'
     )
   })
 
@@ -132,7 +132,7 @@ describe('s1.chordangle', () => {
       [degree120, degree90, degree180],
       [degree120, degree120, degree180],
       [degree30, degree180, degree180],
-      [degree180, degree180, degree180],
+      [degree180, degree180, degree180]
     ]
 
     const subTests: [ChordAngle, ChordAngle, ChordAngle][] = [
@@ -143,7 +143,7 @@ describe('s1.chordangle', () => {
       [degree30, degree90, degree0],
       [degree90, degree30, degree60],
       [degree90, degree60, degree30],
-      [degree180, degree0, degree180],
+      [degree180, degree0, degree180]
     ]
 
     addTests.forEach(([a, b, want]) => {
@@ -181,7 +181,7 @@ describe('s1.chordangle', () => {
       [STRAIGHT_CHORDANGLE, 5, chordangle.fromSquaredLength(5)],
       [ZERO_CHORDANGLE, -5, ZERO_CHORDANGLE],
       [chordangle.fromSquaredLength(1.25), 0.25, chordangle.fromSquaredLength(1.5)],
-      [chordangle.fromSquaredLength(0.75), 0.25, chordangle.fromSquaredLength(1)],
+      [chordangle.fromSquaredLength(0.75), 0.25, chordangle.fromSquaredLength(1)]
     ]
 
     tests.forEach(([have, add, want]) => {

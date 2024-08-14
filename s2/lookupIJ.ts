@@ -12,7 +12,7 @@ export const posToIJ = [
   [0, 1, 3, 2], // canonical order:    (0,0), (0,1), (1,1), (1,0)
   [0, 2, 3, 1], // axes swapped:       (0,0), (1,0), (1,1), (0,1)
   [3, 2, 0, 1], // bits inverted:      (1,1), (1,0), (0,0), (0,1)
-  [3, 1, 0, 2], // swapped & inverted: (1,1), (0,1), (0,0), (1,0)
+  [3, 1, 0, 2] // swapped & inverted: (1,1), (0,1), (0,0), (1,0)
 ]
 export const posToOrientation = [SWAP_MASK, 0, 0, INVERT_MASK | SWAP_MASK]
 const lookupIJ: number[] = []
@@ -30,7 +30,7 @@ function initLookupCell(
   j: number,
   origOrientation: number,
   pos: number,
-  orientation: number,
+  orientation: number
 ) {
   if (level == LOOKUP_BITS) {
     const ij = (i << LOOKUP_BITS) + j

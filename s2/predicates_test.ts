@@ -24,7 +24,7 @@ describe('s2.predicates', () => {
       { p1: [-4, -2, 7], p2: [2, 1, -4], p3: [4, 2, -8], want: false },
       { p1: [0, -5, 7], p2: [0, -4, 8], p3: [0, -2, 4], want: false },
       { p1: [-5, -2, 7], p2: [0, 0, -2], p3: [0, 0, -1], want: false },
-      { p1: [0, -2, 7], p2: [0, 0, 1], p3: [0, 0, 2], want: false },
+      { p1: [0, -2, 7], p2: [0, 0, 1], p3: [0, 0, 2], want: false }
     ]
 
     for (const test of tests) {
@@ -55,7 +55,7 @@ describe('s2.predicates', () => {
       {
         p1: Point.fromVector(poC.vector.sub(poA.vector)),
         p2: Point.fromVector(poB.vector.sub(poC.vector)),
-        want: true,
+        want: true
       },
       { p1: x1, p2: Point.fromVector(x1.vector.normalize()), want: true },
       { p1: x2, p2: Point.fromVector(x2.vector.normalize()), want: true },
@@ -63,7 +63,7 @@ describe('s2.predicates', () => {
       { p1: x4, p2: Point.fromVector(x4.vector.normalize()), want: true },
       { p1: x3, p2: x4, want: false },
       { p1: y1, p2: y2, want: false },
-      { p1: y2, p2: Point.fromVector(y2.vector.normalize()), want: true },
+      { p1: y2, p2: Point.fromVector(y2.vector.normalize()), want: true }
     ]
 
     for (const test of tests) {
@@ -85,7 +85,7 @@ describe('s2.predicates', () => {
       { p1: poA, p2: poB, p3: poC, want: CLOCKWISE },
       { p1: x1, p2: x2, p3: Point.fromVector(x1.vector.mul(-1.0)), want: COUNTERCLOCKWISE },
       { p1: x3, p2: x4, p3: Point.fromVector(x3.vector.mul(-1.0)), want: CLOCKWISE },
-      { p1: y1, p2: y2, p3: Point.fromVector(y1.vector.mul(-1.0)), want: COUNTERCLOCKWISE },
+      { p1: y1, p2: y2, p3: Point.fromVector(y1.vector.mul(-1.0)), want: COUNTERCLOCKWISE }
     ]
 
     for (const test of tests) {
@@ -129,7 +129,7 @@ describe('s2.predicates', () => {
         equal(
           exactSign(a, b, c, true),
           sign,
-          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(a, b, c, true)}, want ${sign}`,
+          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(a, b, c, true)}, want ${sign}`
         )
       } else {
         failureCount++
@@ -146,80 +146,80 @@ describe('s2.predicates', () => {
         a: new Point(-3, -1, 0),
         b: new Point(-2, 1, 0),
         c: new Point(1, -2, 0),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-6, 3, 3),
         b: new Point(-4, 2, -1),
         c: new Point(-2, 1, 4),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(0, -1, -1),
         b: new Point(0, 1, -2),
         c: new Point(0, 2, 1),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-1, 2, 7),
         b: new Point(2, 1, -4),
         c: new Point(4, 2, -8),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-4, -2, 7),
         b: new Point(2, 1, -4),
         c: new Point(4, 2, -8),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(0, -5, 7),
         b: new Point(0, -4, 8),
         c: new Point(0, -2, 4),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-5, -2, 7),
         b: new Point(0, 0, -2),
         c: new Point(0, 0, -1),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(0, -2, 7),
         b: new Point(0, 0, 1),
         c: new Point(0, 0, 2),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-3, 1, 7),
         b: new Point(-1, -4, 1),
         c: new Point(0, 0, 0),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(-6, -4, 7),
         b: new Point(-3, -2, 1),
         c: new Point(0, 0, 0),
-        want: COUNTERCLOCKWISE,
+        want: COUNTERCLOCKWISE
       },
       {
         a: new Point(0, -4, 7),
         b: new Point(0, -2, 1),
         c: new Point(0, 0, 0),
-        want: CLOCKWISE,
+        want: CLOCKWISE
       },
       {
         a: new Point(-1, -4, 5),
         b: new Point(0, 0, -3),
         c: new Point(0, 0, 0),
-        want: CLOCKWISE,
+        want: CLOCKWISE
       },
       {
         a: new Point(0, -4, 5),
         b: new Point(0, 0, -5),
         c: new Point(0, 0, 0),
-        want: COUNTERCLOCKWISE,
-      },
+        want: COUNTERCLOCKWISE
+      }
     ]
 
     for (const test of tests) {

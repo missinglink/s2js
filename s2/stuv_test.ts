@@ -23,7 +23,7 @@ import {
   stToSiTi,
   siTiToST,
   uvwFace,
-  MAX_SiTi,
+  MAX_SiTi
 } from './stuv'
 
 // Define epsilon for floating point comparisons
@@ -43,15 +43,15 @@ describe('s2.stuv', () => {
           Math.abs(
             faceUVToXYZ(face, x, -1)
               .cross(faceUVToXYZ(face, x, 1))
-              .angle(uNorm(face, x)),
-          ) < EPSILON,
+              .angle(uNorm(face, x))
+          ) < EPSILON
         )
         ok(
           Math.abs(
             faceUVToXYZ(face, -1, x)
               .cross(faceUVToXYZ(face, 1, x))
-              .angle(vNorm(face, x)),
-          ) < EPSILON,
+              .angle(vNorm(face, x))
+          ) < EPSILON
         )
       }
     }
@@ -100,7 +100,7 @@ describe('s2.stuv', () => {
       { face: 4, point: point, u: 0, v: 0, ok: false },
       { face: 4, point: pointNeg, u: 1 + 1.0 / 12, v: -(11.0 / 12), ok: true },
       { face: 5, point: point, u: 0, v: 0, ok: false },
-      { face: 5, point: pointNeg, u: -12.0 / 13, v: -11.0 / 13, ok: true },
+      { face: 5, point: pointNeg, u: -12.0 / 13, v: -11.0 / 13, ok: true }
     ]
 
     for (const test of tests) {
@@ -134,12 +134,12 @@ describe('s2.stuv', () => {
       ok(
         faceUVToXYZ(face, 1, 0)
           .sub(faceUVToXYZ(face, 0, 0))
-          .equals(uAxis(face).vector),
+          .equals(uAxis(face).vector)
       )
       ok(
         faceUVToXYZ(face, 0, 1)
           .sub(faceUVToXYZ(face, 0, 0))
-          .equals(vAxis(face).vector),
+          .equals(vAxis(face).vector)
       )
       ok(faceUVToXYZ(face, 0, 0).equals(unitNorm(face).vector))
       equal(uAxis(face).vector.cross(vAxis(face).vector).dot(unitNorm(face).vector), 1)
@@ -255,7 +255,7 @@ describe('s2.stuv', () => {
       { v: new Vector(1, 0, 1), want: 2 },
       { v: new Vector(1, 1, -1), want: 5 },
       { v: new Vector(1, 1, 0), want: 1 },
-      { v: new Vector(1, 1, 1), want: 2 },
+      { v: new Vector(1, 1, 1), want: 2 }
     ]
 
     for (const test of tests) {

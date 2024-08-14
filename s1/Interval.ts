@@ -279,7 +279,7 @@ export class Interval {
     }
     const result = Interval.fromEndpoints(
       remainder(this.lo - margin, 2 * Math.PI),
-      remainder(this.hi + margin, 2 * Math.PI),
+      remainder(this.hi + margin, 2 * Math.PI)
     )
     if (result.lo <= -Math.PI) result.lo = Math.PI
     return result

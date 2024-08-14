@@ -332,7 +332,7 @@ export const ijLevelToBoundUV = (i: number, j: number, level: number): Rect => {
 
   return new Rect(
     new Interval(stToUV(ijToSTMin(xLo)), stToUV(ijToSTMin(xLo + cellSize))),
-    new Interval(stToUV(ijToSTMin(yLo)), stToUV(ijToSTMin(yLo + cellSize))),
+    new Interval(stToUV(ijToSTMin(yLo)), stToUV(ijToSTMin(yLo + cellSize)))
   )
 }
 
@@ -394,7 +394,7 @@ export const vertexNeighbors = (ci: CellID, level: number): CellID[] => {
   const results: CellID[] = [
     parent(ci, level),
     parent(fromFaceIJSame(f, i + ioffset, j, isame), level),
-    parent(fromFaceIJSame(f, i, j + joffset, jsame), level),
+    parent(fromFaceIJSame(f, i, j + joffset, jsame), level)
   ]
 
   if (isame || jsame) {

@@ -227,7 +227,7 @@ export class Cap {
     if (this.isEmpty()) return Cap.fullCap()
     return Cap.fromCenterChordAngle(
       Point.fromCoords(-this.center.x, -this.center.y, -this.center.z),
-      chordangle.sub(STRAIGHT_CHORDANGLE, this.rad),
+      chordangle.sub(STRAIGHT_CHORDANGLE, this.rad)
     )
   }
 
@@ -266,7 +266,7 @@ export class Cap {
         const angleA = Math.asin(sinA / sinC)
         lng = new S1Interval(
           remainder(this.center.x - angleA, Math.PI * 2),
-          remainder(this.center.x + angleA, Math.PI * 2),
+          remainder(this.center.x + angleA, Math.PI * 2)
         )
       }
     }

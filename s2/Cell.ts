@@ -354,7 +354,7 @@ export class Cell {
       case 3:
         bound = new Rect(
           new R1Interval(-Math.PI / 4, Math.PI / 4),
-          new S1Interval((3 * Math.PI) / 4, (-3 * Math.PI) / 4),
+          new S1Interval((3 * Math.PI) / 4, (-3 * Math.PI) / 4)
         )
         break
       case 4:
@@ -372,7 +372,7 @@ export class Cell {
    */
   capBound(): Cap {
     let cap = Cap.fromPoint(
-      Point.fromVector(faceUVToXYZ(this.face, this.uv.center().x, this.uv.center().y).normalize()),
+      Point.fromVector(faceUVToXYZ(this.face, this.uv.center().x, this.uv.center().y).normalize())
     )
     for (let k = 0; k < 4; k++) {
       cap = cap.addPoint(this.vertex(k))
@@ -506,14 +506,14 @@ export class Cell {
             Cell.edgeDistance(-dir00, this.uv.x.lo),
             Cell.edgeDistance(dir01, this.uv.x.hi),
             Cell.edgeDistance(-dir10, this.uv.y.lo),
-            Cell.edgeDistance(dir11, this.uv.y.hi),
+            Cell.edgeDistance(dir11, this.uv.y.hi)
           )
 
     return minChordAngle(
       this.vertexChordDist2(target, false, false),
       this.vertexChordDist2(target, true, false),
       this.vertexChordDist2(target, false, true),
-      this.vertexChordDist2(target, true, true),
+      this.vertexChordDist2(target, true, true)
     )
   }
 
@@ -535,7 +535,7 @@ export class Cell {
       this.vertexChordDist2(targetUVW, false, false),
       this.vertexChordDist2(targetUVW, true, false),
       this.vertexChordDist2(targetUVW, false, true),
-      this.vertexChordDist2(targetUVW, true, true),
+      this.vertexChordDist2(targetUVW, true, true)
     )
 
     if (maxDist <= RIGHT_CHORDANGLE) return maxDist

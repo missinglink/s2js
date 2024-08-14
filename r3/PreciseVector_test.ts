@@ -29,7 +29,7 @@ describe('r3.PreciseVector', () => {
       { v: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)), want: true },
       { v: new PreciseVector(new BigFloat(1 + 2 * epsilon), new BigFloat(0), new BigFloat(0)), want: false },
       { v: new PreciseVector(new BigFloat(0 * (1 + epsilon)), new BigFloat(0), new BigFloat(0)), want: false },
-      { v: new PreciseVector(new BigFloat(1), new BigFloat(1), new BigFloat(1)), want: false },
+      { v: new PreciseVector(new BigFloat(1), new BigFloat(1), new BigFloat(1)), want: false }
     ]
 
     for (const test of tests) {
@@ -43,7 +43,7 @@ describe('r3.PreciseVector', () => {
       { v: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)), want: new BigFloat(1) },
       { v: new PreciseVector(new BigFloat(1), new BigFloat(1), new BigFloat(1)), want: new BigFloat(3) },
       { v: new PreciseVector(new BigFloat(1), new BigFloat(2), new BigFloat(3)), want: new BigFloat(14) },
-      { v: new PreciseVector(new BigFloat(3), new BigFloat(-4), new BigFloat(12)), want: new BigFloat(169) },
+      { v: new PreciseVector(new BigFloat(3), new BigFloat(-4), new BigFloat(12)), want: new BigFloat(169) }
     ]
 
     for (const test of tests) {
@@ -56,23 +56,23 @@ describe('r3.PreciseVector', () => {
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(2), new BigFloat(3)),
         v2: new PreciseVector(new BigFloat(4), new BigFloat(5), new BigFloat(7)),
-        want: new PreciseVector(new BigFloat(5), new BigFloat(7), new BigFloat(10)),
+        want: new PreciseVector(new BigFloat(5), new BigFloat(7), new BigFloat(10))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(-6), new BigFloat(-6)),
-        want: new PreciseVector(new BigFloat(2), new BigFloat(-9), new BigFloat(-1)),
-      },
+        want: new PreciseVector(new BigFloat(2), new BigFloat(-9), new BigFloat(-1))
+      }
     ]
 
     for (const test of tests) {
@@ -85,23 +85,23 @@ describe('r3.PreciseVector', () => {
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(2), new BigFloat(3)),
         v2: new PreciseVector(new BigFloat(4), new BigFloat(5), new BigFloat(7)),
-        want: new PreciseVector(new BigFloat(-3), new BigFloat(-3), new BigFloat(-4)),
+        want: new PreciseVector(new BigFloat(-3), new BigFloat(-3), new BigFloat(-4))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(-6), new BigFloat(-6)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(3), new BigFloat(11)),
-      },
+        want: new PreciseVector(new BigFloat(0), new BigFloat(3), new BigFloat(11))
+      }
     ]
 
     for (const test of tests) {
@@ -114,33 +114,33 @@ describe('r3.PreciseVector', () => {
       {
         v: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
         f: new BigFloat(3),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: new BigFloat(1),
-        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: new BigFloat(0),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: new BigFloat(3),
-        want: new PreciseVector(new BigFloat(3), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(3), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         f: new BigFloat(-1),
-        want: new PreciseVector(new BigFloat(-1), new BigFloat(3), new BigFloat(-5)),
+        want: new PreciseVector(new BigFloat(-1), new BigFloat(3), new BigFloat(-5))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         f: new BigFloat(2),
-        want: new PreciseVector(new BigFloat(2), new BigFloat(-6), new BigFloat(10)),
-      },
+        want: new PreciseVector(new BigFloat(2), new BigFloat(-6), new BigFloat(10))
+      }
     ]
 
     for (const test of tests) {
@@ -153,33 +153,33 @@ describe('r3.PreciseVector', () => {
       {
         v: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
         f: 3,
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: 1,
-        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: 0,
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         f: 3,
-        want: new PreciseVector(new BigFloat(3), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(3), new BigFloat(0), new BigFloat(0))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         f: -1,
-        want: new PreciseVector(new BigFloat(-1), new BigFloat(3), new BigFloat(-5)),
+        want: new PreciseVector(new BigFloat(-1), new BigFloat(3), new BigFloat(-5))
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(-3), new BigFloat(5)),
         f: 2,
-        want: new PreciseVector(new BigFloat(2), new BigFloat(-6), new BigFloat(10)),
-      },
+        want: new PreciseVector(new BigFloat(2), new BigFloat(-6), new BigFloat(10))
+      }
     ]
 
     for (const test of tests) {
@@ -192,33 +192,33 @@ describe('r3.PreciseVector', () => {
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        want: new BigFloat(1),
+        want: new BigFloat(1)
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
-        want: new BigFloat(1),
+        want: new BigFloat(1)
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)),
-        want: new BigFloat(1),
+        want: new BigFloat(1)
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
-        want: new BigFloat(0),
+        want: new BigFloat(0)
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(1)),
-        want: new BigFloat(0),
+        want: new BigFloat(0)
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(1), new BigFloat(1)),
         v2: new PreciseVector(new BigFloat(-1), new BigFloat(-1), new BigFloat(-1)),
-        want: new BigFloat(-3),
-      },
+        want: new BigFloat(-3)
+      }
     ]
 
     for (const test of tests) {
@@ -232,33 +232,33 @@ describe('r3.PreciseVector', () => {
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1))
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)),
-        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
         v2: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(-1)),
+        want: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(-1))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(2), new BigFloat(3)),
         v2: new PreciseVector(new BigFloat(-4), new BigFloat(5), new BigFloat(-6)),
-        want: new PreciseVector(new BigFloat(-27), new BigFloat(-6), new BigFloat(13)),
-      },
+        want: new PreciseVector(new BigFloat(-27), new BigFloat(-6), new BigFloat(13))
+      }
     ]
 
     for (const test of tests) {
@@ -270,28 +270,28 @@ describe('r3.PreciseVector', () => {
     const tests = [
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
+        v2: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
-        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(2)),
+        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(2))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0)),
+        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(0))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
-        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(1)),
+        v2: new PreciseVector(new BigFloat(0), new BigFloat(1), new BigFloat(1))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(1), new BigFloat(1)),
-        v2: new PreciseVector(new BigFloat(-1), new BigFloat(-1), new BigFloat(-1)),
+        v2: new PreciseVector(new BigFloat(-1), new BigFloat(-1), new BigFloat(-1))
       },
       {
         v1: new PreciseVector(new BigFloat(1), new BigFloat(2), new BigFloat(2)),
-        v2: new PreciseVector(new BigFloat(-0.3), new BigFloat(0.4), new BigFloat(-1.2)),
-      },
+        v2: new PreciseVector(new BigFloat(-0.3), new BigFloat(0.4), new BigFloat(-1.2))
+      }
     ]
 
     for (const test of tests) {
@@ -312,33 +312,33 @@ describe('r3.PreciseVector', () => {
       {
         v: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(0)),
         largest: Vector.Z_AXIS,
-        smallest: Vector.Z_AXIS,
+        smallest: Vector.Z_AXIS
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(0), new BigFloat(0)),
         largest: Vector.X_AXIS,
-        smallest: Vector.Z_AXIS,
+        smallest: Vector.Z_AXIS
       },
       {
         v: new PreciseVector(new BigFloat(1), new BigFloat(-1), new BigFloat(0)),
         largest: Vector.Y_AXIS,
-        smallest: Vector.Z_AXIS,
+        smallest: Vector.Z_AXIS
       },
       {
         v: new PreciseVector(new BigFloat(-1), new BigFloat(-1.1), new BigFloat(-1.1)),
         largest: Vector.Z_AXIS,
-        smallest: Vector.X_AXIS,
+        smallest: Vector.X_AXIS
       },
       {
         v: new PreciseVector(new BigFloat(0.5), new BigFloat(-0.4), new BigFloat(-0.5)),
         largest: Vector.Z_AXIS,
-        smallest: Vector.Y_AXIS,
+        smallest: Vector.Y_AXIS
       },
       {
         v: new PreciseVector(new BigFloat(1e-15), new BigFloat(1e-14), new BigFloat(1e-13)),
         largest: Vector.Z_AXIS,
-        smallest: Vector.X_AXIS,
-      },
+        smallest: Vector.X_AXIS
+      }
     ]
 
     for (const test of tests) {
@@ -357,7 +357,7 @@ describe('r3.PreciseVector', () => {
       { have: new PreciseVector(new BigFloat(0), new BigFloat(-0), new BigFloat(0)), want: true },
       { have: new PreciseVector(new BigFloat(0), new BigFloat(0), new BigFloat(1)), want: false },
       { have: x.add(y).add(x.mul(new BigFloat(-1))), want: false },
-      { have: xy.sub(xy), want: true },
+      { have: xy.sub(xy), want: true }
     ]
 
     for (const test of tests) {

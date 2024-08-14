@@ -35,7 +35,7 @@ export const randomFrameAtPoint = (z: Point): Matrix3x3 => {
   const m = [
     [0, 0, 0],
     [0, 0, 0],
-    [0, 0, 0],
+    [0, 0, 0]
   ]
   matrix.setCol(m, 0, x)
   matrix.setCol(m, 1, y)

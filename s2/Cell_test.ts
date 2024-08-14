@@ -159,7 +159,7 @@ describe('s2.Cell', () => {
         new R2Point(DBL_EPSILON, 1),
         new R2Point(1, 1),
         new R2Point(maxSizeUV, maxSizeUV),
-        new R2Point(DBL_EPSILON, maxSizeUV),
+        new R2Point(DBL_EPSILON, maxSizeUV)
       ]
 
       for (const uv of specialUV) {
@@ -221,18 +221,18 @@ describe('s2.Cell', () => {
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 2)),
         oc: Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 2)),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 2)),
         oc: Cell.fromCellID(cellid.childBeginAtLevel(cellid.childBeginAtLevel(cellid.fromFace(0), 2), 5)),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 2)),
         oc: Cell.fromCellID(cellid.next(cellid.childBeginAtLevel(cellid.fromFace(0), 2))),
-        want: false,
-      },
+        want: false
+      }
     ]
 
     for (const test of tests) {
@@ -246,28 +246,28 @@ describe('s2.Cell', () => {
       {
         c: Cell.fromCellID(ci),
         oc: Cell.fromCellID(ci),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(ci),
         oc: Cell.fromCellID(cellid.childBeginAtLevel(ci, 5)),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(ci, 5)),
         oc: Cell.fromCellID(ci),
-        want: false,
+        want: false
       },
       {
         c: Cell.fromCellID(cellid.next(ci)),
         oc: Cell.fromCellID(ci),
-        want: false,
+        want: false
       },
       {
         c: Cell.fromCellID(ci),
         oc: Cell.fromCellID(cellid.next(ci)),
-        want: false,
-      },
+        want: false
+      }
     ]
 
     for (const test of tests) {
@@ -283,7 +283,7 @@ describe('s2.Cell', () => {
       { lat: -50, lng: -50 },
       { lat: 0, lng: 0 },
       { lat: 0, lng: 180 },
-      { lat: 0, lng: -179 },
+      { lat: 0, lng: -179 }
     ]
 
     for (const test of tests) {
@@ -300,23 +300,23 @@ describe('s2.Cell', () => {
       {
         cellID: cellid.fromFacePosLevel(2, 0n, 0),
         latLng: LatLng.fromDegrees(3, 0),
-        wantContains: false,
+        wantContains: false
       },
       {
         cellID: cellid.fromFacePosLevel(2, 0n, 0),
         latLng: LatLng.fromDegrees(50, 0),
-        wantContains: true,
+        wantContains: true
       },
       {
         cellID: cellid.fromFacePosLevel(5, 0n, 0),
         latLng: LatLng.fromDegrees(-3, 0),
-        wantContains: false,
+        wantContains: false
       },
       {
         cellID: cellid.fromFacePosLevel(5, 0n, 0),
         latLng: LatLng.fromDegrees(-50, 0),
-        wantContains: true,
-      },
+        wantContains: true
+      }
     ]
 
     for (const test of tests) {
@@ -339,18 +339,18 @@ describe('s2.Cell', () => {
       {
         c: Cell.fromCellID(ci),
         p: Cell.fromCellID(cellid.childBeginAtLevel(ci, 5)).vertex(1),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(ci),
         p: Cell.fromCellID(ci).vertex(1),
-        want: true,
+        want: true
       },
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(ci, 5)),
         p: Cell.fromCellID(cellid.childBeginAtLevel(cellid.next(ci), 5)).vertex(1),
-        want: false,
-      },
+        want: false
+      }
     ]
 
     for (const test of tests) {

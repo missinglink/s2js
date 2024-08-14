@@ -11,48 +11,48 @@ describe('s2.LatLng', () => {
       {
         desc: 'Valid lat/lng',
         pos: LatLng.fromDegrees(21.8275043, 151.1979675),
-        want: LatLng.fromDegrees(21.8275043, 151.1979675),
+        want: LatLng.fromDegrees(21.8275043, 151.1979675)
       },
       {
         desc: 'Valid lat/lng in the West',
         pos: LatLng.fromDegrees(21.8275043, -151.1979675),
-        want: LatLng.fromDegrees(21.8275043, -151.1979675),
+        want: LatLng.fromDegrees(21.8275043, -151.1979675)
       },
       {
         desc: 'Beyond the North pole',
         pos: LatLng.fromDegrees(95, 151.1979675),
-        want: LatLng.fromDegrees(90, 151.1979675),
+        want: LatLng.fromDegrees(90, 151.1979675)
       },
       {
         desc: 'Beyond the South pole',
         pos: LatLng.fromDegrees(-95, 151.1979675),
-        want: LatLng.fromDegrees(-90, 151.1979675),
+        want: LatLng.fromDegrees(-90, 151.1979675)
       },
       {
         desc: 'At the date line (from East)',
         pos: LatLng.fromDegrees(21.8275043, 180),
-        want: LatLng.fromDegrees(21.8275043, 180),
+        want: LatLng.fromDegrees(21.8275043, 180)
       },
       {
         desc: 'At the date line (from West)',
         pos: LatLng.fromDegrees(21.8275043, -180),
-        want: LatLng.fromDegrees(21.8275043, -180),
+        want: LatLng.fromDegrees(21.8275043, -180)
       },
       {
         desc: 'Across the date line going East',
         pos: LatLng.fromDegrees(21.8275043, 181.0012),
-        want: LatLng.fromDegrees(21.8275043, -178.9988),
+        want: LatLng.fromDegrees(21.8275043, -178.9988)
       },
       {
         desc: 'Across the date line going West',
         pos: LatLng.fromDegrees(21.8275043, -181.0012),
-        want: LatLng.fromDegrees(21.8275043, 178.9988),
+        want: LatLng.fromDegrees(21.8275043, 178.9988)
       },
       {
         desc: 'All wrong',
         pos: LatLng.fromDegrees(256, 256),
-        want: LatLng.fromDegrees(90, -104),
-      },
+        want: LatLng.fromDegrees(90, -104)
+      }
     ]
 
     tests.forEach((test) => {
@@ -84,8 +84,8 @@ describe('s2.LatLng', () => {
         lng: 151.19796752929685,
         x: -0.12456788151479525,
         y: 0.0684875268284729,
-        z: -0.989844584550441,
-      },
+        z: -0.989844584550441
+      }
     ]
 
     tests.forEach((test) => {
@@ -107,7 +107,7 @@ describe('s2.LatLng', () => {
       { lat1: 90, lng1: 0, lat2: 90, lng2: 0, want: 0, tolerance: 0 },
       { lat1: -37, lng1: 25, lat2: -66, lng2: -155, want: 77, tolerance: 1e-13 },
       { lat1: 0, lng1: 165, lat2: 0, lng2: -80, want: 115, tolerance: 1e-13 },
-      { lat1: 47, lng1: -127, lat2: -47, lng2: 53, want: 180, tolerance: 2e-6 },
+      { lat1: 47, lng1: -127, lat2: -47, lng2: 53, want: 180, tolerance: 2e-6 }
     ]
 
     tests.forEach((test) => {
@@ -124,7 +124,7 @@ describe('s2.LatLng', () => {
     const tests = [
       { a: LatLng.fromDegrees(30, 50), b: LatLng.fromDegrees(30, 50 + ε), want: true },
       { a: LatLng.fromDegrees(30, 50), b: LatLng.fromDegrees(30 - ε, 50), want: true },
-      { a: LatLng.fromDegrees(1, 5), b: LatLng.fromDegrees(2, 3), want: false },
+      { a: LatLng.fromDegrees(1, 5), b: LatLng.fromDegrees(2, 3), want: false }
     ]
 
     tests.forEach((test) => {

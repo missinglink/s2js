@@ -30,19 +30,19 @@ describe('s2.point_measures', () => {
         b: Point.fromVector(new Vector(0, EPS, 1).normalize()),
         c: PZ,
         want: EXP1,
-        nearness: 1e-14 * EXP1,
+        nearness: 1e-14 * EXP1
       },
       { a: PR, b: PR, c: PR, want: 0.0, nearness: 0 },
       { a: PR, b: PQ, c: PR, want: 0.0, nearness: 1e-15 },
       { a: P000, b: P045, c: P090, want: 0.0, nearness: 0 },
-      { a: P000, b: Point.fromVector(new Vector(1, 1, EPS).normalize()), c: P090, want: EXP2, nearness: 1e-9 * EXP2 },
+      { a: P000, b: Point.fromVector(new Vector(1, 1, EPS).normalize()), c: P090, want: EXP2, nearness: 1e-9 * EXP2 }
     ]
 
     for (const [d, test] of tests.entries()) {
       const got = pointArea(test.a, test.b, test.c)
       assert.ok(
         Math.abs(got - test.want) <= test.nearness,
-        `${d}, PointArea(${test.a}, ${test.b}, ${test.c}), got ${got} want ${test.want}`,
+        `${d}, PointArea(${test.a}, ${test.b}, ${test.c}), got ${got} want ${test.want}`
       )
     }
 
@@ -76,7 +76,7 @@ describe('s2.point_measures', () => {
         c: P045,
         d: P180,
         e: PZ,
-        want: Math.PI,
+        want: Math.PI
       },
       {
         a: Point.fromCoords(1, 1, EPS2),
@@ -84,8 +84,8 @@ describe('s2.point_measures', () => {
         c: P045,
         d: P180,
         e: PZ,
-        want: Math.PI,
-      },
+        want: Math.PI
+      }
     ]
 
     for (const test of tests) {
@@ -96,7 +96,7 @@ describe('s2.point_measures', () => {
         pointArea(test.a, test.e, test.b)
       assert.ok(
         Math.abs(area - test.want) <= epsilon,
-        `Adding up 4 quarter hemispheres with PointArea(), got ${area} want ${test.want}`,
+        `Adding up 4 quarter hemispheres with PointArea(), got ${area} want ${test.want}`
       )
     }
 
@@ -111,7 +111,7 @@ describe('s2.point_measures', () => {
       const area = pointArea(p0, p1, p2) + pointArea(p0, p2, p3) + pointArea(p0, p3, p4) + pointArea(p0, p4, p1)
       assert.ok(
         Math.abs(area - 2 * Math.PI) <= 2e-15,
-        `hemisphere area of ${p1}, ${p2}, ${p3}, ${p4}, ${p1} = ${area}, want ${2 * Math.PI}`,
+        `hemisphere area of ${p1}, ${p2}, ${p3}, ${p4}, ${p1} = ${area}, want ${2 * Math.PI}`
       )
     }
   })
@@ -122,19 +122,19 @@ describe('s2.point_measures', () => {
       { a: P045, b: PZ, c: P180, wantAngle: (3 * Math.PI) / 4, wantTurnAngle: -Math.PI / 4 },
       { a: P000, b: PZ, c: P180, wantAngle: Math.PI, wantTurnAngle: 0 },
       { a: PZ, b: P000, c: P045, wantAngle: Math.PI / 2, wantTurnAngle: Math.PI / 2 },
-      { a: PZ, b: P000, c: PZ, wantAngle: 0, wantTurnAngle: -Math.PI },
+      { a: PZ, b: P000, c: PZ, wantAngle: 0, wantTurnAngle: -Math.PI }
     ]
 
     for (const test of tests) {
       const gotAngle = angle(test.a, test.b, test.c)
       assert.ok(
         Math.abs(gotAngle - test.wantAngle) <= epsilon,
-        `Angle(${test.a}, ${test.b}, ${test.c}) = ${gotAngle}, want ${test.wantAngle}`,
+        `Angle(${test.a}, ${test.b}, ${test.c}) = ${gotAngle}, want ${test.wantAngle}`
       )
       const gotTurnAngle = turnAngle(test.a, test.b, test.c)
       assert.ok(
         Math.abs(gotTurnAngle - test.wantTurnAngle) <= epsilon,
-        `TurnAngle(${test.a}, ${test.b}, ${test.c}) = ${gotTurnAngle}, want ${test.wantTurnAngle}`,
+        `TurnAngle(${test.a}, ${test.b}, ${test.c}) = ${gotTurnAngle}, want ${test.wantTurnAngle}`
       )
     }
   })

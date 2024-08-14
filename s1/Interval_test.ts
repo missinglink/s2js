@@ -63,7 +63,7 @@ describe('s1.Interval', () => {
       { a: -Math.PI, b: Math.PI, want: PI },
       { a: Math.PI, b: -Math.PI, want: PI },
       { a: MID34.hi, b: MID34.lo, want: MID34 },
-      { a: MID23.lo, b: MID23.hi, want: MID23 },
+      { a: MID23.lo, b: MID23.hi, want: MID23 }
     ]
     tests.forEach((test) => {
       const got = Interval.fromPointPair(test.a, test.b)
@@ -105,7 +105,7 @@ describe('s1.Interval', () => {
       { interval: PI, want: Math.PI },
       { interval: MIPI, want: Math.PI },
       { interval: QUAD23, want: Math.PI },
-      { interval: QUAD123, want: 0.75 * Math.PI },
+      { interval: QUAD123, want: 0.75 * Math.PI }
     ]
     tests.forEach((test) => {
       const got = test.interval.center()
@@ -120,7 +120,7 @@ describe('s1.Interval', () => {
       { interval: MIPI, want: 0 },
       { interval: QUAD123, want: 1.5 * Math.PI },
       { interval: QUAD23, want: Math.PI },
-      { interval: FULL, want: 2 * Math.PI },
+      { interval: FULL, want: 2 * Math.PI }
     ]
     tests.forEach((test) => {
       equal(test.interval.length(), test.want)
@@ -138,11 +138,11 @@ describe('s1.Interval', () => {
         in: [Math.PI / 2, -Math.PI / 2, Math.PI, -Math.PI],
         out: [0],
         iIn: [Math.PI, -Math.PI],
-        iOut: [Math.PI / 2, -Math.PI / 2, 0],
+        iOut: [Math.PI / 2, -Math.PI / 2, 0]
       },
       { interval: PI, in: [Math.PI, -Math.PI], out: [0], iIn: [], iOut: [Math.PI, -Math.PI] },
       { interval: MIPI, in: [Math.PI, -Math.PI], out: [0], iIn: [], iOut: [Math.PI, -Math.PI] },
-      { interval: ZERO, in: [0], out: [], iIn: [], iOut: [0] },
+      { interval: ZERO, in: [0], out: [], iIn: [], iOut: [0] }
     ]
     tests.forEach((test) => {
       test.in.forEach((p) => {
@@ -181,7 +181,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: EMPTY,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: EMPTY,
@@ -192,7 +192,7 @@ describe('s1.Interval', () => {
 
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: EMPTY,
@@ -202,7 +202,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: ZERO,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: EMPTY,
@@ -212,7 +212,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: PI,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: EMPTY,
@@ -222,7 +222,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: MIPI,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
 
       {
@@ -233,7 +233,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: FULL,
@@ -243,7 +243,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: FULL,
+        wantIntersection: FULL
       },
       {
         x: FULL,
@@ -253,7 +253,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: ZERO,
+        wantIntersection: ZERO
       },
       {
         x: FULL,
@@ -263,7 +263,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: FULL,
@@ -273,7 +273,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: FULL,
@@ -283,7 +283,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: QUAD12,
+        wantIntersection: QUAD12
       },
       {
         x: FULL,
@@ -293,7 +293,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: QUAD23,
+        wantIntersection: QUAD23
       },
 
       {
@@ -304,7 +304,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: ZERO,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: ZERO,
@@ -314,7 +314,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: ZERO,
+        wantIntersection: ZERO
       },
       {
         x: ZERO,
@@ -324,7 +324,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: ZERO,
-        wantIntersection: ZERO,
+        wantIntersection: ZERO
       },
       {
         x: ZERO,
@@ -334,7 +334,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(0, Math.PI),
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: ZERO,
@@ -344,7 +344,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD1,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: ZERO,
@@ -354,7 +354,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: ZERO,
@@ -364,7 +364,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD4,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: ZERO,
@@ -374,7 +374,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: ZERO,
+        wantIntersection: ZERO
       },
       {
         x: ZERO,
@@ -384,7 +384,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD123,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
 
       {
@@ -395,7 +395,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: PI2,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI2,
@@ -405,7 +405,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: PI2,
+        wantIntersection: PI2
       },
       {
         x: PI2,
@@ -415,7 +415,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD1,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI2,
@@ -425,7 +425,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(Math.PI / 2, Math.PI),
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI2,
@@ -435,7 +435,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: PI2,
-        wantIntersection: PI2,
+        wantIntersection: PI2
       },
       {
         x: PI2,
@@ -445,7 +445,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD2,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI2,
@@ -455,7 +455,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI2,
@@ -465,7 +465,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: PI2,
+        wantIntersection: PI2
       },
       {
         x: PI2,
@@ -475,7 +475,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: PI2,
+        wantIntersection: PI2
       },
 
       {
@@ -486,7 +486,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: PI,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI,
@@ -496,7 +496,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: PI,
@@ -506,7 +506,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(Math.PI, 0),
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI,
@@ -516,7 +516,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: PI,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: PI,
@@ -526,7 +526,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(Math.PI / 2, Math.PI),
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI,
@@ -536,7 +536,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: PI,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: PI,
@@ -546,7 +546,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD3,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: PI,
@@ -556,7 +556,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(0, Math.PI),
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: PI,
@@ -566,7 +566,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
 
       {
@@ -577,7 +577,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: MIPI,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MIPI,
@@ -587,7 +587,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: MIPI,
@@ -598,7 +598,7 @@ describe('s1.Interval', () => {
         xInteriorIntersectsY: false,
 
         wantUnion: QUAD34,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MIPI,
@@ -608,7 +608,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: MIPI,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: MIPI,
@@ -618,7 +618,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD2,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MIPI,
@@ -628,7 +628,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: MIPI,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: MIPI,
@@ -638,7 +638,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: Interval.fromEndpoints(-Math.PI, -Math.PI / 2),
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MIPI,
@@ -648,7 +648,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: MIPI,
@@ -658,7 +658,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
 
       {
@@ -669,7 +669,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: QUAD12,
@@ -679,7 +679,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: QUAD12,
+        wantIntersection: QUAD12
       },
       {
         x: QUAD12,
@@ -689,7 +689,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: ZERO,
+        wantIntersection: ZERO
       },
       {
         x: QUAD12,
@@ -699,7 +699,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: QUAD12,
@@ -709,7 +709,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD12,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: QUAD12,
@@ -719,7 +719,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD12,
-        wantIntersection: QUAD12,
+        wantIntersection: QUAD12
       },
       {
         x: QUAD12,
@@ -729,7 +729,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD123,
-        wantIntersection: QUAD2,
+        wantIntersection: QUAD2
       },
       {
         x: QUAD12,
@@ -739,7 +739,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: FULL,
-        wantIntersection: QUAD12,
+        wantIntersection: QUAD12
       },
 
       {
@@ -750,7 +750,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: QUAD23,
@@ -760,7 +760,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: FULL,
-        wantIntersection: QUAD23,
+        wantIntersection: QUAD23
       },
       {
         x: QUAD23,
@@ -770,7 +770,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD234,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: QUAD23,
@@ -780,7 +780,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: QUAD23,
@@ -790,7 +790,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: QUAD23,
@@ -800,7 +800,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD123,
-        wantIntersection: QUAD2,
+        wantIntersection: QUAD2
       },
       {
         x: QUAD23,
@@ -810,7 +810,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23,
-        wantIntersection: QUAD23,
+        wantIntersection: QUAD23
       },
       {
         x: QUAD23,
@@ -820,7 +820,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD234,
-        wantIntersection: Interval.fromEndpoints(-Math.PI, -Math.PI / 2),
+        wantIntersection: Interval.fromEndpoints(-Math.PI, -Math.PI / 2)
       },
 
       {
@@ -831,7 +831,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD123,
-        wantIntersection: Interval.fromEndpoints(Math.PI / 2, Math.PI / 2),
+        wantIntersection: Interval.fromEndpoints(Math.PI / 2, Math.PI / 2)
       },
       {
         x: QUAD2,
@@ -841,7 +841,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: QUAD3,
@@ -851,7 +851,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD23,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: QUAD2,
@@ -861,7 +861,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD2,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: QUAD2,
@@ -871,7 +871,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD2,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
       {
         x: QUAD3,
@@ -881,7 +881,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD3,
-        wantIntersection: PI,
+        wantIntersection: PI
       },
       {
         x: QUAD3,
@@ -891,7 +891,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: false,
         wantUnion: QUAD3,
-        wantIntersection: MIPI,
+        wantIntersection: MIPI
       },
 
       {
@@ -902,7 +902,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD12,
-        wantIntersection: MID12,
+        wantIntersection: MID12
       },
       {
         x: MID12,
@@ -912,7 +912,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD12,
-        wantIntersection: MID12,
+        wantIntersection: MID12
       },
 
       {
@@ -923,7 +923,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD12EPS,
-        wantIntersection: QUAD2HI,
+        wantIntersection: QUAD2HI
       },
       {
         x: MID23,
@@ -933,7 +933,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD12EPS,
-        wantIntersection: QUAD2HI,
+        wantIntersection: QUAD2HI
       },
 
       {
@@ -944,7 +944,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD412EPS,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MID34,
@@ -954,7 +954,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUAD412EPS,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
 
       {
@@ -965,7 +965,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUADEPS12,
-        wantIntersection: QUAD1LO,
+        wantIntersection: QUAD1LO
       },
       {
         x: MID41,
@@ -975,7 +975,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUADEPS12,
-        wantIntersection: QUAD1LO,
+        wantIntersection: QUAD1LO
       },
 
       {
@@ -986,7 +986,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUADEPS23,
-        wantIntersection: QUAD2LO,
+        wantIntersection: QUAD2LO
       },
       {
         x: MID12,
@@ -996,7 +996,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUADEPS23,
-        wantIntersection: QUAD2LO,
+        wantIntersection: QUAD2LO
       },
       {
         x: QUAD23,
@@ -1006,7 +1006,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23,
-        wantIntersection: MID23,
+        wantIntersection: MID23
       },
       {
         x: MID23,
@@ -1016,7 +1016,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23,
-        wantIntersection: MID23,
+        wantIntersection: MID23
       },
       {
         x: QUAD23,
@@ -1026,7 +1026,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23EPS,
-        wantIntersection: QUAD3HI,
+        wantIntersection: QUAD3HI
       },
       {
         x: MID34,
@@ -1036,7 +1036,7 @@ describe('s1.Interval', () => {
         xIntersectsY: true,
         xInteriorIntersectsY: true,
         wantUnion: QUAD23EPS,
-        wantIntersection: QUAD3HI,
+        wantIntersection: QUAD3HI
       },
       {
         x: QUAD23,
@@ -1046,7 +1046,7 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUADEPS123,
-        wantIntersection: EMPTY,
+        wantIntersection: EMPTY
       },
       {
         x: MID41,
@@ -1056,8 +1056,8 @@ describe('s1.Interval', () => {
         xIntersectsY: false,
         xInteriorIntersectsY: false,
         wantUnion: QUADEPS123,
-        wantIntersection: EMPTY,
-      },
+        wantIntersection: EMPTY
+      }
     ]
     tests.forEach((test) => {
       ok(test.x.containsInterval(test.y) === test.xContainsY)
@@ -1081,7 +1081,7 @@ describe('s1.Interval', () => {
       { interval: QUAD1, points: [-0.9 * Math.PI, -Math.PI / 2], want: QUAD123 },
       { interval: FULL, points: [0], want: FULL },
       { interval: FULL, points: [Math.PI], want: FULL },
-      { interval: FULL, points: [-Math.PI], want: FULL },
+      { interval: FULL, points: [-Math.PI], want: FULL }
     ]
     tests.forEach((test) => {
       let got = test.interval
@@ -1110,7 +1110,7 @@ describe('s1.Interval', () => {
       { interval: QUAD234, margin: -27, want: EMPTY },
       { interval: QUAD123, margin: -Math.PI / 2, want: QUAD2 },
       { interval: QUAD341, margin: -Math.PI / 2, want: QUAD4 },
-      { interval: QUAD412, margin: -Math.PI / 2, want: QUAD1 },
+      { interval: QUAD412, margin: -Math.PI / 2, want: QUAD1 }
     ]
     tests.forEach((test) => {
       const got = test.interval.expanded(test.margin)
@@ -1164,7 +1164,7 @@ describe('s1.Interval', () => {
       {
         a: Interval.fromEndpoints(Math.PI - 0.5 * lo, -Math.PI + 0.5 * lo),
         b: Interval.fromEndpoints(-Math.PI + 0.5 * lo, Math.PI - 0.5 * lo),
-        want: false,
+        want: false
       },
 
       { a: Interval.fromEndpoints(1 - lo, 2 + lo), b: Interval.fromEndpoints(1, 2), want: true },
@@ -1173,10 +1173,10 @@ describe('s1.Interval', () => {
         a: Interval.fromEndpoints(
           2 - lo,
 
-          1 + lo,
+          1 + lo
         ),
         b: Interval.fromEndpoints(2, 1),
-        want: true,
+        want: true
       },
       { a: Interval.fromEndpoints(2 + lo, 1 - lo), b: Interval.fromEndpoints(2, 1), want: true },
       { a: Interval.fromEndpoints(1 - hi, 2 + lo), b: Interval.fromEndpoints(1, 2), want: false },
@@ -1186,7 +1186,7 @@ describe('s1.Interval', () => {
       { a: Interval.fromEndpoints(1 - lo, 2 + hi), b: Interval.fromEndpoints(1, 2), want: false },
       { a: Interval.fromEndpoints(1 + lo, 2 - hi), b: Interval.fromEndpoints(1, 2), want: false },
       { a: Interval.fromEndpoints(2 - lo, 1 + hi), b: Interval.fromEndpoints(2, 1), want: false },
-      { a: Interval.fromEndpoints(2 + lo, 1 - hi), b: Interval.fromEndpoints(2, 1), want: false },
+      { a: Interval.fromEndpoints(2 + lo, 1 - hi), b: Interval.fromEndpoints(2, 1), want: false }
     ]
 
     tests.forEach((test) => {
@@ -1212,7 +1212,7 @@ describe('s1.Interval', () => {
       {
         i: Interval.fromEndpoints(-0.139626, 0.349066),
         y: Interval.fromEndpoints(0.139626, 0.139626),
-        want: 0.279252 * RADIAN,
+        want: 0.279252 * RADIAN
       },
       { i: Interval.fromEndpoints(0.2, 0.4), y: Interval.fromEndpoints(0.1, 0.5), want: 0 * RADIAN },
       { i: Interval.fromEndpoints(0, 0), y: Interval.emptyInterval(), want: Math.PI * RADIAN },
@@ -1222,7 +1222,7 @@ describe('s1.Interval', () => {
       { i: QUAD12, y: QUAD123, want: 0.0 },
       { i: Interval.fromEndpoints(-0.1, 0.2), y: inInterval, want: 3.0 },
       { i: Interval.fromEndpoints(0.1, 0.2), y: inInterval, want: 3.0 - 0.1 },
-      { i: Interval.fromEndpoints(-0.2, -0.1), y: inInterval, want: 3.0 - 0.1 },
+      { i: Interval.fromEndpoints(-0.2, -0.1), y: inInterval, want: 3.0 - 0.1 }
     ]
 
     tests.forEach((test) => {
@@ -1246,7 +1246,7 @@ describe('s1.Interval', () => {
       { interval: r2, have: -1e-15, want: -Math.PI + 0.1 },
       { interval: FULL, have: 0, want: 0 },
       { interval: FULL, have: Math.PI, want: Math.PI },
-      { interval: FULL, have: -Math.PI, want: Math.PI },
+      { interval: FULL, have: -Math.PI, want: Math.PI }
     ]
 
     tests.forEach((test) => {
