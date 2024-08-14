@@ -1,6 +1,39 @@
-/** clampInt returns the number closest to x within the range min..max. */
+import type { Angle } from '../s1/angle'
+import type { ChordAngle } from '../s1/chordangle'
+
+/** Returns the number closest to x within the range min..max. */
 export const clampInt = <T extends number | bigint>(x: T, min: T, max: T): T => {
   if (x < min) return min
   if (x > max) return max
   return x
 }
+
+/** Returns the largest of the given numbers. */
+export const max = <T extends number | bigint>(first: T, ...others: T[]): T => {
+  let max = first
+  for (const y of others) {
+    if (y > max) max = y
+  }
+  return max
+}
+
+/** Returns the smallest of the given numbers. */
+export const min = <T extends number | bigint>(first: T, ...others: T[]): T => {
+  let min = first
+  for (const y of others) {
+    if (y < min) min = y
+  }
+  return min
+}
+
+/** Returns the largest of the given Angle values. */
+export const maxAngle = (first: Angle, ...others: Angle[]) => max<Angle>(first, ...others)
+
+/** Returns the smallest of the given Angle values. */
+export const minAngle = (first: Angle, ...others: Angle[]) => min<Angle>(first, ...others)
+
+/** Returns the largest of the given ChordAngle values. */
+export const maxChordAngle = (first: ChordAngle, ...others: ChordAngle[]) => max<ChordAngle>(first, ...others)
+
+/** Returns the smallest of the given ChordAngle values. */
+export const minChordAngle = (first: ChordAngle, ...others: ChordAngle[]) => min<ChordAngle>(first, ...others)

@@ -55,6 +55,14 @@ export const pointsNear = (a: Point, b: Point): boolean => {
   return float64Near(a.x, b.x) && float64Near(a.y, b.y) && float64Near(a.y, b.y)
 }
 
+/**
+ * Reports whether the two points are within the given distance of each other.
+ * This is the same as Point.approxEqual but permits specifying the epsilon.
+ */
+export const pointsApproxEqual = (a: Point, b: Point, epsilon: number): boolean => {
+  return a.vector.angle(b.vector) <= epsilon
+}
+
 /** Returns a uniformly distributed integer in the range [0,n). */
 export const randomUniformInt = (n: number): number => {
   return Math.abs(Math.floor(randomFloat64() * n))
