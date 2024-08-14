@@ -20,6 +20,7 @@ import { NEGATIVE_CHORDANGLE, RIGHT_CHORDANGLE, STRAIGHT_CHORDANGLE } from '../s
 import { pointArea } from './point_measures'
 import { updateMaxDistance, updateMinDistance } from './edge_distances'
 import { maxChordAngle, minChordAngle } from './util'
+import { Region } from './Region'
 
 const POLE_MIN_LAT = Math.asin(Math.sqrt(1.0 / 3)) - 0.5 * DBL_EPSILON
 
@@ -28,7 +29,7 @@ const POLE_MIN_LAT = Math.asin(Math.sqrt(1.0 / 3)) - 0.5 * DBL_EPSILON
  * Unlike CellIDs, it supports efficient containment and intersection tests.
  * However, it is also a more expensive representation.
  */
-export class Cell {
+export class Cell implements Region {
   face: number
   level: number
   orientation: number

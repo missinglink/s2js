@@ -12,6 +12,8 @@ import { Interval as S1Interval } from '../s1/Interval'
 import { MinWidthMetric } from './Metric_constants'
 import * as cellid from './cellid'
 import type { CellID } from './cellid'
+import { Region } from './Region'
+import { Cell } from './Cell'
 
 export const CENTER_POINT = Point.fromCoords(1.0, 0, 0)
 
@@ -49,7 +51,7 @@ export const CENTER_POINT = Point.fromCoords(1.0, 0, 0)
  *
  * @beta incomplete
  */
-export class Cap {
+export class Cap implements Region {
   center: Point
   rad: ChordAngle
 
@@ -205,10 +207,83 @@ export class Cap {
   }
 
   /**
+   * Reports whether the cap intersects the cell.
+   */
+  intersectsCell(cell: Cell): boolean {
+    // If the cap contains any cell vertex, return true.
+    const vertices: Point[] = []
+    for (let k = 0; k < 4; k++) {
+      vertices[k] = cell.vertex(k)
+      if (this.containsPoint(vertices[k])) return true
+    }
+    return this._intersects(cell, vertices)
+  }
+
+  /**
+   * Reports whether the cap intersects any point of the cell excluding
+   * its vertices (which are assumed to already have been checked).
+   */
+  private _intersects(cell: Cell, vertices: Point[]): boolean {
+    // If the cap is a hemisphere or larger, the cell and the complement of the cap
+    // are both convex. Therefore since no vertex of the cell is contained, no other
+    // interior point of the cell is contained either.
+    if (this.rad >= RIGHT_CHORDANGLE) return false
+
+    // We need to check for empty caps due to the center check just below.
+    if (this.isEmpty()) return false
+
+    // Optimization: return true if the cell contains the cap center. This allows half
+    // of the edge checks below to be skipped.
+    if (cell.containsPoint(this.center)) return true
+
+    // At this point we know that the cell does not contain the cap center, and the cap
+    // does not contain any cell vertex. The only way that they can intersect is if the
+    // cap intersects the interior of some edge.
+    const sin2Angle = chordangle.sin2(this.rad)
+    for (let k = 0; k < 4; k++) {
+      const edge = cell.edge(k).vector
+      const dot = this.center.vector.dot(edge)
+      if (dot > 0) {
+        // The center is in the interior half-space defined by the edge. We do not need
+        // to consider these edges, since if the cap intersects this edge then it also
+        // intersects the edge on the opposite side of the cell, because the center is
+        // not contained with the cell.
+        continue
+      }
+
+      // The Norm2() factor is necessary because "edge" is not normalized.
+      if (dot * dot > sin2Angle * edge.norm2()) return false
+
+      // Otherwise, the great circle containing this edge intersects the interior of the cap. We just
+      // need to check whether the point of closest approach occurs between the two edge endpoints.
+      const dir = edge.cross(this.center.vector)
+      if (dir.dot(vertices[k].vector) < 0 && dir.dot(vertices[(k + 1) & 3].vector) > 0) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  /**
    * Reports whether this cap contains the point.
    */
   containsPoint(p: Point): boolean {
     return Point.chordAngleBetweenPoints(this.center, p) <= this.rad
+  }
+
+  /** Reports whether the cap contains the given cell. */
+  containsCell(cell: Cell): boolean {
+    // If the cap does not contain all cell vertices, return false.
+    const vertices: Point[] = []
+    for (let k = 0; k < 4; k++) {
+      vertices[k] = cell.vertex(k)
+      if (!this.containsPoint(vertices[k])) {
+        return false
+      }
+    }
+    // Otherwise, return true if the complement of the cap does not intersect the cell.
+    return !this.complement()._intersects(cell, vertices)
   }
 
   /**
