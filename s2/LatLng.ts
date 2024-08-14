@@ -34,7 +34,7 @@ export class LatLng {
   /**
    * Returns the latitude of the given point.
    */
-  private static latitude(p: Point): number {
+  static latitude(p: Point): number {
     const v = p.vector
     return Math.atan2(v.z, Math.sqrt(v.x * v.x + v.y * v.y))
   }
@@ -42,7 +42,7 @@ export class LatLng {
   /**
    * Returns the longitude of the given point.
    */
-  private static longitude(p: Point): number {
+  static longitude(p: Point): number {
     return Math.atan2(p.vector.y, p.vector.x)
   }
 

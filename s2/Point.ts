@@ -226,6 +226,10 @@ export class Point {
     return vertices
   }
 
+  toString(): string {
+    return this.vector.toString()
+  }
+
   /**
    * Returns a unit-length vector that is orthogonal to this point.
    * Satisfies Ortho(-a) = -Ortho(a) for all a.

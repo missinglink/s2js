@@ -48,6 +48,11 @@ export const randomFrameAtPoint = (z: Point): Matrix3x3 => {
  */
 export const randomFrame = (): Matrix3x3 => randomFrameAtPoint(randomPoint())
 
+/** Reports whether the two values are within the default epsilon. */
+export const float64Eq = (x: number, y: number): boolean => {
+  return float64Near(x, y, 1e-10) /** Set a default epsilon value */
+}
+
 /**
  * Returns true IFF all vectors in both points are within epsilon distance of each other.
  */
@@ -86,11 +91,23 @@ export const randomUint64 = (): bigint => randomBigIntN(64)
 
 /**
  * Returns a random CellID at the given level.
- * The distribution is uniform over the space of cell ids, but only
- * approximately uniform over the surface of the sphere.
+ * The distribution is uniform over the space of cell ids, but only approximately uniform over the surface of the sphere.
  */
 export const randomCellIDForLevel = (level: number): CellID => {
   const face = randomUniformInt(NUM_FACES)
   const pos = randomBigIntN(POS_BITS) | (level === MAX_LEVEL ? 0n : 1n)
   return cellid.fromFacePosLevel(face, pos, level)
+}
+
+/**
+ * Returns a random CellID at a randomly chosen level.
+ * The distribution is uniform over the space of cell ids, but only approximately uniform over the surface of the sphere.
+ */
+export const randomCellID = (): CellID => {
+  return randomCellIDForLevel(randomUniformInt(MAX_LEVEL + 1))
+}
+
+/** Returns true with a probability of 1/n. */
+export const oneIn = (n: number): boolean => {
+  return randomUniformInt(n) == 0
 }
