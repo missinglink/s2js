@@ -85,7 +85,7 @@ export const rangeMax = (ci: CellID): CellID => {
  * Returns true iff ci contains oci.
  */
 export const contains = (ci: CellID, oci: CellID) => {
-  return ci !== oci && rangeMin(ci) <= oci && oci <= rangeMax(ci)
+  return rangeMin(ci) <= oci && oci <= rangeMax(ci)
 }
 
 /**
@@ -133,7 +133,7 @@ export const fromFacePosLevel = (face: number, pos: bigint, level: number): Cell
  * @category Constructors
  */
 export const fromFace = (face: number): CellID => {
-  return BigInt(face << POS_BITS) + lsbForLevel(0)
+  return (BigInt(face) << BigInt(POS_BITS)) + lsbForLevel(0)
 }
 
 /**
@@ -204,7 +204,7 @@ export const fromFaceIJ = (f: number, i: number, j: number): CellID => {
 /**
  * Uses the global lookupIJ table to unfiddle the bits of ci.
  */
-export const faceIJOrientation = (ci: bigint): { f: number; i: number; j: number; orientation: number } => {
+export const faceIJOrientation = (ci: CellID): { f: number; i: number; j: number; orientation: number } => {
   let f = face(ci)
   let orientation = f & SWAP_MASK
   let nbits = MAX_LEVEL - 7 * LOOKUP_BITS // first iteration
@@ -244,7 +244,7 @@ export const faceIJOrientation = (ci: bigint): { f: number; i: number; j: number
 /**
  * Returns the Face/Si/Ti coordinates of the center of the cell.
  */
-export const faceSiTi = (ci: bigint): { face: number; si: number; ti: number } => {
+export const faceSiTi = (ci: CellID): { face: number; si: number; ti: number } => {
   const { f: face, i, j } = faceIJOrientation(ci)
 
   let delta = 0
@@ -258,7 +258,7 @@ export const faceSiTi = (ci: bigint): { face: number; si: number; ti: number } =
  * Returns an unnormalized r3 vector from the origin through the center
  * of the s2 cell on the sphere.
  */
-const rawPoint = (ci: CellID): Vector => {
+export const rawPoint = (ci: CellID): Vector => {
   const { face, si, ti } = faceSiTi(ci)
   return faceSiTiToXYZ(face, si, ti).vector
 }
