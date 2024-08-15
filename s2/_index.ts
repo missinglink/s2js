@@ -13,3 +13,4 @@
 export * as cellid from './cellid'
 export { LatLng } from './LatLng'
 export { Cell } from './Cell'
+export { CellUnion } from './CellUnion'

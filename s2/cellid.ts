@@ -42,6 +42,18 @@ export const parent = (ci: CellID, level: number): CellID => {
 }
 
 /**
+ * Returns the immediate parent of the cell.
+ * This method is cheaper than `parent`, but assumes the cell is not a face cell.
+ */
+export const immediateParent = (ci: CellID): CellID => {
+  const nlsb = lsb(ci) << 2n
+  return (ci & -nlsb) | nlsb
+}
+
+/** Returns whether this is a top-level (face) cell. */
+export const isFace = (ci: CellID): boolean => (ci & (lsbForLevel(0) - 1n)) === 0n
+
+/**
  * Returns true is cell id is valid.
  */
 export const valid = (ci: CellID): boolean => {
@@ -59,13 +71,75 @@ export const isLeaf = (ci: CellID): boolean => (ci & 1n) != 0n
 /**
  * Returns the least significant bit that is set
  */
-const lsb = (ci: CellID) => ci & -ci
+export const lsb = (ci: CellID) => ci & -ci
 
 /**
  * Returns the lowest-numbered bit that is on for cells at the given level.
  */
-const lsbForLevel = (level: number): CellID => {
+export const lsbForLevel = (level: number): CellID => {
   return 1n << BigInt(2 * (MAX_LEVEL - level))
+}
+
+/**
+ * Returns the four immediate children of this cell.
+ * If the cell is a leaf cell, it returns four identical cells that are not the children.
+ */
+export const children = (ci: CellID): [CellID, CellID, CellID, CellID] => {
+  const ch: [CellID, CellID, CellID, CellID] = [ci, ci, ci, ci]
+  let _lsb = lsb(ci)
+  ch[0] = ci - _lsb + (_lsb >> 2n)
+  _lsb >>= 1n
+  ch[1] = ch[0] + _lsb
+  ch[2] = ch[1] + _lsb
+  ch[3] = ch[2] + _lsb
+  return ch
+}
+
+/**
+ * Returns all neighbors of this cell at the given level. Two cells X and Y are neighbors
+ * if their boundaries intersect but their interiors do not. In particular, two cells that
+ * intersect at a single point are neighbors. Note that for cells adjacent to a face vertex,
+ * the same neighbor may be returned more than once. There could be up to eight neighbors
+ * including the diagonal ones that share the vertex.
+ *
+ * This requires level >= ci.level().
+ */
+export const allNeighbors = (ci: CellID, lvl: number): CellID[] => {
+  const neighbors: CellID[] = []
+  let { f, i, j } = faceIJOrientation(ci)
+
+  // Find the coordinates of the lower left-hand leaf cell. We need to
+  // normalize (i,j) to a known position within the cell because level
+  // may be larger than this cell's level.
+  const size = sizeIJ(level(ci))
+  i &= -size
+  j &= -size
+
+  const nbrSize = sizeIJ(lvl)
+
+  // Compute the top-bottom, left-right, and diagonal neighbors in one pass.
+  for (let k = -nbrSize; ; k += nbrSize) {
+    let sameFace: boolean
+
+    if (k < 0) {
+      sameFace = j + k >= 0
+    } else if (k >= size) {
+      sameFace = j + k < MAX_SIZE
+    } else {
+      sameFace = true
+      // Top and bottom neighbors.
+      neighbors.push(parent(fromFaceIJSame(f, i + k, j - nbrSize, j - size >= 0), lvl))
+      neighbors.push(parent(fromFaceIJSame(f, i + k, j + size, j + size < MAX_SIZE), lvl))
+    }
+
+    // Left, right, and diagonal neighbors.
+    neighbors.push(parent(fromFaceIJSame(f, i - nbrSize, j + k, sameFace && i - size >= 0), lvl))
+    neighbors.push(parent(fromFaceIJSame(f, i + size, j + k, sameFace && i + size < MAX_SIZE), lvl))
+
+    if (k >= size) break
+  }
+
+  return neighbors
 }
 
 // Ranges
@@ -456,3 +530,53 @@ export const next = (ci: CellID): CellID => {
 export const prev = (ci: CellID): CellID => {
   return ci - (lsb(ci) << 1n)
 }
+
+/**
+ * Returns the largest cell with the same RangeMin such that
+ * RangeMax < limit.RangeMin. It returns limit if no such cell exists.
+ * This method can be used to generate a small set of CellIDs that covers
+ * a given range (a tiling). This example shows how to generate a tiling
+ * for a semi-open range of leaf cells [start, limit):
+ *
+ * for id = start.maxTile(limit); id !== limit; id = id.next().maxTile(limit)) { ... }
+ *
+ * Note that in general the cells in the tiling will be of different sizes;
+ * they gradually get larger (near the middle of the range) and then
+ * gradually get smaller as limit is approached.
+ */
+export const maxTile = (ci: CellID, limit: CellID): CellID => {
+  const start = rangeMin(ci)
+  if (start >= rangeMin(limit)) return limit
+
+  if (rangeMax(ci) >= limit) {
+    // The cell is too large, shrink it. Note that when generating coverings
+    // of CellID ranges, this loop usually executes only once. Also because
+    // ci.RangeMin() < limit.RangeMin(), we will always exit the loop by the
+    // time we reach a leaf cell.
+    while (true) {
+      ci = children(ci)[0]
+      if (rangeMax(ci) < limit) break
+    }
+
+    return ci
+  }
+
+  // The cell may be too small. Grow it if necessary.
+  while (!isFace(ci)) {
+    const parent = immediateParent(ci)
+    if (rangeMin(parent) !== start || rangeMax(parent) >= limit) break
+    ci = parent
+  }
+
+  return ci
+}
+
+/**
+ * Sorts CellIDs ascending
+ */
+export const ascending = (a: CellID, b: CellID) => (a < b ? -1 : a > b ? 1 : 0)
+
+/**
+ * Sorts CellIDs descending
+ */
+export const descending = (a: CellID, b: CellID) => (a > b ? -1 : a < b ? 1 : 0)

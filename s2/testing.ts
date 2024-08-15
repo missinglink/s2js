@@ -5,6 +5,8 @@ import * as matrix from './matrix3x3'
 import { Point } from './Point'
 import * as cellid from './cellid'
 import type { CellID } from './cellid'
+import { Rect } from './Rect'
+import { Cap } from './Cap'
 
 /** The Earth's mean radius in kilometers (according to NASA). */
 export const EARTH_RADIUS_KM = 6371.01
@@ -110,4 +112,27 @@ export const randomCellID = (): CellID => {
 /** Returns true with a probability of 1/n. */
 export const oneIn = (n: number): boolean => {
   return randomUniformInt(n) == 0
+}
+
+/**
+ * Reports whether the two rectangles are within the given tolerances
+ * at each corner from each other. The tolerances are specific to each axis.
+ */
+export const rectsApproxEqual = (a: Rect, b: Rect, tolLat: number, tolLng: number): boolean => {
+  return (
+    Math.abs(a.lat.lo - b.lat.lo) < tolLat &&
+    Math.abs(a.lat.hi - b.lat.hi) < tolLat &&
+    Math.abs(a.lng.lo - b.lng.lo) < tolLng &&
+    Math.abs(a.lng.hi - b.lng.hi) < tolLng
+  )
+}
+
+/**
+ * Returns a cap with a random axis such that the log of its area is
+ * uniformly distributed between the logs of the two given values.
+ * The log of the cap angle is also approximately uniformly distributed.
+ */
+export const randomCap = (minArea: number, maxArea: number): Cap => {
+  const capArea = maxArea * Math.pow(minArea / maxArea, randomFloat64())
+  return Cap.fromCenterArea(randomPoint(), capArea)
 }
