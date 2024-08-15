@@ -1,3 +1,4 @@
+import { BigFloat, PreciseVector } from '../r3/PreciseVector'
 import type { Angle } from '../s1/angle'
 import { Cap } from './Cap'
 import { Cell } from './Cell'
@@ -259,8 +260,14 @@ export class CellUnion extends Array<CellID> implements Region {
     let centroid = new Point(0, 0, 0)
 
     for (const ci of this) {
-      const area = AvgAreaMetric.value(cellid.level(ci))
-      centroid = Point.fromVector(centroid.vector.add(cellid.point(ci).vector.mul(area)))
+      // const area = AvgAreaMetric.value(cellid.level(ci))
+      // centroid = Point.fromVector(centroid.vector.add(cellid.point(ci).vector.mul(area)))
+
+      // missinglink: use precise vector arithmetic
+      const area = new BigFloat(AvgAreaMetric.value(cellid.level(ci)))
+      const pcv = PreciseVector.fromVector(centroid.vector)
+      const ppv = PreciseVector.fromVector(cellid.point(ci).vector)
+      centroid = Point.fromVector(pcv.add(ppv.mul(area)).vector())
     }
 
     if (centroid.equals(new Point(0, 0, 0))) centroid = Point.fromCoords(1, 0, 0)

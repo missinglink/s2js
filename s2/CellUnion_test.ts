@@ -156,6 +156,34 @@ describe('s2.CellUnion', () => {
     }
   })
 
+  test('capBound precision', () => {
+    const tests = [
+      { union: new CellUnion(2810246167479189504n, 12465963768561532928n), cellid: 12465963768561532928n },
+      {
+        union: new CellUnion(
+          2990460521318187008n,
+          2992360477410983936n,
+          4251398048237748224n,
+          9511602413006487552n,
+          13042424520864956416n
+        ),
+        cellid: 4251398048237748224n
+      }
+    ]
+
+    tests.forEach((test) => {
+      // console.error('---')
+      // test.union.forEach((ci) => {
+      //   console.error(ci.toString(2).padStart(64, '0'))
+      // })
+      const cb = test.union.capBound()
+      // console.error('cap', cb.toString())
+      // console.error('cap center', cb.center)
+      const c = Cell.fromCellID(test.cellid)
+      ok(cb.containsCell(c), `${cb.toString()} containsCell ${c.toString()}`)
+    })
+  })
+
   test('normalize pseudo random', () => {
     let inSum = 0
     let outSum = 0

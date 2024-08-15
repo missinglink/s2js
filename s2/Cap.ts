@@ -278,9 +278,7 @@ export class Cap implements Region {
     const vertices: Point[] = []
     for (let k = 0; k < 4; k++) {
       vertices[k] = cell.vertex(k)
-      if (!this.containsPoint(vertices[k])) {
-        return false
-      }
+      if (!this.containsPoint(vertices[k])) return false
     }
     // Otherwise, return true if the complement of the cap does not intersect the cell.
     return !this.complement()._intersects(cell, vertices)
@@ -301,7 +299,7 @@ export class Cap implements Region {
     if (this.isFull()) return Cap.emptyCap()
     if (this.isEmpty()) return Cap.fullCap()
     return Cap.fromCenterChordAngle(
-      Point.fromCoords(-this.center.x, -this.center.y, -this.center.z),
+      Point.fromVector(this.center.vector.mul(-1)),
       chordangle.sub(STRAIGHT_CHORDANGLE, this.rad)
     )
   }
