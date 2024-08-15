@@ -11,6 +11,11 @@
  * @module s2
  */
 export * as cellid from './cellid'
-export { LatLng } from './LatLng'
+export { Cap } from './Cap'
 export { Cell } from './Cell'
 export { CellUnion } from './CellUnion'
+export { Metric } from './Metric'
+export { LatLng } from './LatLng'
+export { Point } from './Point'
+export { Rect } from './Rect'
+export { Region } from './Region'
