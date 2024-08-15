@@ -401,9 +401,10 @@ export class Cap implements Region {
     if (this.isEmpty()) return other
     if (other.isEmpty()) return this
 
+    // We round up the distance to ensure that the cap is actually contained.
     const dist = chordangle.add(Point.chordAngleBetweenPoints(this.center, other.center), other.rad)
     const newRad = chordangle.expanded(dist, DBL_EPSILON * dist)
-    if (newRad) this.rad = newRad
+    if (newRad > this.rad) this.rad = newRad
 
     return this
   }

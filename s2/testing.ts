@@ -70,7 +70,7 @@ export const pointsApproxEqual = (a: Point, b: Point, epsilon: number): boolean 
 
 /** Returns a uniformly distributed integer in the range [0,n). */
 export const randomUniformInt = (n: number): number => {
-  return Math.abs(Math.floor(randomFloat64() * n))
+  return Math.floor(Math.random() * n)
 }
 
 /** Returns a random hex string of length chars. */
@@ -95,7 +95,7 @@ export const randomUint64 = (): bigint => randomBigIntN(64)
  */
 export const randomCellIDForLevel = (level: number): CellID => {
   const face = randomUniformInt(NUM_FACES)
-  const pos = randomBigIntN(POS_BITS) | (level === MAX_LEVEL ? 0n : 1n)
+  const pos = randomUint64() & ((1n << BigInt(POS_BITS)) - 1n)
   return cellid.fromFacePosLevel(face, pos, level)
 }
 

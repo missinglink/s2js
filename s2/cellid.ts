@@ -169,7 +169,7 @@ export const fromLatLng = (ll: LatLng): CellID => {
 
 /** Converts a value in ST coordinates to a value in IJ coordinates. */
 export const stToIJ = (s: number): number => {
-  return clampInt(MAX_SIZE * s, 0, MAX_SIZE - 1)
+  return clampInt(Math.floor(MAX_SIZE * s), 0, MAX_SIZE - 1)
 }
 
 export const sizeIJ = (level: number): number => {
@@ -251,13 +251,12 @@ export const fromFaceIJWrap = (f: number, i: number, j: number): CellID => {
   // coordinates enough so that we end up in the wrong leaf cell.
   const scale = 1.0 / MAX_SIZE
   const limit = nextAfter(1, 2)
-  const u = Math.max(-limit, Math.min(limit, scale * ((i << 1) + 1 - MAX_SIZE)))
-  const v = Math.max(-limit, Math.min(limit, scale * ((j << 1) + 1 - MAX_SIZE)))
 
-  // Find the leaf cell coordinates on the adjacent face, and convert
-  // them to a cell id at the appropriate level.
-  const [newFace, newU, newV] = xyzToFaceUV(faceUVToXYZ(f, u, v))
-  return fromFaceIJ(newFace, stToIJ(0.5 * (newU + 1)), stToIJ(0.5 * (newV + 1)))
+  let u = Math.max(-limit, Math.min(limit, scale * (Number(BigInt(i) << 1n) + 1 - MAX_SIZE)))
+  let v = Math.max(-limit, Math.min(limit, scale * (Number(BigInt(j) << 1n) + 1 - MAX_SIZE)))
+
+  ;[f, u, v] = xyzToFaceUV(faceUVToXYZ(f, u, v))
+  return fromFaceIJ(f, stToIJ(0.5 * (u + 1)), stToIJ(0.5 * (v + 1)))
 }
 
 /**
