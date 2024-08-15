@@ -226,6 +226,16 @@ export class Point {
     return vertices
   }
 
+  /**
+   * Returns a unit-length vector to use as the reference direction for
+   * deciding whether a polygon with semi-open boundaries contains the given vertex "a"
+   * (see ContainsVertexQuery). The result is unit length and is guaranteed
+   * to be different from the given point "a".
+   */
+  referenceDir(): Point {
+    return Point.ortho(this)
+  }
+
   toString(): string {
     return this.vector.toString()
   }

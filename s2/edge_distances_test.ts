@@ -1,5 +1,5 @@
 import { test, describe } from 'node:test'
-import { ok, equal } from 'node:assert/strict'
+import { ok } from 'node:assert/strict'
 import { Point } from './Point'
 import { LatLng } from './LatLng'
 import { Vector } from '../r3/Vector'
@@ -426,7 +426,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(1, 1, 0),
   //       distRads: Math.PI / 4,
   //       wantA: Point.fromCoords(1, 0, 1),
-  //       wantB: Point.fromCoords(1, 0, 0),
+  //       wantB: Point.fromCoords(1, 0, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, -1, 0),
@@ -435,7 +435,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(1, 0, 1),
   //       distRads: Math.PI / 4,
   //       wantA: Point.fromCoords(1, 0, 0),
-  //       wantB: Point.fromCoords(1, 0, 1),
+  //       wantB: Point.fromCoords(1, 0, 1)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -444,7 +444,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 0),
   //       distRads: Math.PI / 2,
   //       wantA: Point.fromCoords(1, 0, 0),
-  //       wantB: Point.fromCoords(0, 1, 0),
+  //       wantB: Point.fromCoords(0, 1, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -453,7 +453,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(-1, 0, 0),
   //       distRads: Math.PI,
   //       wantA: Point.fromCoords(1, 0, 0),
-  //       wantB: Point.fromCoords(-1, 0, 0),
+  //       wantB: Point.fromCoords(-1, 0, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -462,7 +462,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 0),
   //       distRads: 0,
   //       wantA: zero,
-  //       wantB: zero,
+  //       wantB: zero
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -470,13 +470,8 @@ describe('s2.edge_distances', () => {
   //       b0: Point.fromCoords(1, 0, 0),
   //       b1: Point.fromCoords(1, 0, 0),
   //       distRads: 0,
-  //       wantA: Point.fromCoords(
-  //         1,
-
-  //         0,
-  //         0
-  //       ),
-  //       wantB: Point.fromCoords(1, 0, 0),
+  //       wantA: Point.fromCoords(1, 0, 0),
+  //       wantB: Point.fromCoords(1, 0, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -485,7 +480,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 1),
   //       distRads: 0,
   //       wantA: Point.fromCoords(0, 1, 0),
-  //       wantB: Point.fromCoords(0, 1, 0),
+  //       wantB: Point.fromCoords(0, 1, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(0, 1, 0),
@@ -494,7 +489,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 1),
   //       distRads: 0,
   //       wantA: Point.fromCoords(0, 1, 0),
-  //       wantB: Point.fromCoords(0, 1, 0),
+  //       wantB: Point.fromCoords(0, 1, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
@@ -503,7 +498,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 0),
   //       distRads: 0,
   //       wantA: Point.fromCoords(0, 1, 0),
-  //       wantB: Point.fromCoords(0, 1, 0),
+  //       wantB: Point.fromCoords(0, 1, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(0, 1, 0),
@@ -512,7 +507,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(0, 1, 0),
   //       distRads: 0,
   //       wantA: Point.fromCoords(0, 1, 0),
-  //       wantB: Point.fromCoords(0, 1, 0),
+  //       wantB: Point.fromCoords(0, 1, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, -1, 0),
@@ -521,7 +516,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(1, 0, 1),
   //       distRads: 0,
   //       wantA: Point.fromCoords(1, 0, 0),
-  //       wantB: Point.fromCoords(1, 0, 0),
+  //       wantB: Point.fromCoords(1, 0, 0)
   //     },
   //     {
   //       a0: Point.fromCoords(1, -1, 0),
@@ -530,7 +525,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(-1, 0, 1),
   //       distRads: Math.acos(-0.5),
   //       wantA: zero,
-  //       wantB: Point.fromCoords(-1, 0, 1),
+  //       wantB: Point.fromCoords(-1, 0, 1)
   //     },
   //     {
   //       a0: Point.fromCoords(-1, 0, 0),
@@ -539,7 +534,7 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(1, 1, 0),
   //       distRads: Math.acos(-0.5),
   //       wantA: Point.fromCoords(-1, 0, 1),
-  //       wantB: zero,
+  //       wantB: zero
   //     },
   //     {
   //       a0: Point.fromCoords(1, -1, 0),
@@ -548,8 +543,8 @@ describe('s2.edge_distances', () => {
   //       b1: Point.fromCoords(-1, 0, 1),
   //       distRads: Math.acos(-0.5),
   //       wantA: zero,
-  //       wantB: zero,
-  //     },
+  //       wantB: zero
+  //     }
   //   ]
 
   //   tests.forEach((test) => {
@@ -579,26 +574,28 @@ describe('s2.edge_distances', () => {
   //       )
   //     }
 
-  //     let [minDist, ok] = updateEdgePairMinDistance(test.a0, test.a1, test.b0, test.b1, 0)
+  //     let { dist: minDist, less } = updateEdgePairMinDistance(test.a0, test.a1, test.b0, test.b1, 0)
   //     ok(
-  //       !ok,
+  //       !less,
   //       `updateEdgePairMinDistance(${test.a0}, ${test.a1}, ${test.b0}, ${
   //         test.b1
   //       }, ${0}) = ${minDist}, want updated to be false`
   //     )
 
   //     minDist = chordangle.infChordAngle()
-  //     ;[minDist, ok] = updateEdgePairMinDistance(test.a0, test.a1, test.b0, test.b1, minDist)
+  //     ;({ dist: minDist, less } = updateEdgePairMinDistance(test.a0, test.a1, test.b0, test.b1, minDist))
   //     ok(
-  //       ok,
+  //       less,
   //       `updateEdgePairMinDistance(${test.a0}, ${test.a1}, ${test.b0}, ${
   //         test.b1
   //       }, ${chordangle.infChordAngle()}) = ${minDist}, want updated to be true`
   //     )
 
   //     ok(
-  //       float64Near(test.distRads, minDist.angle(), EPSILON),
-  //       `minDist ${test.distRads} - ${minDist.angle()} = ${test.distRads - minDist.angle()}, want < ${EPSILON}`
+  //       float64Near(test.distRads, chordangle.angle(minDist), EPSILON),
+  //       `minDist ${test.distRads} - ${chordangle.angle(minDist)} = ${
+  //         test.distRads - chordangle.angle(minDist)
+  //       }, want < ${EPSILON}`
   //     )
   //   })
   // })
@@ -610,81 +607,83 @@ describe('s2.edge_distances', () => {
   //       a1: Point.fromCoords(0, 1, 0),
   //       b0: Point.fromCoords(1, 1, 0),
   //       b1: Point.fromCoords(1, 1, 1),
-  //       distRads: Math.acos(1 / Math.sqrt(3)),
+  //       distRads: Math.acos(1 / Math.sqrt(3))
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 1),
   //       a1: Point.fromCoords(1, 0, 1),
   //       b0: Point.fromCoords(1, -1, 0),
   //       b1: Point.fromCoords(1, 1, 0),
-  //       distRads: Math.acos(0.5),
+  //       distRads: Math.acos(0.5)
   //     },
   //     {
   //       a0: Point.fromCoords(1, -1, 0),
   //       a1: Point.fromCoords(1, 1, 0),
   //       b0: Point.fromCoords(1, 0, 1),
   //       b1: Point.fromCoords(1, 0, 1),
-  //       distRads: Math.acos(0.5),
+  //       distRads: Math.acos(0.5)
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
   //       a1: Point.fromCoords(1, 0, 0),
   //       b0: Point.fromCoords(0, 1, 0),
   //       b1: Point.fromCoords(0, 1, 0),
-  //       distRads: Math.PI / 2,
+  //       distRads: Math.PI / 2
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
   //       a1: Point.fromCoords(1, 0, 0),
   //       b0: Point.fromCoords(-1, 0, 0),
   //       b1: Point.fromCoords(-1, 0, 0),
-  //       distRads: Math.PI,
+  //       distRads: Math.PI
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
   //       a1: Point.fromCoords(0, 1, 0),
   //       b0: Point.fromCoords(1, 0, 0),
   //       b1: Point.fromCoords(0, 1, 0),
-  //       distRads: Math.PI / 2,
+  //       distRads: Math.PI / 2
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 0),
   //       a1: Point.fromCoords(1, 0, 0),
   //       b0: Point.fromCoords(1, 0, 0),
   //       b1: Point.fromCoords(1, 0, 0),
-  //       distRads: 0,
+  //       distRads: 0
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 1),
   //       a1: Point.fromCoords(1, 0, -1),
   //       b0: Point.fromCoords(-1, -1, 0),
   //       b1: Point.fromCoords(-1, 1, 0),
-  //       distRads: Math.PI,
+  //       distRads: Math.PI
   //     },
   //     {
   //       a0: Point.fromCoords(1, 0, 1),
   //       a1: Point.fromCoords(1, 0, 0),
   //       b0: Point.fromCoords(-1, -1, 0),
   //       b1: Point.fromCoords(-1, 1, 0),
-  //       distRads: Math.PI,
-  //     },
+  //       distRads: Math.PI
+  //     }
   //   ]
 
   //   tests.forEach((test) => {
-  //     let [maxDist, ok] = updateEdgePairMaxDistance(test.a0, test.a1, test.b0, test.b1, STRAIGHT_CHORDANGLE)
+  //     let { dist: maxDist, less } = updateEdgePairMaxDistance(test.a0, test.a1, test.b0, test.b1, STRAIGHT_CHORDANGLE)
   //     ok(
-  //       !ok,
+  //       !less,
   //       `updateEdgePairMaxDistance(${test.a0}, ${test.a1}, ${test.b0}, ${test.b1}, ${STRAIGHT_CHORDANGLE}) = ${maxDist}, want updated to be false`
   //     )
-  //     ;[maxDist, ok] = updateEdgePairMaxDistance(test.a0, test.a1, test.b0, test.b1, NEGATIVE_CHORDANGLE)
+  //     ;({ dist: maxDist, less } = updateEdgePairMaxDistance(test.a0, test.a1, test.b0, test.b1, NEGATIVE_CHORDANGLE))
   //     ok(
-  //       ok,
+  //       less,
   //       `updateEdgePairMaxDistance(${test.a0}, ${test.a1}, ${test.b0}, ${test.b1}, ${NEGATIVE_CHORDANGLE}) = ${maxDist}, want updated to be false`
   //     )
 
   //     ok(
-  //       float64Near(test.distRads, maxDist.angle(), EPSILON),
-  //       `maxDist ${test.distRads} - ${maxDist.angle()} = ${test.distRads - maxDist.angle()}, want < ${EPSILON}`
+  //       float64Near(test.distRads, chordangle.angle(maxDist), EPSILON),
+  //       `maxDist ${test.distRads} - ${chordangle.angle(maxDist)} = ${
+  //         test.distRads - chordangle.angle(maxDist)
+  //       }, want < ${EPSILON}`
   //     )
   //   })
   // })

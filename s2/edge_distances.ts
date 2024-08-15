@@ -5,6 +5,7 @@ import { RIGHT_CHORDANGLE, STRAIGHT_CHORDANGLE } from '../s1/chordangle_constant
 import { DBL_EPSILON, sign } from './predicates'
 import { maxChordAngle } from './util'
 import * as chordangle from '../s1/chordangle'
+import { CROSS, crossingSign, intersection } from './edge_crossings'
 
 type Response = { dist: ChordAngle; less: boolean }
 
@@ -343,10 +344,10 @@ export const interiorDist = (x: Point, a: Point, b: Point, minDist: ChordAngle, 
 //   b1: Point,
 //   minDist: ChordAngle
 // ): Response => {
-//   if (minDist == 0) return [0, false]
-//   if (crossingSign(a0, a1, b0, b1) == Cross) {
+//   if (minDist == 0) return { dist: 0, less: false }
+//   if (crossingSign(a0, a1, b0, b1) == CROSS) {
 //     minDist = 0
-//     return [0, true]
+//     return { dist: 0, less: true }
 //   }
 
 //   // Otherwise, the minimum distance is achieved at an endpoint of at least
@@ -355,11 +356,11 @@ export const interiorDist = (x: Point, a: Point, b: Point, minDist: ChordAngle, 
 //   // The calculation below computes each of the six vertex-vertex distances
 //   // twice (this could be optimized).
 //   let ok1, ok2, ok3, ok4
-//   ;[minDist, ok1] = updateMinDistance(a0, b0, b1, minDist)
-//   ;[minDist, ok2] = updateMinDistance(a1, b0, b1, minDist)
-//   ;[minDist, ok3] = updateMinDistance(b0, a0, a1, minDist)
-//   ;[minDist, ok4] = updateMinDistance(b1, a0, a1, minDist)
-//   return [minDist, ok1 || ok2 || ok3 || ok4]
+//   ;({ dist: minDist, less: ok1 } = updateMinDistance(a0, b0, b1, minDist))
+//   ;({ dist: minDist, less: ok2 } = updateMinDistance(a1, b0, b1, minDist))
+//   ;({ dist: minDist, less: ok3 } = updateMinDistance(b0, a0, a1, minDist))
+//   ;({ dist: minDist, less: ok4 } = updateMinDistance(b1, a0, a1, minDist))
+//   return { dist: minDist, less: ok1 || ok2 || ok3 || ok4 }
 // }
 
 // /**
@@ -373,9 +374,10 @@ export const interiorDist = (x: Point, a: Point, b: Point, minDist: ChordAngle, 
 //   b1: Point,
 //   maxDist: ChordAngle
 // ): Response => {
-//   if (maxDist == STRAIGHT_CHORDANGLE) return [STRAIGHT_CHORDANGLE, false]
-//   if (crossingSign(a0, a1, Point.vector.mul(b0, -1), Point.vector.mul(b1, -1)) == Cross)
-//     return [STRAIGHT_CHORDANGLE, true]
+//   if (maxDist == STRAIGHT_CHORDANGLE) return { dist: STRAIGHT_CHORDANGLE, less: false }
+//   if (crossingSign(a0, a1, Point.fromVector(b0.vector.mul(-1)), Point.fromVector(b1.vector.mul(-1))) == CROSS) {
+//     return { dist: STRAIGHT_CHORDANGLE, less: true }
+//   }
 
 //   // Otherwise, the maximum distance is achieved at an endpoint of at least
 //   // one of the two edges. We ensure that all four possibilities are always checked.
@@ -383,44 +385,44 @@ export const interiorDist = (x: Point, a: Point, b: Point, minDist: ChordAngle, 
 //   // The calculation below computes each of the six vertex-vertex distances
 //   // twice (this could be optimized).
 //   let ok1, ok2, ok3, ok4
-//   ;[maxDist, ok1] = updateMaxDistance(a0, b0, b1, maxDist)
-//   ;[maxDist, ok2] = updateMaxDistance(a1, b0, b1, maxDist)
-//   ;[maxDist, ok3] = updateMaxDistance(b0, a0, a1, maxDist)
-//   ;[maxDist, ok4] = updateMaxDistance(b1, a0, a1, maxDist)
-//   return [maxDist, ok1 || ok2 || ok3 || ok4]
+//   ;({ dist: maxDist, less: ok1 } = updateMinDistance(a0, b0, b1, maxDist))
+//   ;({ dist: maxDist, less: ok2 } = updateMinDistance(a1, b0, b1, maxDist))
+//   ;({ dist: maxDist, less: ok3 } = updateMinDistance(b0, a0, a1, maxDist))
+//   ;({ dist: maxDist, less: ok4 } = updateMinDistance(b1, a0, a1, maxDist))
+//   return { dist: maxDist, less: ok1 || ok2 || ok3 || ok4 }
 // }
 
-// /**
-//  * Returns the pair of points (a, b) that achieves the
-//  * minimum distance between edges a0a1 and b0b1, where a is a point on a0a1 and
-//  * b is a point on b0b1. If the two edges intersect, a and b are both equal to
-//  * the intersection point. Handles a0 == a1 and b0 == b1 correctly.
-//  */
-// export const edgePairClosestPoints = (a0: Point, a1: Point, b0: Point, b1: Point): [Point, Point] => {
-//   if (crossingSign(a0, a1, b0, b1) == Cross) {
-//     let x = intersection(a0, a1, b0, b1)
-//     return [x, x]
-//   }
-//   // We save some work by first determining which vertex/edge pair achieves
-//   // the minimum distance, and then computing the closest point on that edge.
-//   let minDist: ChordAngle = 0
-//   let ok: boolean
-//   ;[minDist] = updateMinDistance(a0, b0, b1, minDist)
-//   let closestVertex = 0
-//   if ((([minDist, ok] = updateMinDistance(a1, b0, b1, minDist)), ok)) closestVertex = 1
-//   if ((([minDist, ok] = updateMinDistance(b0, a0, a1, minDist)), ok)) closestVertex = 2
-//   if ((([, ok] = updateMinDistance(b1, a0, a1, minDist)), ok)) closestVertex = 3
+/**
+ * Returns the pair of points (a, b) that achieves the
+ * minimum distance between edges a0a1 and b0b1, where a is a point on a0a1 and
+ * b is a point on b0b1. If the two edges intersect, a and b are both equal to
+ * the intersection point. Handles a0 == a1 and b0 == b1 correctly.
+ */
+export const edgePairClosestPoints = (a0: Point, a1: Point, b0: Point, b1: Point): [Point, Point] => {
+  if (crossingSign(a0, a1, b0, b1) == CROSS) {
+    let x = intersection(a0, a1, b0, b1)
+    return [x, x]
+  }
+  // We save some work by first determining which vertex/edge pair achieves
+  // the minimum distance, and then computing the closest point on that edge.
+  let minDist: ChordAngle = 0
+  let ok: boolean
+  ;({ dist: minDist } = updateMinDistance(a0, b0, b1, minDist))
+  let closestVertex = 0
+  if ((({ dist: minDist, less: ok } = updateMinDistance(a1, b0, b1, minDist)), ok)) closestVertex = 1
+  if ((({ dist: minDist, less: ok } = updateMinDistance(b0, a0, a1, minDist)), ok)) closestVertex = 2
+  if ((({ less: ok } = updateMinDistance(b1, a0, a1, minDist)), ok)) closestVertex = 3
 
-//   switch (closestVertex) {
-//     case 0:
-//       return [a0, project(a0, b0, b1)]
-//     case 1:
-//       return [a1, project(a1, b0, b1)]
-//     case 2:
-//       return [project(b0, a0, a1), b0]
-//     case 3:
-//       return [project(b1, a0, a1), b1]
-//     default:
-//       throw new Error('illegal case reached')
-//   }
-// }
+  switch (closestVertex) {
+    case 0:
+      return [a0, project(a0, b0, b1)]
+    case 1:
+      return [a1, project(a1, b0, b1)]
+    case 2:
+      return [project(b0, a0, a1), b0]
+    case 3:
+      return [project(b1, a0, a1), b1]
+    default:
+      throw new Error('illegal case reached')
+  }
+}
