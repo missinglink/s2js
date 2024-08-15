@@ -14,6 +14,7 @@ import * as cellid from './cellid'
 import type { CellID } from './cellid'
 import { Region } from './Region'
 import { Cell } from './Cell'
+import { LatLng } from './LatLng'
 
 export const CENTER_POINT = Point.fromCoords(1.0, 0, 0)
 
@@ -317,30 +318,40 @@ export class Cap implements Region {
   rectBound(): Rect {
     if (this.isEmpty()) return Rect.emptyRect()
 
-    const capAngle = this.rad
+    const capAngle = this.radius()
     let allLongitudes = false
-    const lat = new R1Interval(this.center.y - capAngle, this.center.y + capAngle)
+    const lat = new R1Interval(LatLng.latitude(this.center) - capAngle, LatLng.latitude(this.center) + capAngle)
     let lng = S1Interval.fullInterval()
 
+    // Check whether cap includes the south pole.
     if (lat.lo <= -Math.PI / 2) {
       lat.lo = -Math.PI / 2
       allLongitudes = true
     }
 
+    // Check whether cap includes the north pole.
     if (lat.hi >= Math.PI / 2) {
       lat.hi = Math.PI / 2
       allLongitudes = true
     }
 
     if (!allLongitudes) {
+      // Compute the range of longitudes covered by the cap. We use the law
+      // of sines for spherical triangles. Consider the triangle ABC where
+      // A is the north pole, B is the center of the cap, and C is the point
+      // of tangency between the cap boundary and a line of longitude. Then
+      // C is a right angle, and letting a,b,c denote the sides opposite A,B,C,
+      // we have sin(a)/sin(A) = sin(c)/sin(C), or sin(A) = sin(a)/sin(c).
+      // Here "a" is the cap angle, and "c" is the colatitude (90 degrees
+      // minus the latitude). This formula also works for negative latitudes.
+      //
+      // The formula for sin(a) follows from the relationship h = 1 - cos(a).
       const sinA = chordangle.sin(this.rad)
-      const sinC = Math.cos(this.center.y)
+      const sinC = Math.cos(LatLng.latitude(this.center))
       if (sinA <= sinC) {
         const angleA = Math.asin(sinA / sinC)
-        lng = new S1Interval(
-          remainder(this.center.x - angleA, Math.PI * 2),
-          remainder(this.center.x + angleA, Math.PI * 2)
-        )
+        lng.lo = remainder(LatLng.longitude(this.center) - angleA, Math.PI * 2)
+        lng.hi = remainder(LatLng.longitude(this.center) + angleA, Math.PI * 2)
       }
     }
 

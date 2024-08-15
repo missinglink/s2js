@@ -1,7 +1,7 @@
 import { findLSBSetNonZero64, nextAfter } from '../r1/math'
 import lookupIJ, { INVERT_MASK, LOOKUP_BITS, lookupPos, SWAP_MASK } from './lookupIJ'
 import { faceSiTiToXYZ, faceUVToXYZ, siTiToST, stToUV, uvToST, xyzToFaceUV } from './stuv'
-import { FACE_BITS, MAX_LEVEL, MAX_SIZE, NUM_FACES, POS_BITS } from './cellid_constants'
+import { FACE_BITS, MAX_LEVEL, MAX_SIZE, NUM_FACES, POS_BITS, WRAP_OFFSET } from './cellid_constants'
 import { LatLng } from './LatLng'
 import { Point } from './Point'
 import { clampInt } from './util'
@@ -569,6 +569,33 @@ export const maxTile = (ci: CellID, limit: CellID): CellID => {
   }
 
   return ci
+}
+
+/**
+ * Advances or retreats the indicated number of steps along the
+ * Hilbert curve at the current level, and returns the new position. The
+ * position is never advanced past End() or before Begin().
+ */
+export const advance = (ci: CellID, steps: CellID): CellID => {
+  if (steps === 0n) return ci
+
+  // We clamp the number of steps if necessary to ensure that we do not
+  // advance past the End() or before the Begin() of this level.
+  const stepShift = BigInt(2 * (MAX_LEVEL - level(ci)) + 1)
+
+  if (steps < 0n) {
+    const minSteps = -((ci >> stepShift) as bigint)
+    if (steps < minSteps) {
+      steps = minSteps
+    }
+  } else {
+    const maxSteps = ((WRAP_OFFSET + lsb(ci) - ci) >> stepShift) as bigint
+    if (steps > maxSteps) {
+      steps = maxSteps
+    }
+  }
+
+  return ci + (steps << stepShift)
 }
 
 /**

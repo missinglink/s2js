@@ -26,4 +26,4 @@ export const POS_BITS = 2 * MAX_LEVEL + 1
 export const MAX_SIZE = Number(1n << BigInt(MAX_LEVEL))
 
 //
-// export const WRAP_OFFSET = BigInt(NUM_FACES) << BigInt(POS_BITS)
+export const WRAP_OFFSET = BigInt(NUM_FACES) << BigInt(POS_BITS)
