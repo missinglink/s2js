@@ -109,6 +109,27 @@ export const randomCellID = (): CellID => {
   return randomCellIDForLevel(randomUniformInt(MAX_LEVEL + 1))
 }
 
+/**
+ * Returns a point chosen uniformly at random (with respect to area) from the given cap.
+ */
+export const samplePointFromCap = (c: Cap): Point => {
+  // We consider the cap axis to be the "z" axis. We choose two other axes to
+  // complete the coordinate frame.
+  const m = matrix.getFrame(c.center)
+
+  // The surface area of a spherical cap is directly proportional to its height.
+  // First, we choose a random height, and then we choose a random point along the circle at that height.
+  const h = randomFloat64() * c.height()
+  const theta = 2 * Math.PI * randomFloat64()
+  const r = Math.sqrt(h * (2 - h))
+
+  // The result should already be very close to unit-length, but we might as
+  // well make it as accurate as possible.
+  return Point.fromVector(
+    matrix.fromFrame(m, Point.fromCoords(Math.cos(theta) * r, Math.sin(theta) * r, 1 - h)).vector.normalize()
+  )
+}
+
 /** Returns true with a probability of 1/n. */
 export const oneIn = (n: number): boolean => {
   return randomUniformInt(n) == 0

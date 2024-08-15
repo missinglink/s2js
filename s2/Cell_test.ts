@@ -7,17 +7,18 @@ import { Point as R2Point } from '../r2/Point'
 import * as cellid from './cellid'
 import { SWAP_MASK } from './lookupIJ'
 import { float64Eq, randomCellID, randomPoint, samplePointFromCap } from './testing'
-import { DBL_EPSILON } from './predicates'
+import { DBL_EPSILON, EPSILON } from './predicates'
 import { LatLng } from './LatLng'
 import { float64Near } from '../r1/math'
-import { updateMaxDistance, updateMinDistance } from './edge_distances'
+import { interpolate, updateMaxDistance, updateMinDistance } from './edge_distances'
 import * as chordangle from '../s1/chordangle'
 import { Cap } from './Cap'
 import { NEGATIVE_CHORDANGLE, STRAIGHT_CHORDANGLE } from '../s1/chordangle_constants'
 import { deepEqual } from 'node:assert'
+import { crossingSign, DO_NOT_CROSS } from './edge_crossings'
 
 describe('s2.Cell', () => {
-  test('Faces', () => {
+  test('faces', () => {
     const edgeCounts: Map<string, number> = new Map()
     const vertexCounts: Map<string, number> = new Map()
 
@@ -65,10 +66,10 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('Children', () => {
+  test('children', () => {
     testCellChildren(Cell.fromCellID(cellid.fromFace(0)))
-    // testCellChildren(Cell.fromCellID(cellid.fromFace(3)))
-    // testCellChildren(Cell.fromCellID(cellid.fromFace(5)))
+    testCellChildren(Cell.fromCellID(cellid.fromFace(3)))
+    testCellChildren(Cell.fromCellID(cellid.fromFace(5)))
   })
 
   function testCellChildren(cell: Cell) {
@@ -176,7 +177,7 @@ describe('s2.Cell', () => {
     })
   }
 
-  // test('Areas', () => {
+  // test('areas', () => {
   //   const exactError = Math.log(1 + 1e-6)
   //   const approxError = Math.log(1.03)
   //   const avgError = Math.log(1 + 1e-15)
@@ -216,7 +217,7 @@ describe('s2.Cell', () => {
   //   }
   // })
 
-  test('IntersectsCell', () => {
+  test('intersectsCell', () => {
     const tests = [
       {
         c: Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 2)),
@@ -240,7 +241,7 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('ContainsCell', () => {
+  test('containsCell', () => {
     const ci = cellid.childBeginAtLevel(cellid.fromFace(0), 2)
     const tests = [
       {
@@ -275,7 +276,7 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('RectBound', () => {
+  test('rectBound', () => {
     const tests = [
       { lat: 50, lng: 50 },
       { lat: -50, lng: 50 },
@@ -295,7 +296,7 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('RectBoundAroundPoleMinLat', () => {
+  test('rectBound around pole min lat', () => {
     const tests = [
       {
         cellID: cellid.fromFacePosLevel(2, 0n, 0),
@@ -325,7 +326,7 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('CapBound', () => {
+  test('capBound', () => {
     const c = Cell.fromCellID(cellid.childBeginAtLevel(cellid.fromFace(0), 20))
     const s2Cap = c.capBound()
     for (let i = 0; i < 4; i++) {
@@ -333,7 +334,7 @@ describe('s2.Cell', () => {
     }
   })
 
-  test('ContainsPoint', () => {
+  test('containsPoint', () => {
     const ci = cellid.childBeginAtLevel(cellid.fromFace(0), 2)
     const tests = [
       {
@@ -358,25 +359,25 @@ describe('s2.Cell', () => {
     }
   })
 
-  // test('ContainsPointConsistentWithS2CellIDFromPoint', () => {
-  //   for (let iter = 0; iter < 1000; iter++) {
-  //     const cell = Cell.fromCellID(randomCellID())
-  //     const i1 = Math.floor(Math.random() * 4)
-  //     const i2 = (i1 + 1) & 3
-  //     const v1 = cell.vertex(i1)
-  //     const v2 = samplePointFromCap(Cap.fromCenterAngle(cell.vertex(i2), EPSILON))
-  //     const p = Interpolate(Math.random(), v1, v2)
-  //     ok(Cell.fromCellID(cellid.fromPoint(p)).containsPoint(p))
-  //   }
-  // })
+  test('containsPoint consistent with cellid.fromPoint', () => {
+    for (let iter = 0; iter < 1000; iter++) {
+      const cell = Cell.fromCellID(randomCellID())
+      const i1 = Math.floor(Math.random() * 4)
+      const i2 = (i1 + 1) & 3
+      const v1 = cell.vertex(i1)
+      const v2 = samplePointFromCap(Cap.fromCenterAngle(cell.vertex(i2), EPSILON))
+      const p = interpolate(Math.random(), v1, v2)
+      ok(Cell.fromCellID(cellid.fromPoint(p)).containsPoint(p))
+    }
+  })
 
-  test('ContainsPointContainsAmbiguousPoint', () => {
+  test('containsPoint contains ambiguous point', () => {
     const p = Point.fromLatLng(LatLng.fromDegrees(-2, 90))
     const cell = Cell.fromCellID(cellid.parent(cellid.fromPoint(p), 1))
     ok(cell.containsPoint(p))
   })
 
-  test('Distance', () => {
+  test('distance', () => {
     for (let iter = 0; iter < 1000; iter++) {
       const cell = Cell.fromCellID(randomCellID())
       const target = randomPoint()
@@ -408,26 +409,26 @@ describe('s2.Cell', () => {
     }
   })
 
-  function chooseEdgeNearCell(cell: Cell): [Point, Point] {
-    const c = cell.capBound()
-    let a: Point, b: Point
+  // function chooseEdgeNearCell(cell: Cell): [Point, Point] {
+  //   const c = cell.capBound()
+  //   let a: Point, b: Point
 
-    if (Math.random() < 0.2) {
-      a = randomPoint()
-    } else {
-      a = samplePointFromCap(Cap.fromCenterChordAngle(c.center, 1.5 * c.rad))
-    }
+  //   if (Math.random() < 0.2) {
+  //     a = randomPoint()
+  //   } else {
+  //     a = samplePointFromCap(Cap.fromCenterChordAngle(c.center, 1.5 * c.rad))
+  //   }
 
-    const maxLength = Math.min(100 * Math.pow(1e-4, Math.random()) * c.radius(), Math.PI / 2)
-    b = samplePointFromCap(Cap.fromCenterAngle(a, maxLength))
+  //   const maxLength = Math.min(100 * Math.pow(1e-4, Math.random()) * c.radius(), Math.PI / 2)
+  //   b = samplePointFromCap(Cap.fromCenterAngle(a, maxLength))
 
-    if (Math.random() < 0.05) {
-      a = Point.fromVector(a.vector.mul(-1))
-      b = Point.fromVector(b.vector.mul(-1))
-    }
+  //   if (Math.random() < 0.05) {
+  //     a = Point.fromVector(a.vector.mul(-1))
+  //     b = Point.fromVector(b.vector.mul(-1))
+  //   }
 
-    return [a, b]
-  }
+  //   return [a, b]
+  // }
 
   function minDistanceToPointBruteForce(cell: Cell, target: Point): ChordAngle {
     let minDistance = chordangle.infChordAngle()
@@ -456,7 +457,7 @@ describe('s2.Cell', () => {
   //     const v0 = cell.vertex(i)
   //     const v1 = cell.vertex((i + 1) % 4)
 
-  //     if (Cell.crossingSign(a, b, v0, v1) !== Cell.DoNotCross) return 0
+  //     if (crossingSign(a, b, v0, v1) !== DO_NOT_CROSS) return 0
 
   //     minDist = updateMinDistance(a, v0, v1, minDist)[0]
   //     minDist = updateMinDistance(b, v0, v1, minDist)[0]
@@ -465,39 +466,41 @@ describe('s2.Cell', () => {
   //   return minDist
   // }
 
-  // function maxDistanceToEdgeBruteForce(cell: Cell, a: Point, b: Point): ChordAngle {
-  //   if (
-  //     cell.containsPoint(Point.fromVector(a.vector.mul(-1))) ||
-  //     cell.containsPoint(Point.fromVector(b.vector.mul(-1)))
-  //   ) {
-  //     return STRAIGHT_CHORDANGLE
-  //   }
+  function maxDistanceToEdgeBruteForce(cell: Cell, a: Point, b: Point): ChordAngle {
+    if (
+      cell.containsPoint(Point.fromVector(a.vector.mul(-1))) ||
+      cell.containsPoint(Point.fromVector(b.vector.mul(-1)))
+    ) {
+      return STRAIGHT_CHORDANGLE
+    }
 
-  //   let maxDist = NEGATIVE_CHORDANGLE
-  //   for (let i = 0; i < 4; i++) {
-  //     const v0 = cell.vertex(i)
-  //     const v1 = cell.vertex((i + 1) % 4)
+    let maxDist = NEGATIVE_CHORDANGLE
+    for (let i = 0; i < 4; i++) {
+      const v0 = cell.vertex(i)
+      const v1 = cell.vertex((i + 1) % 4)
 
-  //     if (Cell.crossingSign(a.mul(-1), b.mul(-1), v0, v1) !== Cell.DoNotCross) {
-  //       return STRAIGHT_CHORDANGLE
-  //     }
+      if (
+        crossingSign(Point.fromVector(a.vector.mul(-1)), Point.fromVector(b.vector.mul(-1)), v0, v1) !== DO_NOT_CROSS
+      ) {
+        return STRAIGHT_CHORDANGLE
+      }
 
-  //     maxDist = updateMaxDistance(a, v0, v1, maxDist)[0]
-  //     maxDist = updateMaxDistance(b, v0, v1, maxDist)[0]
-  //     maxDist = updateMaxDistance(v0, a, b, maxDist)[0]
-  //   }
-  //   return maxDist
-  // }
+      maxDist = updateMaxDistance(a, v0, v1, maxDist)[0]
+      maxDist = updateMaxDistance(b, v0, v1, maxDist)[0]
+      maxDist = updateMaxDistance(v0, a, b, maxDist)[0]
+    }
+    return maxDist
+  }
 
-  // test('DistanceToEdge', () => {
+  // test('distanceToEdge', () => {
   //   for (let iter = 0; iter < 1000; iter++) {
   //     const cell = Cell.fromCellID(randomCellID())
 
   //     const [a, b] = chooseEdgeNearCell(cell)
-  //     const expectedMin = minDistanceToEdgeBruteForce(cell, a, b).angle()
-  //     const expectedMax = maxDistanceToEdgeBruteForce(cell, a, b).angle()
-  //     const actualMin = cell.distanceToEdge(a, b).angle()
-  //     const actualMax = cell.maxDistanceToEdge(a, b).angle()
+  //     const expectedMin = chordangle.angle(minDistanceToEdgeBruteForce(cell, a, b))
+  //     const expectedMax = chordangle.angle(maxDistanceToEdgeBruteForce(cell, a, b))
+  //     const actualMin = chordangle.angle(cell.distanceToEdge(a, b))
+  //     const actualMax = chordangle.angle(cell.maxDistanceToEdge(a, b))
 
   //     let expectedError = 1e-12
   //     if (expectedMin > Math.PI / 2) {
@@ -515,38 +518,38 @@ describe('s2.Cell', () => {
   //   }
   // })
 
-  // test('MaxDistanceToEdge', () => {
-  //   const cell = Cell.fromCellID(cellid.fromFacePosLevel(0, 0, 20))
-  //   const a = Point.fromInterpolate(2.0, cell.center(), cell.vertex(0)).mul(-1)
-  //   const b = Point.fromInterpolate(2.0, cell.center(), cell.vertex(2)).mul(-1)
+  test('maxDistanceToEdge', () => {
+    const cell = Cell.fromCellID(cellid.fromFacePosLevel(0, 0n, 20))
+    const a = Point.fromVector(interpolate(2.0, cell.center(), cell.vertex(0)).vector.mul(-1))
+    const b = Point.fromVector(interpolate(2.0, cell.center(), cell.vertex(2)).vector.mul(-1))
 
-  //   const actual = cell.maxDistanceToEdge(a, b)
-  //   const expected = maxDistanceToEdgeBruteForce(cell, a, b)
+    const actual = cell.maxDistanceToEdge(a, b)
+    const expected = maxDistanceToEdgeBruteForce(cell, a, b)
 
-  //   ok(float64Near(expected.angle(), STRAIGHT_CHORDANGLE.angle(), 1e-15))
-  //   ok(float64Near(actual.angle(), STRAIGHT_CHORDANGLE.angle(), 1e-15))
-  // })
+    ok(float64Near(chordangle.angle(expected), chordangle.angle(STRAIGHT_CHORDANGLE), 1e-15))
+    ok(float64Near(chordangle.angle(actual), chordangle.angle(STRAIGHT_CHORDANGLE), 1e-15))
+  })
 
-  // test('MaxDistanceToCellAntipodal', () => {
-  //   const p = parsePoint('0:0')
-  //   const cell = Cell.fromPoint(p)
-  //   const antipodalCell = Cell.fromPoint(p.mul(-1))
-  //   const dist = cell.maxDistanceToCell(antipodalCell)
+  test('maxDistanceToCell antipodal', () => {
+    const p = Point.fromLatLng(new LatLng(0, 0))
+    const cell = Cell.fromPoint(p)
+    const antipodalCell = Cell.fromPoint(Point.fromVector(p.vector.mul(-1)))
+    const dist = cell.maxDistanceToCell(antipodalCell)
 
-  //   equal(dist, STRAIGHT_CHORDANGLE)
-  // })
+    equal(dist, STRAIGHT_CHORDANGLE)
+  })
 
-  // test('MaxDistanceToCell', () => {
-  //   for (let i = 0; i < 1000; i++) {
-  //     const cell = Cell.fromCellID(randomCellID())
-  //     const testCell = Cell.fromCellID(randomCellID())
-  //     const antipodalLeafID = cellid.fromPoint(testCell.center().mul(-1))
-  //     const antipodalTestCell = Cell.fromCellID(antipodalLeafID.parent(testCell.level()))
+  test('maxDistanceToCell', () => {
+    for (let i = 0; i < 1000; i++) {
+      const cell = Cell.fromCellID(randomCellID())
+      const testCell = Cell.fromCellID(randomCellID())
+      const antipodalLeafID = cellid.fromPoint(Point.fromVector(testCell.center().vector.mul(-1)))
+      const antipodalTestCell = Cell.fromCellID(cellid.parent(antipodalLeafID, testCell.level))
 
-  //     const distFromMin = STRAIGHT_CHORDANGLE - cell.distanceToCell(antipodalTestCell)
-  //     const distFromMax = cell.maxDistanceToCell(testCell)
+      const distFromMin = STRAIGHT_CHORDANGLE - cell.distanceToCell(antipodalTestCell)
+      const distFromMax = cell.maxDistanceToCell(testCell)
 
-  //     ok(float64Near(distFromMin.angle(), distFromMax.angle(), 1e-8))
-  //   }
-  // })
+      ok(float64Near(chordangle.angle(distFromMin), chordangle.angle(distFromMax), 1e-8))
+    }
+  })
 })

@@ -21,6 +21,8 @@ import { pointArea } from './point_measures'
 import { updateMaxDistance, updateMinDistance } from './edge_distances'
 import { maxChordAngle, minChordAngle } from './util'
 import { Region } from './Region'
+import { EdgeCrosser } from './EdgeCrosser'
+import { DO_NOT_CROSS } from './edge_crossings'
 
 const POLE_MIN_LAT = Math.asin(Math.sqrt(1.0 / 3)) - 0.5 * DBL_EPSILON
 
@@ -551,35 +553,37 @@ export class Cell implements Region {
     return this.distanceInternal(target, false)
   }
 
-  // /**
-  //  * Returns the minimum distance from the cell to the given edge AB. Returns
-  //  * zero if the edge intersects the cell interior.
-  //  */
-  // distanceToEdge(a: Point, b: Point): ChordAngle {
-  //   let minDist = minChordAngle(this.distance(a), this.distance(b))
-  //   if (minDist === 0) return minDist
+  /**
+   * Returns the minimum distance from the cell to the given edge AB. Returns
+   * zero if the edge intersects the cell interior.
+   */
+  distanceToEdge(a: Point, b: Point): ChordAngle {
+    let minDist = minChordAngle(this.distance(a), this.distance(b))
+    if (minDist === 0) return minDist
 
-  //   const crosser = new ChainEdgeCrosser(a, b, this.vertex(3))
-  //   for (let i = 0; i < 4; i++) {
-  //     if (crosser.chainCrossingSign(this.vertex(i)) !== DoNotCross) return 0
-  //   }
+    const crosser = EdgeCrosser.newChainEdgeCrosser(a, b, this.vertex(3))
+    for (let i = 0; i < 4; i++) {
+      if (crosser.chainCrossingSign(this.vertex(i)) !== DO_NOT_CROSS) return 0
+    }
 
-  //   for (let i = 0; i < 4; i++) {
-  //     minDist = updateMinDistance(this.vertex(i), a, b, minDist)[0]
-  //   }
-  //   return minDist
-  // }
+    for (let i = 0; i < 4; i++) {
+      minDist = updateMinDistance(this.vertex(i), a, b, minDist).dist
+    }
+    return minDist
+  }
 
-  // /**
-  //  * Returns the maximum distance from the cell (including its interior)
-  //  * to the given edge AB.
-  //  */
-  // maxDistanceToEdge(a: Point, b: Point): ChordAngle {
-  //   let maxDist = maxChordAngle(this.maxDistance(a), this.maxDistance(b))
-  //   if (maxDist <= RIGHT_CHORDANGLE) return maxDist
+  /**
+   * Returns the maximum distance from the cell (including its interior)
+   * to the given edge AB.
+   */
+  maxDistanceToEdge(a: Point, b: Point): ChordAngle {
+    let maxDist = maxChordAngle(this.maxDistance(a), this.maxDistance(b))
+    if (maxDist <= RIGHT_CHORDANGLE) return maxDist
 
-  //   return STRAIGHT_CHORDANGLE - this.distanceToEdge(new Point(a.mul(-1)), new Point(b.mul(-1)))
-  // }
+    return (
+      STRAIGHT_CHORDANGLE - this.distanceToEdge(Point.fromVector(a.vector.mul(-1)), Point.fromVector(b.vector.mul(-1)))
+    )
+  }
 
   /**
    * Returns the minimum distance from this cell to the given cell.
