@@ -193,6 +193,11 @@ export const maxAngleError = (c: ChordAngle): number => DBL_EPSILON * c
  * This method assumes the ChordAngles are not special.
  */
 export const add = (c: ChordAngle, oc: ChordAngle): ChordAngle => {
+  // missinglink: use slower method which doesn't produce errors for input
+  // such as (0.05641360112609339, 0.08434543246929838).
+  // @todo: performance
+  return fromAngle(angle(c) + angle(oc))
+
   // Note that this method (and Sub) is much more efficient than converting
   // the ChordAngle to an Angle and adding those and converting back. It
   // requires only one square root plus a few additions and multiplications.

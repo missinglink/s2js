@@ -168,7 +168,8 @@ describe('s2.CellUnion', () => {
           13042424520864956416n
         ),
         cellid: 4251398048237748224n
-      }
+      },
+      { union: new CellUnion(11619287038615879680n, 11889503016258109440n), cellid: 11889503016258109440n }
     ]
 
     tests.forEach((test) => {
@@ -205,6 +206,13 @@ describe('s2.CellUnion', () => {
       // Test CapBound().
       const cb = cellunion.capBound()
       for (const ci of cellunion) {
+        // if (!cb.containsCell(Cell.fromCellID(ci))) {
+        //   console.error({ i, inSum, outSum })
+        //   console.error(cellunion.length, cellunion)
+        //   console.error(ci)
+        //   console.error(cb)
+        //   throw new Error('fail')
+        // }
         ok(cb.containsCell(Cell.fromCellID(ci)), `${cb} contains ${ci}`)
       }
 
