@@ -82,7 +82,7 @@ const randomHexString = (length: number): string => {
 
 /** Returns a random BigInt of n bits in length. */
 export const randomBigIntN = (n: number): bigint => {
-  return BigInt.asUintN(n, BigInt(`0x${randomHexString(Math.ceil(n / 4))}`))
+  return BigInt.asUintN(n, BigInt(`0x${randomHexString(Math.ceil(n / 4))}`)) & ((1n << BigInt(n)) - 1n)
 }
 
 /** Returns a uniformly distributed 32-bit unsigned integer. */
@@ -156,4 +156,14 @@ export const rectsApproxEqual = (a: Rect, b: Rect, tolLat: number, tolLng: numbe
 export const randomCap = (minArea: number, maxArea: number): Cap => {
   const capArea = maxArea * Math.pow(minArea / maxArea, randomFloat64())
   return Cap.fromCenterArea(randomPoint(), capArea)
+}
+
+/**
+ * Returns a number in the range [0, 2^maxLog - 1] with bias towards smaller numbers.
+ *
+ * missinglink: is this biased?
+ */
+export const skewedInt = (maxLog: number): number => {
+  const base = Math.floor(Math.random() * (maxLog + 1))
+  return Number(randomBigIntN(31)) & ((1 << base) - 1)
 }

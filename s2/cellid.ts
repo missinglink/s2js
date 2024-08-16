@@ -1,4 +1,4 @@
-import { findLSBSetNonZero64, nextAfter } from '../r1/math'
+import { findLSBSetNonZero64, findMSBSetNonZero64, nextAfter } from '../r1/math'
 import lookupIJ, { INVERT_MASK, LOOKUP_BITS, lookupPos, SWAP_MASK } from './lookupIJ'
 import { faceSiTiToXYZ, faceUVToXYZ, siTiToST, stToUV, uvToST, xyzToFaceUV } from './stuv'
 import { FACE_BITS, MAX_LEVEL, MAX_SIZE, NUM_FACES, POS_BITS, WRAP_OFFSET } from './cellid_constants'
@@ -192,6 +192,27 @@ export const fromToken = (t: string): CellID => {
   let ci = BigInt('0x' + t)
   if (t.length < 16) ci = ci << BigInt(4 * (16 - t.length))
   return ci
+}
+
+/**
+ * Converts a string in the form "1/3210" to a CellID.
+ * @category Constructors
+ */
+export const fromString = (s: string): CellID => {
+  const level = s.length - 2
+  if (level < 0 || level > MAX_LEVEL) return 0n
+
+  const face = parseInt(s[0], 10)
+  if (face < 0 || face > 5 || s[1] !== '/') return 0n
+
+  let cid = fromFace(face)
+  for (let i = 2; i < s.length; i++) {
+    const childPos = parseInt(s[i], 10)
+    if (childPos < 0 || childPos > 3) return 0n
+    cid = children(cid)[childPos]
+  }
+
+  return cid
 }
 
 // Constructors
@@ -436,6 +457,24 @@ export const latLng = (ci: CellID): LatLng => {
 }
 
 /**
+ * Returns the four cells that are adjacent across the cell's four edges.
+ * Edges 0, 1, 2, 3 are in the down, right, up, left directions in the face space.
+ * All neighbors are guaranteed to be distinct.
+ */
+export const edgeNeighbors = (ci: CellID): [CellID, CellID, CellID, CellID] => {
+  const lvl = level(ci)
+  const size = sizeIJ(lvl)
+  const { f, i, j } = faceIJOrientation(ci)
+
+  return [
+    parent(fromFaceIJWrap(f, i, j - size), lvl),
+    parent(fromFaceIJWrap(f, i + size, j), lvl),
+    parent(fromFaceIJWrap(f, i, j + size), lvl),
+    parent(fromFaceIJWrap(f, i - size, j), lvl)
+  ]
+}
+
+/**
  * Returns the neighboring cellIDs with vertex closest to this cell at the given level.
  * (Normally there are four neighbors, but the closest vertex may only have three neighbors if it is one of
  * the 8 cube vertices.)
@@ -529,6 +568,23 @@ export const next = (ci: CellID): CellID => {
 /** Returns the previous cell along the Hilbert curve. */
 export const prev = (ci: CellID): CellID => {
   return ci - (lsb(ci) << 1n)
+}
+
+/**
+ * Returns the level of the common ancestor of the two S2 CellIDs.
+ * @param other The other CellID to compare with.
+ * @returns A tuple where the first element is the level and the second element is a boolean indicating success.
+ */
+export const commonAncestorLevel = (ci: CellID, other: CellID): [number, boolean] => {
+  let bits = ci ^ other
+  if (bits < lsb(ci)) bits = lsb(ci)
+  if (bits < lsb(other)) bits = lsb(other)
+
+  const msbPos = findMSBSetNonZero64(bits)
+  if (msbPos > 60) {
+    return [0, false]
+  }
+  return [(60 - msbPos) >> 1, true]
 }
 
 /**

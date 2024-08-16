@@ -35,7 +35,9 @@ export const nextAfter = (x: number, y: number): number => {
 export const float64Near = (a: number, b: number, epsilon: number = 1e-14) => Math.abs(a - b) <= epsilon
 
 /**
- * Returns the number of trailing zero bits in a 64-bit bigint.
+ * Returns the offset of the lest significant bit set.
+ * Offset 0 corresponds to the rightmost bit, 63 is the leftmost bit.
+ * If none of the rightmost 64 bits are set then 64 is returned.
  */
 export const findLSBSetNonZero64 = (i: bigint): number => {
   const lsb = i & -i & 0xffffffffffffffffn
@@ -44,6 +46,20 @@ export const findLSBSetNonZero64 = (i: bigint): number => {
   if (lo < 32) return 31 - lo
   const hi = Math.clz32(Number((lsb >> 32n) & 0xffffffffn))
   return 63 - hi
+}
+
+/**
+ * Returns the offset of the most significant bit set.
+ * Offset 0 corresponds to the rightmost bit, 63 is the leftmost bit.
+ * If none of the rightmost 64 bits are set then 64 is returned.
+ */
+export const findMSBSetNonZero64 = (i: bigint): number => {
+  const msb = i & 0xffffffffffffffffn
+  if (msb === 0n) return 64
+  const hi = Math.clz32(Number((msb >> 32n) & 0xffffffffn))
+  if (hi < 32) return 63 - hi
+  const lo = Math.clz32(Number(msb & 0xffffffffn))
+  return 31 - lo
 }
 
 /**

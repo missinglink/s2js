@@ -37,3 +37,22 @@ export const maxChordAngle = (first: ChordAngle, ...others: ChordAngle[]) => max
 
 /** Returns the smallest of the given ChordAngle values. */
 export const minChordAngle = (first: ChordAngle, ...others: ChordAngle[]) => min<ChordAngle>(first, ...others)
+
+/**
+ * Performs a binary search to find the smallest index `i` in the range [0, n) where the function `f` is true.
+ *
+ * missinglink: port of Go `sort.Search`
+ */
+export const binarySearch = (n: number, f: (i: number) => boolean): number => {
+  let i = 0
+  let j = n
+  while (i < j) {
+    const h = Math.floor((i + j) / 2) // calculate mid-point
+    if (!f(h)) {
+      i = h + 1 // move to the right half
+    } else {
+      j = h // move to the left half
+    }
+  }
+  return i
+}
