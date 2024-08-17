@@ -7,7 +7,34 @@ import * as cellid from './cellid'
 import { Point } from './Point'
 import { binarySearch } from './util'
 
-type RegionCovererOptions = { minLevel?: number; maxLevel?: number; levelMod?: number; maxCells?: number }
+/**
+ * RegionCovererOptions allows the RegionCoverer to be configured.
+ */
+export interface RegionCovererOptions {
+  /**
+   * the minimum cell level to be used.
+   * @default 0
+   */
+  minLevel?: number
+
+  /**
+   * the maximum cell level to be used.
+   * @default 30
+   */
+  maxLevel?: number
+
+  /**
+   * the levelMod to be used.
+   * @default 1
+   */
+  levelMod?: number
+
+  /**
+   * the maximum desired number of cells in the approximation.
+   * @default 8
+   */
+  maxCells?: number
+}
 
 /**
  * RegionCoverer allows arbitrary regions to be approximated as unions of cells (CellUnion).
@@ -67,13 +94,16 @@ type RegionCovererOptions = { minLevel?: number; maxLevel?: number; levelMod?: n
  * @beta
  */
 export class RegionCoverer {
-  minLevel: number // the minimum cell level to be used.
-  maxLevel: number // the maximum cell level to be used.
-  levelMod: number // the LevelMod to be used.
-  maxCells: number // the maximum desired number of cells in the approximation.
+  minLevel: number
+  maxLevel: number
+  levelMod: number
+  maxCells: number
 
   /**
    * Returns a new RegionCoverer with the appropriate defaults.
+   *
+   * @param options - RegionCoverer options
+   *
    * @category Constructors
    */
   constructor({ minLevel = 0, maxLevel = MAX_LEVEL, levelMod = 1, maxCells = 8 }: RegionCovererOptions = {}) {
