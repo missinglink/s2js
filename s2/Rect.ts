@@ -51,7 +51,7 @@ export class Rect {
    * Constructs a rectangle containing a single point p.
    * @category Constructors
    */
-  static rectFromLatLng(p: LatLng): Rect {
+  static fromLatLng(p: LatLng): Rect {
     return new Rect(
       new R1Interval(angle.radians(p.lat), angle.radians(p.lat)),
       new S1Interval(angle.radians(p.lng), angle.radians(p.lng))
@@ -64,7 +64,7 @@ export class Rect {
    */
   static rectFromCenterSize(center: LatLng, size: LatLng): Rect {
     const half = new LatLng(size.lat / 2, size.lng / 2)
-    return Rect.rectFromLatLng(center).expanded(half)
+    return Rect.fromLatLng(center).expanded(half)
   }
 
   /**

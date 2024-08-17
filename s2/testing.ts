@@ -7,6 +7,7 @@ import * as cellid from './cellid'
 import type { CellID } from './cellid'
 import { Rect } from './Rect'
 import { Cap } from './Cap'
+import { DBL_EPSILON } from './predicates'
 
 /** The Earth's mean radius in kilometers (according to NASA). */
 export const EARTH_RADIUS_KM = 6371.01
@@ -134,6 +135,9 @@ export const samplePointFromCap = (c: Cap): Point => {
 export const oneIn = (n: number): boolean => {
   return randomUniformInt(n) == 0
 }
+
+export const RECT_ERROR_LAT = 10 * DBL_EPSILON
+export const RECT_ERROR_LNG = DBL_EPSILON
 
 /**
  * Reports whether the two rectangles are within the given tolerances
