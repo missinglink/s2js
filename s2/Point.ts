@@ -153,8 +153,8 @@ export class Point {
   /**
    * Reports whether this point is similar enough to be equal to another point.
    */
-  approxEqual(op: Point): boolean {
-    return this.vector.angle(op.vector) <= EPSILON
+  approxEqual(op: Point, eps: number = EPSILON): boolean {
+    return this.vector.angle(op.vector) <= eps
   }
 
   /**

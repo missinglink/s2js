@@ -1,4 +1,4 @@
-import { CROSS, Crossing, DO_NOT_CROSS, MAYBE_CROSS } from './edge_crossings'
+import { CROSS, Crossing, DO_NOT_CROSS, MAYBE_CROSS, vertexCrossing } from './edge_crossings'
 import { DBL_EPSILON, expensiveSign, INDETERMINATE, robustSign, triageSign } from './predicates'
 import type { Direction } from './predicates'
 import { Point } from './Point'
@@ -22,7 +22,6 @@ import { Point } from './Point'
  *   return count;
  * }
  * ```
- * @beta incomplete
  */
 export class EdgeCrosser {
   a: Point
@@ -82,8 +81,23 @@ export class EdgeCrosser {
    * chainCrossingSign below.
    */
   crossingSign(c: Point, d: Point): Crossing {
-    if (c !== this.c) this.restartAt(c)
+    if (!c.equals(this.c)) this.restartAt(c)
     return this.chainCrossingSign(d)
+  }
+
+  /**
+   * Reports whether if CrossingSign(c, d) > 0, or AB and CD share a vertex and VertexCrossing(a, b, c, d) is true.
+   *
+   * This method extends the concept of a "crossing" to the case where AB
+   * and CD have a vertex in common. The two edges may or may not cross,
+   * according to the rules defined in VertexCrossing above. The rules
+   * are designed so that point containment tests can be implemented simply
+   * by counting edge crossings. Similarly, determining whether one edge
+   * chain crosses another edge chain can be implemented by counting.
+   */
+  edgeOrVertexCrossing(c: Point, d: Point): boolean {
+    if (!c.equals(this.c)) this.restartAt(c)
+    return this.edgeOrVertexChainCrossing(d)
   }
 
   /**
@@ -101,20 +115,63 @@ export class EdgeCrosser {
    * the crossing methods (or restartAt) as the first vertex of the current edge.
    */
   chainCrossingSign(d: Point): Crossing {
+    // For there to be an edge crossing, the triangles ACB, CBD, BDA, DAC must
+    // all be oriented the same way (CW or CCW). We keep the orientation of ACB
+    // as part of our state. When each new point D arrives, we compute the
+    // orientation of BDA and check whether it matches ACB. This checks whether
+    // the points C and D are on opposite sides of the great circle through AB.
+
+    // Recall that triageSign is invariant with respect to rotating its
+    // arguments, i.e. ABD has the same orientation as BDA.
     const bda = triageSign(this.a, this.b, d)
     if (this.acb === -bda && bda !== INDETERMINATE) {
       this.c = d
       this.acb = -bda
       return DO_NOT_CROSS
     }
-    return this.crossingSignHelper(d, bda)
+
+    return this._crossingSign(d, bda)
+  }
+
+  /**
+   * Like EdgeOrVertexCrossing, but uses the last vertex
+   * passed to one of the crossing methods (or RestartAt) as the first vertex of the current edge.
+   */
+  edgeOrVertexChainCrossing(d: Point): boolean {
+    // We need to copy this.c since it is clobbered by ChainCrossingSign.
+    const c = Point.fromVector(this.c.vector)
+
+    switch (this.chainCrossingSign(d)) {
+      case DO_NOT_CROSS:
+        return false
+      case CROSS:
+        return true
+    }
+
+    return vertexCrossing(this.a, this.b, c, d)
   }
 
   /**
    * Handle the slow path of crossingSign.
    */
-  private crossingSignHelper(d: Point, bda: Direction): Crossing {
+  private _crossingSign(d: Point, bda: Direction): Crossing {
     const maxError = (1.5 + 1 / Math.sqrt(3)) * DBL_EPSILON
+
+    // At this point, a very common situation is that A,B,C,D are four points on
+    // a line such that AB does not overlap CD. (For example, this happens when
+    // a line or curve is sampled finely, or when geometry is constructed by
+    // computing the union of S2CellIds.) Most of the time, we can determine
+    // that AB and CD do not intersect using the two outward-facing
+    // tangents at A and B (parallel to AB) and testing whether AB and CD are on
+    // opposite sides of the plane perpendicular to one of these tangents. This
+    // is moderately expensive but still much cheaper than expensiveSign.
+
+    // The error in RobustCrossProd is insignificant. The maximum error in
+    // the call to CrossProd (i.e., the maximum norm of the error vector) is
+    // (0.5 + 1/sqrt(3)) * dblEpsilon. The maximum error in each call to
+    // DotProd below is dblEpsilon. (There is also a small relative error
+    // term that is insignificant because we are comparing the result against a
+    // constant that is very close to zero.)
     if (
       (this.c.vector.dot(this.aTangent.vector) > maxError && d.vector.dot(this.aTangent.vector) > maxError) ||
       (this.c.vector.dot(this.bTangent.vector) > maxError && d.vector.dot(this.bTangent.vector) > maxError)
@@ -124,18 +181,25 @@ export class EdgeCrosser {
       return DO_NOT_CROSS
     }
 
-    if (this.a === this.c || this.a === d || this.b === this.c || this.b === d) {
+    // Otherwise, eliminate the cases where two vertices from different edges are
+    // equal. (These cases could be handled in the code below, but we would rather
+    // avoid calling ExpensiveSign if possible.)
+    if (this.a.equals(this.c) || this.a.equals(d) || this.b.equals(this.c) || this.b.equals(d)) {
       this.c = d
       this.acb = -bda
       return MAYBE_CROSS
     }
 
-    if (this.a === this.b || this.c === d) {
+    // Eliminate the cases where an input edge is degenerate. (Note that in
+    // most cases, if CD is degenerate then this method is not even called
+    // because acb and bda have different signs.)
+    if (this.a.equals(this.b) || this.c.equals(d)) {
       this.c = d
       this.acb = -bda
       return DO_NOT_CROSS
     }
 
+    // Otherwise it's time to break out the big guns.
     if (this.acb === INDETERMINATE) this.acb = -expensiveSign(this.a, this.b, this.c)
     if (bda === INDETERMINATE) bda = expensiveSign(this.a, this.b, d)
 

@@ -67,16 +67,16 @@ export const crossingSign = (a: Point, b: Point, c: Point, d: Point): Crossing =
  * It is an error to call this method with 4 distinct vertices.
  */
 export const vertexCrossing = (a: Point, b: Point, c: Point, d: Point): boolean => {
-  if (a === b || c === d) return false
+  if (a.equals(b) || c.equals(d)) return false
 
   switch (true) {
-    case a === c:
-      return b === d || Point.orderedCCW(a.referenceDir(), d, b, a)
-    case b === d:
+    case a.equals(c):
+      return b.equals(d) || Point.orderedCCW(a.referenceDir(), d, b, a)
+    case b.equals(d):
       return Point.orderedCCW(b.referenceDir(), c, a, b)
-    case a === d:
-      return b === c || Point.orderedCCW(a.referenceDir(), c, b, a)
-    case b === c:
+    case a.equals(d):
+      return b.equals(c) || Point.orderedCCW(a.referenceDir(), c, b, a)
+    case b.equals(c):
       return Point.orderedCCW(b.referenceDir(), d, a, b)
   }
 

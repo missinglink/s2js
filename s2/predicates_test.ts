@@ -7,7 +7,7 @@ import { CLOCKWISE, COUNTERCLOCKWISE, INDETERMINATE } from './predicates'
 import { Point } from './Point'
 import { Vector } from '../r3/Vector'
 import * as matrix from './matrix3x3.ts'
-import { randomFrame } from './testing.ts'
+import { EARTH_RADIUS_KM, randomFrame } from './testing.ts'
 
 describe('s2.predicates', () => {
   test('sign', () => {
@@ -108,15 +108,28 @@ describe('s2.predicates', () => {
   })
 
   test('stableSign failure rate', () => {
-    // The Earth's mean radius in kilometers (according to NASA).
-    const earthRadiusKm = 6371.01
-
     const iters = 1000
+
+    // Verify that stableSign is able to handle most cases where the three
+    // points are as collinear as possible. (For reference, triageSign fails
+    // almost 100% of the time on this test.)
+    //
+    // Note that the failure rate *decreases* as the points get closer together,
+    // and the decrease is approximately linear. For example, the failure rate
+    // is 0.4% for collinear points spaced 1km apart, but only 0.0004% for
+    // collinear points spaced 1 meter apart.
+    //
+    //  1km spacing: <  1% (actual is closer to 0.4%)
+    // 10km spacing: < 10% (actual is closer to 4%)
     const want = 0.01
     const spacing = 1.0
 
+    // Estimate the probability that stableSign will not be able to compute
+    // the determinant sign of a triangle A, B, C consisting of three points
+    // that are as collinear as possible and spaced the given distance apart
+    // by counting up the times it returns Indeterminate.
     let failureCount = 0
-    const m = Math.tan(spacing / earthRadiusKm)
+    const m = Math.tan(spacing / EARTH_RADIUS_KM)
     for (let iter = 0; iter < iters; iter++) {
       const f = randomFrame()
       const a = matrix.col(f, 0)

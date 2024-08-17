@@ -88,7 +88,10 @@ export class RectBounder {
       lngAB = S1Interval.fullInterval()
     }
 
-    // Compute the latitude range spanned by the edge AB.
+    /**
+     * Next we compute the latitude range spanned by the edge AB. We start
+     * with the range spanning the two endpoints of the edge:
+     */
     let latAB = R1Interval.fromPoint(this.aLL.lat).addPoint(bLL.lat)
 
     // Check if AB crosses the plane through N and the Z-axis.
