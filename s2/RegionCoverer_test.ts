@@ -12,7 +12,7 @@ import { AvgAreaMetric } from './Metric_constants'
 
 describe('s2.RegionCoverer', () => {
   test('random cells', () => {
-    const rc = new RegionCoverer(0, 30, 1, 1)
+    const rc = new RegionCoverer({ maxCells: 1 })
 
     for (let i = 0; i < 10000; i++) {
       const id = randomCellID()
@@ -94,7 +94,7 @@ describe('s2.RegionCoverer', () => {
   }
 
   test('random caps', () => {
-    const rc = new RegionCoverer(0, 30, 1, 1)
+    const rc = new RegionCoverer({ maxCells: 1 })
     for (let i = 0; i < 1000; i++) {
       rc.minLevel = randomUniformInt(rc.maxLevel + 1)
       rc.maxLevel = randomUniformInt(rc.maxLevel + 1)
@@ -130,7 +130,7 @@ describe('s2.RegionCoverer', () => {
     const largeCellUnion = new CellUnion(...[largeCell])
     const diff = CellUnion.fromDifference(largeCellUnion, smallCellUnion)
 
-    const coverer = new RegionCoverer(LEVEL, LEVEL + 3, undefined, 3)
+    const coverer = new RegionCoverer({ minLevel: LEVEL, maxLevel: LEVEL + 3, maxCells: 3 })
 
     const interior = coverer.interiorCovering(diff)
     equal(interior.length, 3)
@@ -145,7 +145,7 @@ describe('s2.RegionCoverer', () => {
       const maxArea = Math.min(4 * Math.PI, 1000.0 * AvgAreaMetric.value(level))
       const c = randomCap(0.1 * AvgAreaMetric.value(MAX_LEVEL), maxArea)
       const covering = new CellUnion(...simpleRegionCovering(c, c.center, level))
-      const rc = new RegionCoverer(level, level, 1, Number.MAX_SAFE_INTEGER)
+      const rc = new RegionCoverer({ minLevel: level, maxLevel: level, maxCells: Number.MAX_SAFE_INTEGER })
       checkCovering(rc, c, covering, false)
     }
   })
@@ -160,47 +160,47 @@ describe('s2.RegionCoverer', () => {
       { cells: ['1/3', '1/33'], cov: new RegionCoverer(), want: false },
       {
         cells: ['1/31'],
-        cov: new RegionCoverer(2, 30, 1, 8),
+        cov: new RegionCoverer({ minLevel: 2 }),
         want: true
       },
       {
         cells: ['1/3'],
-        cov: new RegionCoverer(2, 30, 1, 8),
+        cov: new RegionCoverer({ minLevel: 2 }),
         want: false
       },
       {
         cells: ['1/31'],
-        cov: new RegionCoverer(0, 2, 1, 8),
+        cov: new RegionCoverer({ maxLevel: 2 }),
         want: true
       },
       {
         cells: ['1/312'],
-        cov: new RegionCoverer(0, 2, 1, 8),
+        cov: new RegionCoverer({ maxLevel: 2 }),
         want: false
       },
       {
         cells: ['1/31'],
-        cov: new RegionCoverer(0, 30, 2, 8),
+        cov: new RegionCoverer({ levelMod: 2 }),
         want: true
       },
       {
         cells: ['1/312'],
-        cov: new RegionCoverer(0, 30, 2, 8),
+        cov: new RegionCoverer({ levelMod: 2 }),
         want: false
       },
       {
         cells: ['1/1', '1/3'],
-        cov: new RegionCoverer(0, 30, 1, 2),
+        cov: new RegionCoverer({ maxCells: 2 }),
         want: true
       },
       {
         cells: ['1/1', '1/3', '2/'],
-        cov: new RegionCoverer(0, 30, 1, 2),
+        cov: new RegionCoverer({ maxCells: 2 }),
         want: false
       },
       {
         cells: ['1/123', '2/1', '3/0122'],
-        cov: new RegionCoverer(0, 30, 1, 2),
+        cov: new RegionCoverer({ maxCells: 2 }),
         want: true
       },
       {
@@ -242,7 +242,7 @@ describe('s2.RegionCoverer', () => {
           '1/1133',
           '1/1200'
         ],
-        cov: new RegionCoverer(0, 30, 2, 20),
+        cov: new RegionCoverer({ levelMod: 2, maxCells: 20 }),
         want: true
       },
       {
@@ -264,7 +264,7 @@ describe('s2.RegionCoverer', () => {
           '1/1132',
           '1/1133'
         ],
-        cov: new RegionCoverer(0, 30, 2, 20),
+        cov: new RegionCoverer({ levelMod: 2, maxCells: 20 }),
         want: false
       }
     ]

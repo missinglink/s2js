@@ -7,15 +7,17 @@ import * as cellid from './cellid'
 import { Point } from './Point'
 import { binarySearch } from './util'
 
+type RegionCovererOptions = { minLevel?: number; maxLevel?: number; levelMod?: number; maxCells?: number }
+
 /**
  * RegionCoverer allows arbitrary regions to be approximated as unions of cells (CellUnion).
  * This is useful for implementing various sorts of search and precomputation operations.
  *
  * Typical usage:
  *
- * 	rc := &s2.RegionCoverer{MaxLevel: 30, MaxCells: 5}
- * 	r := s2.Region(CapFromCenterArea(center, area))
- * 	covering := rc.Covering(r)
+ * 	rc = new RegionCoverer({ maxLevel: 30, maxCells: 5 })
+ * 	r = Cap.fromCenterArea(center, area)
+ * 	covering = rc.covering(r)
  *
  * This yields a CellUnion of at most 5 cells that is guaranteed to cover the
  * given region (a disc-shaped region on the sphere).
@@ -74,7 +76,7 @@ export class RegionCoverer {
    * Returns a new RegionCoverer with the appropriate defaults.
    * @category Constructors
    */
-  constructor(minLevel = 0, maxLevel = MAX_LEVEL, levelMod = 1, maxCells = 8) {
+  constructor({ minLevel = 0, maxLevel = MAX_LEVEL, levelMod = 1, maxCells = 8 }: RegionCovererOptions = {}) {
     this.minLevel = minLevel
     this.maxLevel = maxLevel
     this.levelMod = levelMod
