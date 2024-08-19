@@ -9,8 +9,43 @@ import { Vector } from '../r3/Vector'
 import { Interval } from '../r1/Interval'
 import { Rect } from '../r2/Rect'
 import { Point as R2Point } from '../r2/Point'
+import { Rect as R2Rect } from '../r2/Rect'
 
+/**
+ * Uniquely identifies a cell in the S2 cell decomposition.
+ * The most significant 3 bits encode the face number (0-5). The
+ * remaining 61 bits encode the position of the center of this cell
+ * along the Hilbert curve on that face. The zero value and the value
+ * (1<<64)-1 are invalid cell IDs. The first compares less than any
+ * valid cell ID, the second as greater than any valid cell ID.
+ *
+ * Sequentially increasing cell IDs follow a continuous space-filling curve
+ * over the entire sphere. They have the following properties:
+ *
+ *   - The ID of a cell at level k consists of a 3-bit face number followed
+ *     by k bit pairs that recursively select one of the four children of
+ *     each cell. The next bit is always 1, and all other bits are 0.
+ *     Therefore, the level of a cell is determined by the position of its
+ *     lowest-numbered bit that is turned on (for a cell at level k, this
+ *     position is 2 * (MaxLevel - k)).
+ *
+ *   - The ID of a parent cell is at the midpoint of the range of IDs spanned
+ *     by its children (or by its descendants at any level).
+ *
+ * Leaf cells are often used to represent points on the unit sphere, and
+ * this type provides methods for converting directly between these two
+ * representations. For cells that represent 2D regions rather than
+ * discrete point, it is better to use Cells.
+ */
 export type CellID = bigint
+
+/**
+ * An invalid cell ID guaranteed to be larger than any
+ * valid cell ID. It is used primarily by ShapeIndex. The value is also used
+ * by some S2 types when encoding data.
+ * Note that the sentinel's RangeMin == RangeMax == itself.
+ */
+export const SentinelCellID = ~0n
 
 /**
  * Returns the cube face for this cell id, in the range [0,5].
@@ -292,6 +327,12 @@ export const centerUV = (ci: CellID): R2Point => {
   return new R2Point(stToUV(siTiToST(si)), stToUV(siTiToST(ti)))
 }
 
+// boundUV returns the bound of this CellID in (u,v)-space.
+export const boundUV = (ci: CellID): R2Rect => {
+  const { i, j } = faceIJOrientation(ci)
+  return ijLevelToBoundUV(i, j, level(ci))
+}
+
 /**
  * Returns a leaf cell given its cube face (range 0..5) and IJ coordinates.
  * @category Constructors
@@ -568,6 +609,26 @@ export const next = (ci: CellID): CellID => {
 /** Returns the previous cell along the Hilbert curve. */
 export const prev = (ci: CellID): CellID => {
   return ci - (lsb(ci) << 1n)
+}
+
+/**
+ * Returns the next cell along the Hilbert curve, wrapping from last to
+ * first as necessary. This should not be used with ChildBegin and ChildEnd.
+ */
+export const nextWrap = (ci: CellID): CellID => {
+  const n = next(ci)
+  if (n < WRAP_OFFSET) return n
+  return n - WRAP_OFFSET
+}
+
+/**
+ * Returns the previous cell along the Hilbert curve, wrapping around from
+ * first to last as necessary. This should not be used with ChildBegin and ChildEnd.
+ */
+export const prevWrap = (ci: CellID): CellID => {
+  const p = prev(ci)
+  if (p < WRAP_OFFSET) return p
+  return p + WRAP_OFFSET
 }
 
 /**

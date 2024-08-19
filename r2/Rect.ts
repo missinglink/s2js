@@ -235,6 +235,14 @@ export class Rect {
   }
 
   /**
+   * Constructs a rectangle from another rectangle (ie. make a copy)
+   * @category Constructors
+   */
+  static fromRect(or: Rect): Rect {
+    return new Rect(new Interval(or.x.lo, or.x.hi), new Interval(or.y.lo, or.y.hi))
+  }
+
+  /**
    * Constructs the canonical empty rectangle.
    * Use isEmpty() to test for empty rectangles, since they have more than one representation.
    * new Interval(0, 0) is not the same as the empty Rect.
