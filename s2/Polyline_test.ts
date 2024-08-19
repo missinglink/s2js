@@ -9,19 +9,7 @@ import * as matrix from './matrix3x3'
 import * as cellid from './cellid'
 import { Cell } from './Cell'
 import { DEGREE } from '../s1/angle_constants'
-
-// const shape = makePolyline('0:0, 1:0, 1:1, 2:1')
-const makePolyline = (str: string): Polyline => {
-  const points: Point[] = str
-    .split(/\s*,\s*/)
-    .filter(Boolean)
-    .map((chunk) => {
-      const [x, y] = chunk.split(':').map(parseFloat)
-      return Point.fromLatLng(LatLng.fromDegrees(x, y))
-    })
-
-  return new Polyline(points)
-}
+import { makePolyline } from './testing_textformat'
 
 describe('s2.Polyline', () => {
   test('basics', () => {
