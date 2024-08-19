@@ -3,11 +3,12 @@ import { MAX_LEVEL, NUM_FACES, POS_BITS } from './cellid_constants'
 import type { Matrix3x3 } from './matrix3x3'
 import * as matrix from './matrix3x3'
 import { Point } from './Point'
+import { Point as R2Point } from '../r2/Point'
 import * as cellid from './cellid'
 import type { CellID } from './cellid'
 import { Rect } from './Rect'
 import { Cap } from './Cap'
-import { DBL_EPSILON } from './predicates'
+import { DBL_EPSILON, EPSILON } from './predicates'
 
 /** The Earth's mean radius in kilometers (according to NASA). */
 export const EARTH_RADIUS_KM = 6371.01
@@ -143,7 +144,7 @@ export const RECT_ERROR_LNG = DBL_EPSILON
  * Reports whether the two rectangles are within the given tolerances
  * at each corner from each other. The tolerances are specific to each axis.
  */
-export const rectsApproxEqual = (a: Rect, b: Rect, tolLat: number, tolLng: number): boolean => {
+export const rectsApproxEqual = (a: Rect, b: Rect, tolLat: number = EPSILON, tolLng: number = EPSILON): boolean => {
   return (
     Math.abs(a.lat.lo - b.lat.lo) < tolLat &&
     Math.abs(a.lat.hi - b.lat.hi) < tolLat &&
@@ -170,4 +171,35 @@ export const randomCap = (minArea: number, maxArea: number): Cap => {
 export const skewedInt = (maxLog: number): number => {
   const base = Math.floor(Math.random() * (maxLog + 1))
   return Number(randomBigIntN(31)) & ((1 << base) - 1)
+}
+
+/**
+ * Reports whether the two points are within the given epsilon.
+ */
+export const r2PointsApproxEqual = (a: R2Point, b: R2Point, epsilon: number = EPSILON): boolean => {
+  return float64Near(a.x, b.x, epsilon) && float64Near(a.y, b.y, epsilon)
+}
+
+/**
+ * Returns a Point from a line segment whose endpoints are difficult to handle correctly.
+ * Given two adjacent cube vertices P and Q, it returns either an edge midpoint, face midpoint,
+ * or corner vertex that is in the plane of PQ and that has been perturbed slightly.
+ * It also sometimes returns a random point from anywhere on the sphere.
+ */
+export const perturbedCornerOrMidpoint = (p: Point, q: Point): Point => {
+  let a = p.vector.mul(randomUniformInt(3) - 1).add(q.vector.mul(randomUniformInt(3) - 1))
+
+  if (oneIn(10)) {
+    a = a.add(randomPoint().vector.mul(Math.pow(1e-300, randomFloat64())))
+  } else if (oneIn(2)) {
+    a = a.add(randomPoint().vector.mul(4 * DBL_EPSILON))
+  } else {
+    a = a.add(randomPoint().vector.mul(1e-10 * Math.pow(1e-15, randomFloat64())))
+  }
+
+  if (a.norm2() < Number.MIN_VALUE) {
+    return perturbedCornerOrMidpoint(p, q)
+  }
+
+  return Point.fromVector(a)
 }

@@ -62,6 +62,13 @@ export class Point {
     return new Point(trunc(this.x), trunc(this.y))
   }
 
+  /**
+   * Reports whether this point equals another point.
+   */
+  equals(op: Point): boolean {
+    return this.x === op.x && this.y === op.y
+  }
+
   /** Generates a human readable string. */
   toString(): string {
     const t = this.trunc(12)
