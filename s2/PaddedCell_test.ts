@@ -18,9 +18,9 @@ describe('s2.PaddedCell', () => {
       equal(cell.id, pCell.cellID())
       equal(cellid.level(cell.id), pCell.levelValue())
       equal(padding, pCell.paddingValue())
-      deepEqual(pCell.boundRect(), cell.boundUV().expandedByMargin(padding))
+      deepEqual(pCell.bound(), cell.boundUV().expandedByMargin(padding))
       const r = R2Rect.fromPoints(cellid.centerUV(cell.id)).expandedByMargin(padding)
-      deepEqual(pCell.middleRect(), r)
+      deepEqual(pCell.middle(), r)
       deepEqual(cellid.point(cell.id), pCell.center())
       if (cellid.isLeaf(cid)) continue
       const children = cell.children()
@@ -31,9 +31,9 @@ describe('s2.PaddedCell', () => {
         equal(cellChild.id, pCellChild.cellID())
         equal(cellid.level(cellChild.id), pCellChild.levelValue())
         equal(padding, pCellChild.paddingValue())
-        deepEqual(pCellChild.boundRect(), cellChild.boundUV().expandedByMargin(padding))
+        deepEqual(pCellChild.bound(), cellChild.boundUV().expandedByMargin(padding))
         const r = R2Rect.fromPoints(cellid.centerUV(cellChild.id)).expandedByMargin(padding)
-        ok(r.approxEqual(pCellChild.middleRect()))
+        ok(r.approxEqual(pCellChild.middle()))
         deepEqual(cellid.point(cellChild.id), pCellChild.center())
       }
     }
