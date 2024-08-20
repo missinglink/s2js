@@ -37,20 +37,36 @@ export const clipToPaddedFace = (
   f: number,
   padding: number
 ): [R2Point | null, R2Point | null, boolean] => {
+  // Fast path: both endpoints are on the given face.
   if (face(a.vector) === f && face(b.vector) === f) {
     const [au, av] = validFaceXYZToUV(f, a.vector)
     const [bu, bv] = validFaceXYZToUV(f, b.vector)
     return [new R2Point(au, av), new R2Point(bu, bv), true]
   }
 
+  // Convert everything into the (u,v,w) coordinates of the given face. Note
+  // that the cross product *must* be computed in the original (x,y,z)
+  // coordinate system because PointCross (unlike the mathematical cross
+  // product) can produce different results in different coordinate systems
+  // when one argument is a linear multiple of the other, due to the use of
+  // symbolic perturbations.
   let normUVW = new PointUVW(faceXYZtoUVW(f, a.pointCross(b)))
   const aUVW = new PointUVW(faceXYZtoUVW(f, a))
   const bUVW = new PointUVW(faceXYZtoUVW(f, b))
 
+  // Padding is handled by scaling the u- and v-components of the normal.
+  // Letting R=1+padding, this means that when we compute the dot product of
+  // the normal with a cube face vertex (such as (-1,-1,1)), we will actually
+  // compute the dot product with the scaled vertex (-R,-R,1). This allows
+  // methods such as intersectsFace, exitAxis, etc, to handle padding
+  // with no further modifications.
   const scaleUV = 1 + padding
   const scaledN = new PointUVW(new Point(scaleUV * normUVW.x, scaleUV * normUVW.y, normUVW.z))
   if (!scaledN.intersectsFace()) return [null, null, false]
 
+  // TODO(roberts): This is a workaround for extremely small vectors where some
+  // loss of precision can occur in Normalize causing underflow. When PointCross
+  // is updated to work around this, this can be removed.
   if (Math.max(Math.abs(normUVW.x), Math.max(Math.abs(normUVW.y), Math.abs(normUVW.z))) < ldexp(1, -511)) {
     normUVW = new PointUVW(Point.fromVector(normUVW.vector.mul(ldexp(1, 563))))
   }
@@ -59,6 +75,8 @@ export const clipToPaddedFace = (
   const aTan = new PointUVW(Point.fromVector(normUVWNormalized.vector.cross(aUVW.vector)))
   const bTan = new PointUVW(Point.fromVector(bUVW.vector.cross(normUVWNormalized.vector)))
 
+  // As described in clipDestination, if the sum of the scores from clipping the two
+  // endpoints is 3 or more, then the segment does not intersect this face.
   const [aUV, aScore] = clipDestination(
     bUVW,
     aUVW,
@@ -168,7 +186,7 @@ export const clipDestination = (
     if (Math.max(Math.abs(uv.x), Math.abs(uv.y)) <= maxSafeUVCoord) return [uv, 0]
   }
 
-  const uv = scaledN.exitPoint(scaledN.exitAxis()).mul(scaleUV)
+  let uv = scaledN.exitPoint(scaledN.exitAxis()).mul(scaleUV)
 
   const p = new PointUVW(new Point(uv.x, uv.y, 1.0))
 
@@ -179,9 +197,12 @@ export const clipDestination = (
     score = 1
   }
 
-  if (score > 0 && b.z <= 0) score = 3
+  if (score > 0) {
+    if (b.z <= 0) score = 3
+    else uv = new R2Point(b.x / b.z, b.y / b.z)
+  }
 
-  return score > 0 ? [new R2Point(b.x / b.z, b.y / b.z), score] : [uv, score]
+  return [uv, score]
 }
 
 /**
