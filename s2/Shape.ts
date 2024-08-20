@@ -30,12 +30,19 @@ export class Edge {
     if (v0cmp !== 0) return v0cmp
     return this.v1.vector.cmp(other.v1.vector)
   }
+
+  /**
+   * Reports whether this edge equals another edge.
+   */
+  equals(other: Edge): boolean {
+    return this.v0.equals(other.v0) && this.v1.equals(other.v1)
+  }
 }
 
 /**
  * Sorts the array of Edges in place.
  */
-export const sortedges = (e: Edge[]): void => {
+export const sortEdges = (e: Edge[]): void => {
   e.sort((a, b) => a.cmp(b))
 }
 
