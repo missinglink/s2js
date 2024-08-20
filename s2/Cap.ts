@@ -12,7 +12,7 @@ import { Interval as S1Interval } from '../s1/Interval'
 import { MinWidthMetric } from './Metric_constants'
 import * as cellid from './cellid'
 import type { CellID } from './cellid'
-import { Region } from './Region'
+import type { Region } from './Region'
 import { Cell } from './Cell'
 import { LatLng } from './LatLng'
 

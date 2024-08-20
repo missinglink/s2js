@@ -51,13 +51,13 @@ export class NilRegion implements Region {
   rectBound(): Rect {
     return Rect.emptyRect()
   }
-  containsCell(c: Cell): boolean {
+  containsCell(_c: Cell): boolean {
     return false
   }
-  intersectsCell(c: Cell): boolean {
+  intersectsCell(_c: Cell): boolean {
     return false
   }
-  containsPoint(p: Point): boolean {
+  containsPoint(_p: Point): boolean {
     return false
   }
   cellUnionBound(): CellID[] {

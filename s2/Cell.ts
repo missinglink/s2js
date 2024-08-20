@@ -20,7 +20,7 @@ import { NEGATIVE_CHORDANGLE, RIGHT_CHORDANGLE, STRAIGHT_CHORDANGLE } from '../s
 import { pointArea } from './point_measures'
 import { updateMaxDistance, updateMinDistance } from './edge_distances'
 import { maxChordAngle, minChordAngle } from './util'
-import { Region } from './Region'
+import type { Region } from './Region'
 import { EdgeCrosser } from './EdgeCrosser'
 import { DO_NOT_CROSS } from './edge_crossings'
 
