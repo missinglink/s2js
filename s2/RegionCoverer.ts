@@ -1,9 +1,10 @@
+import type { Region } from './Region'
 import type { CellID } from './cellid'
+import * as cellid from './cellid'
 import { Cell } from './Cell'
 import { MAX_LEVEL } from './cellid_constants'
 import { CellUnion } from './CellUnion'
-import type { Region } from './Region'
-import * as cellid from './cellid'
+import { NilRegion } from './Region'
 import { Point } from './Point'
 import { binarySearch } from './util'
 
@@ -213,7 +214,7 @@ export class Coverer {
   maxLevel: number
   levelMod: number
   maxCells: number
-  region: Region | undefined
+  region: Region = new NilRegion()
   result: CellUnion = new CellUnion()
   pq: PriorityQueue = new PriorityQueue()
   interiorCovering = false
@@ -233,15 +234,15 @@ export class Coverer {
    * Returns a new candidate with no children if the cell intersects the given region.
    * The candidate is marked as terminal if it should not be expanded further.
    */
-  newCandidate(cell: Cell): Candidate | null {
-    if (!this.region!.intersectsCell(cell)) return null
+  newCandidate(cell: Cell): Candidate | NilCandidate {
+    if (!this.region.intersectsCell(cell)) return new NilCandidate()
     const cand = new Candidate(cell)
     const level = cell.level
     if (level >= this.minLevel) {
       if (this.interiorCovering) {
-        if (this.region!.containsCell(cell)) cand.terminal = true
-        else if (level + this.levelMod > this.maxLevel) return null
-      } else if (level + this.levelMod > this.maxLevel || this.region!.containsCell(cell)) cand.terminal = true
+        if (this.region.containsCell(cell)) cand.terminal = true
+        else if (level + this.levelMod > this.maxLevel) return new NilCandidate()
+      } else if (level + this.levelMod > this.maxLevel || this.region.containsCell(cell)) cand.terminal = true
     }
     return cand
   }
@@ -257,11 +258,13 @@ export class Coverer {
     for (let ci = cellid.childBegin(cell.id); ci !== last; ci = cellid.next(ci)) {
       const childCell = Cell.fromCellID(ci)
       if (numLevels > 0) {
-        if (this.region!.intersectsCell(childCell)) numTerminals += this.expandChildren(cand, childCell, numLevels)
+        if (this.region.intersectsCell(childCell)) {
+          numTerminals += this.expandChildren(cand, childCell, numLevels)
+        }
         continue
       }
       const child = this.newCandidate(childCell)
-      if (child) {
+      if (!(child instanceof NilCandidate)) {
         cand.children.push(child)
         cand.numChildren++
         if (child.terminal) numTerminals++
@@ -275,8 +278,8 @@ export class Coverer {
    * otherwise expands its children and inserts it into the priority queue.
    * Passing an argument of nil does nothing.
    */
-  addCandidate(cand: Candidate | null): void {
-    if (!cand) return
+  addCandidate(cand: Candidate | NilCandidate): void {
+    if (cand instanceof NilCandidate) return
 
     if (cand.terminal) {
       this.result.push(cand.cell.id)
@@ -291,7 +294,8 @@ export class Coverer {
     const numTerminals = this.expandChildren(cand, cand.cell, numLevels)
     const maxChildrenShift = 2 * this.levelMod
     if (cand.numChildren === 0) return
-    else if (!this.interiorCovering && numTerminals === 1 << maxChildrenShift && level >= this.minLevel) {
+
+    if (!this.interiorCovering && numTerminals === 1 << maxChildrenShift && level >= this.minLevel) {
       // Optimization: add the parent cell rather than all of its children.
       // We can't do this for interior coverings, since the children just
       // intersect the region, but may not be contained by it - we need to
@@ -374,7 +378,7 @@ export class Coverer {
 
     this.initialCandidates(region)
     while (this.pq.length > 0 && (!this.interiorCovering || this.result.length < this.maxCells)) {
-      const cand = this.pq.pop()!
+      const cand = this.pq.pop()
 
       // For interior covering we keep subdividing no matter how many children
       // candidate has. If we reach MaxCells before expanding all children,
@@ -399,7 +403,7 @@ export class Coverer {
       }
     }
 
-    this.region = undefined
+    this.region = new NilRegion()
     this.pq.reset()
 
     // Rather than just returning the raw list of cell ids, we construct a cell
@@ -580,6 +584,15 @@ class Candidate {
   }
 }
 
+// NilCandidate represents a Nil value
+class NilCandidate {
+  cell: Cell = Cell.fromCellID(cellid.SentinelCellID)
+  terminal = false // Cell should not be expanded further.
+  numChildren = 0 // Number of children that intersect the region.
+  children: Candidate[] = [] // Actual size may be 0, 4, 16, or 64 elements.
+  priority = 0 // Priority of the candidate.
+}
+
 export class PriorityQueue extends Array<Candidate> {
   len(): number {
     return this.length
@@ -600,9 +613,9 @@ export class PriorityQueue extends Array<Candidate> {
     return n
   }
 
-  pop(): Candidate | undefined {
+  pop(): Candidate | NilCandidate {
     const x = super.pop()
-    return x ? (x as Candidate) : x
+    return x ? (x as Candidate) : new NilCandidate()
   }
 
   reset(): void {
