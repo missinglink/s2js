@@ -9,9 +9,13 @@ import type { CellID } from './cellid'
 import { Rect } from './Rect'
 import { Cap } from './Cap'
 import { DBL_EPSILON, EPSILON } from './predicates'
+import type { Angle } from '../s1/angle'
 
 /** The Earth's mean radius in kilometers (according to NASA). */
 export const EARTH_RADIUS_KM = 6371.01
+
+// kmToAngle converts a distance on the Earth's surface to an angle.
+export const kmToAngle = (km: number): Angle => km / EARTH_RADIUS_KM
 
 /**
  * Returns a uniformly distributed value in the range [0,1).

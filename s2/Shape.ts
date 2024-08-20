@@ -320,3 +320,41 @@ export const defaultShapeIsEmpty = (s: Shape): boolean => {
 export const defaultShapeIsFull = (s: Shape): boolean => {
   return s.numEdges() === 0 && s.dimension() === 2 && s.numChains() > 0
 }
+
+// NilShape represents a Nil value
+export class NilShape implements Shape {
+  numEdges(): number {
+    return 0
+  }
+  edge(_i: number): Edge {
+    return new Edge(Point.originPoint(), Point.originPoint())
+  }
+  referencePoint(): ReferencePoint {
+    return originReferencePoint(false)
+  }
+  numChains(): number {
+    return 0
+  }
+  chain(_chainID: number): Chain {
+    return new Chain(0, 0)
+  }
+  chainEdge(_chainID: number, _offset: number): Edge {
+    return new Edge(Point.originPoint(), Point.originPoint())
+  }
+  chainPosition(_edgeID: number): ChainPosition {
+    return new ChainPosition(0, 0)
+  }
+  dimension(): number {
+    return -1
+  }
+  isEmpty(): boolean {
+    return true
+  }
+  isFull(): boolean {
+    return false
+  }
+  typeTag(): TypeTag {
+    return TypeTagNone
+  }
+  privateInterface(): void {}
+}
