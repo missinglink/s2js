@@ -23,6 +23,7 @@ import { ShapeIndexClippedShape } from './ShapeIndexClippedShape'
 import { CrossingEdgeQuery } from './CrossingEdgeQuery'
 import { ShapeIndexCell } from './ShapeIndexCell'
 import { PaddedCell } from './PaddedCell'
+import { trueCentroid } from './centroids'
 import {
   clipToPaddedFace,
   edgeIntersectsRect,
@@ -175,9 +176,7 @@ export class Loop implements Shape {
 
   validate(): Error | null {
     const err = this.findValidationErrorNoIndex()
-    if (err) {
-      return err
-    }
+    if (err) return err
     return null
   }
 
@@ -190,19 +189,17 @@ export class Loop implements Shape {
     }
 
     if (this.vertices.length < 3) {
-      if (this.isEmptyOrFull()) {
-        return null
-      }
+      if (this.isEmptyOrFull()) return null
       return new Error('non-empty, non-full loops must have at least 3 vertices')
     }
 
     for (let i = 0; i < this.vertices.length; i++) {
-      if (this.vertices[i] === this.vertex(i + 1)) {
+      if (this.vertices[i].equals(this.vertex(i + 1))) {
         return new Error(`edge ${i} is degenerate (duplicate vertex)`)
       }
 
       const other = Point.fromVector(this.vertex(i + 1).vector.mul(-1))
-      if (this.vertices[i] === other) {
+      if (this.vertices[i].equals(other)) {
         return new Error(`vertices ${i} and ${(i + 1) % this.vertices.length} are antipodal`)
       }
     }
@@ -267,7 +264,7 @@ export class Loop implements Shape {
     if (this.isEmptyOrFull()) return this.isEmpty() === o.isEmpty()
 
     for (let offset = 0; offset < this.vertices.length; offset++) {
-      if (this.vertices[offset] === o.vertex(0)) {
+      if (this.vertices[offset].equals(o.vertex(0))) {
         for (let i = 0; i < this.vertices.length; i++) {
           if (this.vertex(i + offset) !== o.vertex(i)) {
             return false
@@ -559,7 +556,7 @@ export class Loop implements Shape {
     const notFound = 0
     if (this.vertices.length < 10) {
       for (let i = 1; i <= this.vertices.length; i++) {
-        if (this.vertex(i) === p) return [i, true]
+        if (this.vertex(i).equals(p)) return [i, true]
       }
       return [notFound, false]
     }
@@ -570,10 +567,10 @@ export class Loop implements Shape {
     const aClipped = it.indexCell().findByShapeID(0)
     for (let i = aClipped.numEdges() - 1; i >= 0; i--) {
       const ai = aClipped.edges[i]
-      if (this.vertex(ai) === p) {
+      if (this.vertex(ai).equals(p)) {
         return ai === 0 ? [this.vertices.length, true] : [ai, true]
       }
-      if (this.vertex(ai + 1) === p) {
+      if (this.vertex(ai + 1).equals(p)) {
         return [ai + 1, true]
       }
     }
@@ -601,7 +598,7 @@ export class Loop implements Shape {
     for (let i = 1; i + 1 < this.vertices.length; i++) {
       if (this.vertex(i + 1).vector.angle(origin.vector) > maxLength) {
         const oldOrigin = origin
-        if (origin === this.vertex(0)) {
+        if (origin.equals(this.vertex(0))) {
           origin = Point.fromVector(this.vertex(0).pointCross(this.vertex(i)).vector.normalize())
         } else if (this.vertex(i).vector.angle(this.vertex(0).vector) < maxLength) {
           origin = this.vertex(0)
@@ -627,7 +624,7 @@ export class Loop implements Shape {
     for (let i = 1; i + 1 < this.vertices.length; i++) {
       if (this.vertex(i + 1).vector.angle(origin.vector) > maxLength) {
         const oldOrigin = origin
-        if (origin === this.vertex(0)) {
+        if (origin.equals(this.vertex(0))) {
           origin = Point.fromVector(this.vertex(0).pointCross(this.vertex(i)).vector.normalize())
         } else if (this.vertex(i).vector.angle(this.vertex(0).vector) < maxLength) {
           origin = this.vertex(0)
@@ -664,9 +661,9 @@ export class Loop implements Shape {
     return area
   }
 
-  // centroid(): Point {
-  //   return this.surfaceIntegralPoint(TrueCentroid)
-  // }
+  centroid(): Point {
+    return this.surfaceIntegralPoint(trueCentroid)
+  }
 
   // xyzFaceSiTiVertices(): XyzFaceSiTi[] {
   //   return this.vertices.map((v) => {
@@ -674,6 +671,32 @@ export class Loop implements Shape {
   //     return new XyzFaceSiTi(v, face, si, ti, level)
   //   })
   // }
+
+  /**
+   * Reports whether given two loops whose boundaries
+   * do not cross (see compareBoundary), if this loop contains the boundary of the
+   * other loop. If reverse is true, the boundary of the other loop is reversed
+   * first (which only affects the result when there are shared edges). This method
+   * is cheaper than compareBoundary because it does not test for edge intersections.
+   *
+   * This function requires that neither loop is empty, and that if the other is full,
+   * then reverse == false.
+   */
+  containsNonCrossingBoundary(other: Loop, reverseOther: boolean): boolean {
+    // The bounds must intersect for containment.
+    if (!this.bound.intersects(other.bound)) return false
+
+    // Full loops are handled as though the loop surrounded the entire sphere.
+    if (this.isFull()) return true
+    if (other.isFull()) return false
+
+    const [m, ok] = this.findVertex(other.vertex(0))
+    if (!ok) {
+      return this.containsPoint(other.vertex(0)) // Since the other loops vertex 0 is not shared, we can check if this contains it.
+    }
+    // Otherwise check whether the edge (b0, b1) is contained by this loop.
+    return wedgeContainsSemiwedge(this.vertex(m - 1), this.vertex(m), this.vertex(m + 1), other.vertex(1), reverseOther)
+  }
 }
 
 export const containsCenterMatches = (a: ShapeIndexClippedShape, target: CrossingTarget): boolean => {
@@ -835,18 +858,6 @@ export class CompareBoundaryRelation implements LoopRelation {
 export const wedgeContainsSemiwedge = (a0: Point, ab1: Point, a2: Point, b2: Point, reverse: boolean): boolean => {
   if (b2.equals(a0) || b2.equals(a2)) return b2.equals(a0) === reverse
   return Point.orderedCCW(a0, a2, b2, ab1)
-}
-
-export const containsNonCrossingBoundary = (l: Loop, other: Loop, reverseOther: boolean): boolean => {
-  if (!l.bound.intersects(other.bound)) return false
-
-  if (l.isFull()) return true
-  if (other.isFull()) return false
-
-  const [m, ok] = l.findVertex(other.vertex(0))
-  if (!ok) return l.containsPoint(other.vertex(0))
-
-  return wedgeContainsSemiwedge(l.vertex(m - 1), l.vertex(m), l.vertex(m + 1), other.vertex(1), reverseOther)
 }
 
 // ----

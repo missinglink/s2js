@@ -45,7 +45,7 @@ export type CellID = bigint
  * by some S2 types when encoding data.
  * Note that the sentinel's RangeMin == RangeMax == itself.
  */
-export const SentinelCellID = ~0n
+export const SentinelCellID = 18446744073709551615n
 
 /**
  * Returns the cube face for this cell id, in the range [0,5].

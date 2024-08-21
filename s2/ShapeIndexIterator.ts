@@ -4,6 +4,7 @@ import * as cellid from './cellid'
 import { NilShapeIndexCell, ShapeIndexCell } from './ShapeIndexCell'
 import type { CellRelation } from './ShapeIndex'
 import { ShapeIndex, INDEXED, SUBDIVIDED, DISJOINT } from './ShapeIndex'
+import { binarySearch } from './util'
 
 /**
  * Defines the set of possible iterator starting positions. By
@@ -160,10 +161,10 @@ export class ShapeIndexIterator {
    * end of the index if no such cell exists.
    */
   seek(target: CellID): void {
-    this.position = this.index.cells.findIndex((cell) => cell >= target)
-    if (this.position === -1) {
-      this.position = this.index.cells.length
-    }
+    this.position = binarySearch(this.index.cells.length, (i) => {
+      return this.index.cells[i] >= target
+    })
+
     this.refresh()
   }
 

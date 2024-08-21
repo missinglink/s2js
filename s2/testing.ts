@@ -10,6 +10,8 @@ import { Rect } from './Rect'
 import { Cap } from './Cap'
 import { DBL_EPSILON, EPSILON } from './predicates'
 import type { Angle } from '../s1/angle'
+import { Loop } from './Loop'
+import { Polygon } from './Polygon'
 
 /** The Earth's mean radius in kilometers (according to NASA). */
 export const EARTH_RADIUS_KM = 6371.01
@@ -206,4 +208,19 @@ export const perturbedCornerOrMidpoint = (p: Point, q: Point): Point => {
   }
 
   return Point.fromVector(a)
+}
+
+/**
+ * Constructs a polygon with the specified center as a
+ * number of concentric loops and vertices per loop.
+ */
+export const concentricLoopsPolygon = (center: Point, numLoops: number, verticesPerLoop: number): Polygon => {
+  const loops: Loop[] = []
+
+  for (let li = 0; li < numLoops; li++) {
+    const radius = (0.005 * (li + 1)) / numLoops
+    loops.push(Loop.regularLoop(Point.fromVector(center.vector), radius, verticesPerLoop))
+  }
+
+  return Polygon.fromLoops(loops)
 }

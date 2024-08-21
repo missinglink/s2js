@@ -1,8 +1,10 @@
 import { LatLng } from './LatLng'
 import { LaxPolygon } from './LaxPolygon'
 import { LaxPolyline } from './LaxPolyline'
+import { Loop } from './Loop'
 import { Point } from './Point'
 import { PointVector } from './PointVector'
+import { Polygon } from './Polygon'
 import { Polyline } from './Polyline'
 import { ShapeIndex } from './ShapeIndex'
 
@@ -96,4 +98,54 @@ export const makeShapeIndex = (str: string): ShapeIndex => {
   }
 
   return index
+}
+
+/**
+ * Constructs a Loop from the input string.
+ * The strings "empty" or "full" create an empty or full loop respectively.
+ */
+export const makeLoop = (s: string): Loop => {
+  if (s === 'full') return Loop.fullLoop()
+  if (s === 'empty') return Loop.emptyLoop()
+
+  return new Loop(parsePoints(s))
+}
+
+/**
+ * Constructs a polygon from the sequence of loops in the input string. Loops are automatically normalized by inverting them if necessary
+ * so that they enclose at most half of the unit sphere. (Historically this was
+ * once a requirement of polygon loops. It also hides the problem that if the
+ * user thinks of the coordinates as X:Y rather than LAT:LNG, it yields a loop
+ * with the opposite orientation.)
+ *
+ * Loops are semicolon separated in the input string with each loop using the
+ * same format as above.
+ *
+ * Examples of the input format:
+ *
+ * "10:20, 90:0, 20:30"                                  // one loop
+ * "10:20, 90:0, 20:30; 5.5:6.5, -90:-180, -15.2:20.3"   // two loops
+ * ""       // the empty polygon (consisting of no loops)
+ * "empty"  // the empty polygon (consisting of no loops)
+ * "full"   // the full polygon (consisting of one full loop)
+ */
+export const makePolygon = (s: string, normalize: boolean): Polygon => {
+  const loops: Loop[] = []
+
+  // Avoid the case where split on empty string will still return
+  // one empty value, where we want no values.
+  if (s === 'empty' || s === '') {
+    return Polygon.fromLoops(loops)
+  }
+
+  s.split(';')
+    .map((str) => str.trim())
+    .filter(Boolean)
+    .forEach((str) => {
+      const loop = makeLoop(str)
+      if (normalize && !loop.isFull()) loop.normalize()
+      loops.push(loop)
+    })
+
+  return Polygon.fromLoops(loops)
 }

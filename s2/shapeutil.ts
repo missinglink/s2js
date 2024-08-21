@@ -67,6 +67,9 @@ export class RangeIterator {
    */
   seekTo(target: RangeIterator) {
     this.it.seek(target.rangeMin)
+    // If the current cell does not overlap target, it is possible that the
+    // previous cell is the one we are looking for. This can only happen when
+    // the previous cell contains target but has a smaller CellID.
     if (this.it.done() || cellid.rangeMin(this.it.cellID()) > target.rangeMax) {
       if (this.it.prev() && cellid.rangeMax(this.it.cellID()) < target.cellID()) {
         this.it.next()
