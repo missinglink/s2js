@@ -12,7 +12,7 @@ import { LatLng } from './LatLng'
 import { DBL_EPSILON, EPSILON } from './predicates'
 import { DEGREE } from '../s1/angle_constants'
 
-import { pointsNear, randomPoint, randomUniformFloat64 } from './testing'
+import { float64Eq, pointsNear, randomPoint, randomUniformFloat64 } from './testing'
 import { float64Near } from '../r1/math'
 import { MinWidthMetric } from './Metric_constants'
 import { Cell } from './Cell'
@@ -504,68 +504,68 @@ describe('s2.Cap', () => {
     }
   })
 
-  // test('union', () => {
-  //   const a = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.0, 10.0)), 0.2 * DEGREE)
-  //   const b = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.0, 10.0)), 0.3 * DEGREE)
-  //   ok(b.contains(a), `${b}.contains(${a}) = false, want true`)
-  //   ok(b.approxEqual(a.union(b)), `${b}.approxEqual(${a.union(b)}) = false, want true`)
+  test('union', () => {
+    const a = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.0, 10.0)), 0.2 * DEGREE)
+    const b = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.0, 10.0)), 0.3 * DEGREE)
+    ok(b.contains(a), `${b}.contains(${a}) = false, want true`)
+    ok(b.approxEqual(a.union(b)), `${b}.approxEqual(${a.union(b)}) = false, want true`)
 
-  //   ok(a.union(Cap.fullCap()).isFull(), `${a}.union(${Cap.fullCap()}).isFull() = false, want true`)
+    ok(a.union(Cap.fullCap()).isFull(), `${a}.union(${Cap.fullCap()}).isFull() = false, want true`)
 
-  //   ok(a.union(Cap.emptyCap()).approxEqual(a), `${a}.union(Cap.emptyCap()) = ${a.union(Cap.emptyCap())}, want ${a}`)
+    ok(a.union(Cap.emptyCap()).approxEqual(a), `${a}.union(Cap.emptyCap()) = ${a.union(Cap.emptyCap())}, want ${a}`)
 
-  //   const c = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(51.0, 11.0)), 1.5 * DEGREE)
-  //   ok(c.contains(a), `${c}.contains(${a}) = false, want true`)
-  //   ok(a.union(c).center.approxEqual(c.center), `${a}.union(${c}).center = ${a.union(c).center}, want ${c.center}`)
-  //   ok(
-  //     s2.float64Eq(a.union(c).radius(), c.radius()),
-  //     `${a}.union(${c}).radius = ${a.union(c).radius()}, want ${c.radius()}`
-  //   )
+    const c = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(51.0, 11.0)), 1.5 * DEGREE)
+    ok(c.contains(a), `${c}.contains(${a}) = false, want true`)
+    ok(a.union(c).center.approxEqual(c.center), `${a}.union(${c}).center = ${a.union(c).center}, want ${c.center}`)
+    ok(
+      float64Eq(a.union(c).radius(), c.radius()),
+      `${a}.union(${c}).radius = ${a.union(c).radius()}, want ${c.radius()}`
+    )
 
-  //   const d = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(51.0, 11.0)), 0.1 * DEGREE)
-  //   ok(!d.contains(a), `${d}.contains(${a}) = true, want false`)
-  //   ok(!d.intersects(a), `${d}.intersects(${a}) = true, want false`)
+    const d = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(51.0, 11.0)), 0.1 * DEGREE)
+    ok(!d.contains(a), `${d}.contains(${a}) = true, want false`)
+    ok(!d.intersects(a), `${d}.intersects(${a}) = true, want false`)
 
-  //   ok(a.union(d).approxEqual(d.union(a)), `${a}.union(${d}).approxEqual(${d.union(a)}) = false, want true`)
-  //   ok(
-  //     float64Near(LatLng.fromPoint(a.union(d).center).lat.degrees(), 50.4588, 0.001),
-  //     `${a.union(d)}.center.lat = ${LatLng.fromPoint(a.union(d).center).lat.degrees()}, want 50.4588`
-  //   )
-  //   ok(
-  //     float64Near(LatLng.fromPoint(a.union(d).center).lng.degrees(), 10.4525, 0.001),
-  //     `${a.union(d)}.center.lng = ${LatLng.fromPoint(a.union(d).center).lng.degrees()}, want 10.4525`
-  //   )
-  //   ok(
-  //     float64Near(a.union(d).radius().degrees(), 0.7425, 0.001),
-  //     `${a.union(d)}.radius = ${a.union(d).radius().degrees()}, want 0.7425`
-  //   )
+    ok(a.union(d).approxEqual(d.union(a)), `${a}.union(${d}).approxEqual(${d.union(a)}) = false, want true`)
+    ok(
+      float64Near(angle.degrees(LatLng.fromPoint(a.union(d).center).lat), 50.4588, 0.001),
+      `${a.union(d)}.center.lat = ${angle.degrees(LatLng.fromPoint(a.union(d).center).lat)}, want 50.4588`
+    )
+    ok(
+      float64Near(angle.degrees(LatLng.fromPoint(a.union(d).center).lng), 10.4525, 0.001),
+      `${a.union(d)}.center.lng = ${angle.degrees(LatLng.fromPoint(a.union(d).center).lng)}, want 10.4525`
+    )
+    ok(
+      float64Near(angle.degrees(a.union(d).radius()), 0.7425, 0.001),
+      `${a.union(d)}.radius = ${angle.degrees(a.union(d).radius())}, want 0.7425`
+    )
 
-  //   const e = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.3, 10.3)), 0.2 * DEGREE)
-  //   ok(!e.contains(a), `${e}.contains(${a}) = false, want true`)
-  //   ok(e.intersects(a), `${e}.intersects(${a}) = false, want true`)
-  //   ok(a.union(e).approxEqual(e.union(a)), `${a}.union(${e}).approxEqual(${e.union(a)}) = false, want true`)
-  //   ok(
-  //     float64Near(LatLng.fromPoint(a.union(e).center).lat.degrees(), 50.15, 0.001),
-  //     `${a.union(e)}.center.lat = ${LatLng.fromPoint(a.union(e).center).lat.degrees()}, want 50.1500`
-  //   )
-  //   ok(
-  //     float64Near(LatLng.fromPoint(a.union(e).center).lng.degrees(), 10.1495, 0.001),
-  //     `${a.union(e)}.center.lng = ${LatLng.fromPoint(a.union(e).center).lng.degrees()}, want 10.1495`
-  //   )
-  //   ok(
-  //     float64Near(a.union(e).radius().degrees(), 0.3781, 0.001),
-  //     `${a.union(e)}.radius = ${a.union(e).radius().degrees()}, want 0.3781`
-  //   )
+    const e = Cap.fromCenterAngle(Point.fromLatLng(LatLng.fromDegrees(50.3, 10.3)), 0.2 * DEGREE)
+    ok(!e.contains(a), `${e}.contains(${a}) = false, want true`)
+    ok(e.intersects(a), `${e}.intersects(${a}) = false, want true`)
+    ok(a.union(e).approxEqual(e.union(a)), `${a}.union(${e}).approxEqual(${e.union(a)}) = false, want true`)
+    ok(
+      float64Near(angle.degrees(LatLng.fromPoint(a.union(e).center).lat), 50.15, 0.001),
+      `${a.union(e)}.center.lat = ${angle.degrees(LatLng.fromPoint(a.union(e).center).lat)}, want 50.1500`
+    )
+    ok(
+      float64Near(angle.degrees(LatLng.fromPoint(a.union(e).center).lng), 10.1495, 0.001),
+      `${a.union(e)}.center.lng = ${angle.degrees(LatLng.fromPoint(a.union(e).center).lng)}, want 10.1495`
+    )
+    ok(
+      float64Near(angle.degrees(a.union(e).radius()), 0.3781, 0.001),
+      `${a.union(e)}.radius = ${angle.degrees(a.union(e).radius())}, want 0.3781`
+    )
 
-  //   const p1 = new Point(0, 0, 1)
-  //   const p2 = new Point(0, 1, 0)
-  //   const f = Cap.fromCenterAngle(p1, 150 * DEGREE)
-  //   const g = Cap.fromCenterAngle(p2, 150 * DEGREE)
-  //   ok(f.union(g).isFull(), `${f}.union(${g}).isFull() = false, want true`)
+    const p1 = new Point(0, 0, 1)
+    const p2 = new Point(0, 1, 0)
+    const f = Cap.fromCenterAngle(p1, 150 * DEGREE)
+    const g = Cap.fromCenterAngle(p2, 150 * DEGREE)
+    ok(f.union(g).isFull(), `${f}.union(${g}).isFull() = false, want true`)
 
-  //   const hemi = Cap.fromCenterHeight(p1, 1)
-  //   ok(hemi.union(hemi.complement()).isFull(), `${hemi}.union(${hemi.complement()}).isFull() = false, want true`)
-  // })
+    const hemi = Cap.fromCenterHeight(p1, 1)
+    ok(hemi.union(hemi.complement()).isFull(), `${hemi}.union(${hemi.complement()}).isFull() = false, want true`)
+  })
 
   test('equal', () => {
     const tests = [

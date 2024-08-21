@@ -15,6 +15,7 @@ import type { CellID } from './cellid'
 import type { Region } from './Region'
 import { Cell } from './Cell'
 import { LatLng } from './LatLng'
+import { interpolateAtDistance } from './edge_distances'
 
 export const CENTER_POINT = Point.fromCoords(1.0, 0, 0)
 
@@ -480,5 +481,30 @@ export class Cap implements Region {
     if (this.isEmpty()) return new Point(0, 0, 0)
     const r = 1 - 0.5 * this.height()
     return Point.fromVector(this.center.vector.mul(r * this.area()))
+  }
+
+  /**
+   * Returns the smallest cap which encloses this cap and another cap.
+   */
+  union(oc: Cap): Cap {
+    let c: Cap = this
+
+    // If the other cap is larger, swap c and other for the rest of the computations.
+    if (c.rad < oc.rad) {
+      ;[c, oc] = [oc, c]
+    }
+
+    if (c.isFull() || oc.isEmpty()) return c
+
+    const cRadius = c.radius()
+    const otherRadius = oc.radius()
+    const distance = c.center.distance(oc.center)
+
+    if (cRadius >= distance + otherRadius) return c
+
+    const resRadius = 0.5 * (distance + cRadius + otherRadius)
+    const resCenter = interpolateAtDistance(0.5 * (distance - cRadius + otherRadius), c.center, oc.center)
+
+    return Cap.fromCenterAngle(resCenter, resRadius)
   }
 }
