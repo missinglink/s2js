@@ -1,98 +1,101 @@
-// /**
-//  * CrossingType defines different ways of reporting edge intersections.
-//  */
-// export enum CrossingType {
-//   /**
-//    * CrossingTypeInterior reports intersections that occur at a point
-//    * interior to both edges (i.e., not at a vertex).
-//    */
-//   CrossingTypeInterior,
-
+import type { CellID } from './cellid'
+import * as cellid from './cellid'
 import { ContainsVertexQuery } from './ContainsVertexQuery'
 import { EdgeCrosser } from './EdgeCrosser'
 import { Point } from './Point'
 import { Edge, originReferencePoint, ReferencePoint, Shape, sortEdges } from './Shape'
+import { ShapeIndex } from './ShapeIndex'
+import { ShapeIndexCell } from './ShapeIndexCell'
+import { ShapeIndexIterator } from './ShapeIndexIterator'
 
-//   /**
-//    * CrossingTypeAll reports all intersections, even those where two edges
-//    * intersect only because they share a common vertex.
-//    */
-//   CrossingTypeAll,
+/**
+ * CrossingType defines different ways of reporting edge intersections.
+ */
+export type CrossingType = number
 
-//   /**
-//    * CrossingTypeNonAdjacent reports all intersections except for pairs of
-//    * the form (AB, BC) where both edges are from the same ShapeIndex.
-//    */
-//   CrossingTypeNonAdjacent
-// }
+/**
+ * Reports intersections that occur at a point
+ * interior to both edges (i.e., not at a vertex).
+ */
+export const CROSSING_TYPE_INTERIOR: CrossingType = 0
+/**
+ * Reports all intersections, even those where two edges
+ * intersect only because they share a common vertex.
+ */
+export const CROSSING_TYPE_ALL: CrossingType = 1
+/**
+ * Reports all intersections except for pairs of
+ * the form (AB, BC) where both edges are from the same ShapeIndex.
+ */
+export const CROSSING_TYPE_NON_ADJACENT: CrossingType = 2
 
-// /**
-//  * rangeIterator is a wrapper over ShapeIndexIterator with extra methods
-//  * that are useful for merging the contents of two or more ShapeIndexes.
-//  */
-// export class rangeIterator {
-//   it: ShapeIndexIterator
-//   rangeMin: CellID
-//   rangeMax: CellID
+/**
+ * RangeIterator is a wrapper over ShapeIndexIterator with extra methods
+ * that are useful for merging the contents of two or more ShapeIndexes.
+ */
+export class RangeIterator {
+  it: ShapeIndexIterator
+  rangeMin: CellID = cellid.SentinelCellID
+  rangeMax: CellID = cellid.SentinelCellID
 
-//   constructor(index: ShapeIndex) {
-//     this.it = index.iterator()
-//     this.refresh()
-//   }
+  constructor(index: ShapeIndex) {
+    this.it = index.iterator()
+    this.refresh()
+  }
 
-//   cellID(): CellID {
-//     return this.it.cellID()
-//   }
+  cellID(): CellID {
+    return this.it.cellID()
+  }
 
-//   indexCell(): ShapeIndexCell {
-//     return this.it.indexCell()
-//   }
+  indexCell(): ShapeIndexCell {
+    return this.it.indexCell()
+  }
 
-//   next() {
-//     this.it.next()
-//     this.refresh()
-//   }
+  next() {
+    this.it.next()
+    this.refresh()
+  }
 
-//   done(): boolean {
-//     return this.it.done()
-//   }
+  done(): boolean {
+    return this.it.done()
+  }
 
-//   /**
-//    * Positions the iterator at the first cell that overlaps or follows
-//    * the current range minimum of the target iterator, i.e. such that its
-//    * rangeMax >= target.rangeMin.
-//    */
-//   seekTo(target: rangeIterator) {
-//     this.it.seek(target.rangeMin)
-//     if (this.it.done() || this.it.cellID().rangeMin() > target.rangeMax) {
-//       if (this.it.prev() && this.it.cellID().rangeMax() < target.cellID()) {
-//         this.it.next()
-//       }
-//     }
-//     this.refresh()
-//   }
+  /**
+   * Positions the iterator at the first cell that overlaps or follows
+   * the current range minimum of the target iterator, i.e. such that its
+   * rangeMax >= target.rangeMin.
+   */
+  seekTo(target: RangeIterator) {
+    this.it.seek(target.rangeMin)
+    if (this.it.done() || cellid.rangeMin(this.it.cellID()) > target.rangeMax) {
+      if (this.it.prev() && cellid.rangeMax(this.it.cellID()) < target.cellID()) {
+        this.it.next()
+      }
+    }
+    this.refresh()
+  }
 
-//   /**
-//    * Positions the iterator at the first cell that follows the current
-//    * range minimum of the target iterator. i.e. the first cell such that its
-//    * rangeMin > target.rangeMax.
-//    */
-//   seekBeyond(target: rangeIterator) {
-//     this.it.seek(target.rangeMax.next())
-//     if (!this.it.done() && this.it.cellID().rangeMin() <= target.rangeMax) {
-//       this.it.next()
-//     }
-//     this.refresh()
-//   }
+  /**
+   * Positions the iterator at the first cell that follows the current
+   * range minimum of the target iterator. i.e. the first cell such that its
+   * rangeMin > target.rangeMax.
+   */
+  seekBeyond(target: RangeIterator) {
+    this.it.seek(cellid.next(target.rangeMax))
+    if (!this.it.done() && cellid.rangeMin(this.it.cellID()) <= target.rangeMax) {
+      this.it.next()
+    }
+    this.refresh()
+  }
 
-//   /**
-//    * Updates the iterator's min and max values.
-//    */
-//   refresh() {
-//     this.rangeMin = this.cellID().rangeMin()
-//     this.rangeMax = this.cellID().rangeMax()
-//   }
-// }
+  /**
+   * Updates the iterator's min and max values.
+   */
+  refresh() {
+    this.rangeMin = cellid.rangeMin(this.cellID())
+    this.rangeMax = cellid.rangeMax(this.cellID())
+  }
+}
 
 /**
  * referencePointForShape is a helper function for implementing various Shapes
