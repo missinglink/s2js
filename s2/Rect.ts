@@ -9,13 +9,16 @@ import { RADIAN } from '../s1/angle_constants'
 import { remainder } from '../r1/math'
 import type { CellID } from './cellid'
 import { Cell } from './Cell'
+import type { Region } from './Region'
+import * as cellid from './cellid'
+import { CROSS, crossingSign } from './edge_crossings'
 
 /**
  * Represents a closed latitude-longitude rectangle.
  *
  * @beta incomplete
  */
-export class Rect {
+export class Rect implements Region {
   lat: R1Interval
   lng: S1Interval
 
@@ -383,4 +386,126 @@ export class Rect {
 
     return new Point(r0 * Math.cos(lng), r0 * Math.sin(lng), z)
   }
+
+  /**
+   * Reports whether this rectangle intersects the given cell. This is an exact test and may be fairly expensive.
+   */
+  intersectsCell(c: Cell): boolean {
+    // First we eliminate the cases where one region completely contains the other.
+    // Once these are disposed of, then the regions will intersect if and only if their boundaries intersect.
+    if (this.isEmpty()) return false
+    if (this.containsPoint(Point.fromVector(cellid.rawPoint(c.id)))) return true
+    if (c.containsPoint(Point.fromLatLng(this.center()))) return true
+
+    // Quick rejection test (not required for correctness).
+    if (!this.intersects(c.rectBound())) return false
+
+    // Precompute the cell vertices as points and latitude-longitudes.
+    // We also check whether the Cell contains any corner of the rectangle, or vice-versa,
+    // since the edge-crossing tests only check the edge interiors.
+    const vertices: Point[] = []
+    const latlngs: LatLng[] = []
+
+    for (let i = 0; i < 4; i++) {
+      const vertex = c.vertex(i)
+      vertices.push(vertex)
+      const latlng = LatLng.fromPoint(vertex)
+      latlngs.push(latlng)
+      if (this.containsLatLng(latlng)) return true
+      if (c.containsPoint(Point.fromLatLng(this.vertex(i)))) return true
+    }
+
+    // Now check whether the boundaries intersect.
+    // Unfortunately, a latitude-longitude rectangle does not have straight edges:
+    // two edges are curved, and at least one of them is concave.
+    for (let i = 0; i < 4; i++) {
+      const edgeLng = S1Interval.fromEndpoints(latlngs[i].lng, latlngs[(i + 1) & 3].lng)
+      if (!this.lng.intersects(edgeLng)) continue
+
+      const a = vertices[i]
+      const b = vertices[(i + 1) & 3]
+      if (edgeLng.contains(this.lng.lo) && intersectsLngEdge(a, b, this.lat, this.lng.lo)) {
+        return true
+      }
+      if (edgeLng.contains(this.lng.hi) && intersectsLngEdge(a, b, this.lat, this.lng.hi)) {
+        return true
+      }
+      if (intersectsLatEdge(a, b, this.lat.lo, this.lng)) {
+        return true
+      }
+      if (intersectsLatEdge(a, b, this.lat.hi, this.lng)) {
+        return true
+      }
+    }
+    return false
+  }
+}
+
+/**
+ * Reports whether the edge AB intersects the given edge of constant latitude.
+ * Requires the points to have unit length.
+ */
+const intersectsLatEdge = (a: Point, b: Point, lat: Angle, lng: S1Interval): boolean => {
+  // Unfortunately, lines of constant latitude are curves on the sphere.
+  // They can intersect a straight edge in 0, 1, or 2 points.
+
+  // First, compute the normal to the plane AB that points vaguely north.
+  let z = a.vector.cross(b.vector).normalize()
+  if (z.z < 0) z = z.mul(-1)
+
+  // Extend this to an orthonormal frame (x,y,z) where x is the direction
+  // where the great circle through AB achieves its maximum latitude.
+  const y = z.cross(Point.fromCoords(0, 0, 1).vector).normalize()
+  const x = y.cross(z)
+
+  // Compute the angle "theta" from the x-axis (in the x-y plane defined
+  // above) where the great circle intersects the given line of latitude.
+  const sinLat = Math.sin(angle.radians(lat))
+  if (Math.abs(sinLat) >= x.z) {
+    // The great circle does not reach the given latitude.
+    return false
+  }
+
+  const cosTheta = sinLat / x.z
+  const sinTheta = Math.sqrt(1 - cosTheta * cosTheta)
+  const theta = Math.atan2(sinTheta, cosTheta)
+
+  // The candidate intersection points are located +/- theta in the x-y plane.
+  // For an intersection to be valid, we need to check that the intersection
+  // point is contained in the interior of the edge AB and also that it is
+  // contained within the given longitude interval "lng".
+
+  // Compute the range of theta values spanned by the edge AB.
+  const abTheta = S1Interval.fromPointPair(
+    Math.atan2(a.vector.dot(y), a.vector.dot(x)),
+    Math.atan2(b.vector.dot(y), b.vector.dot(x))
+  )
+
+  if (abTheta.contains(theta)) {
+    // Check if the intersection point is also in the given lng interval.
+    const isect = x.mul(cosTheta).add(y.mul(sinTheta))
+    if (lng.contains(Math.atan2(isect.y, isect.x))) {
+      return true
+    }
+  }
+
+  if (abTheta.contains(-theta)) {
+    // Check if the other intersection point is also in the given lng interval.
+    const isect = x.mul(cosTheta).sub(y.mul(sinTheta))
+    if (lng.contains(Math.atan2(isect.y, isect.x))) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Reports whether the edge AB intersects the given edge of constant longitude.
+ * Requires the points to have unit length.
+ */
+const intersectsLngEdge = (a: Point, b: Point, lat: R1Interval, lng: Angle): boolean => {
+  // The nice thing about edges of constant longitude is that they are straight lines on the sphere (geodesics).
+  return (
+    crossingSign(a, b, Point.fromLatLng(new LatLng(lat.lo, lng)), Point.fromLatLng(new LatLng(lat.hi, lng))) === CROSS
+  )
 }

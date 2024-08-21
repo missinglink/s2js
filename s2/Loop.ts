@@ -11,6 +11,7 @@ import { ShapeIndexIterator } from './ShapeIndexIterator'
 import { Interval as R1Interval } from '../r1/Interval'
 import { Interval as S1Interval } from '../s1/Interval'
 import type { ReferencePoint, Shape, TypeTag } from './Shape'
+import type { Region } from './Region'
 import { Chain, ChainPosition, Edge, originReferencePoint, TypeTagNone } from './Shape'
 import { wedgeContains, wedgeIntersects } from './wedge_relations'
 import { RangeIterator } from './shapeutil'
@@ -57,7 +58,7 @@ const fullLoopPoint = new Point(0, 0, -1)
  *
  * @beta incomplete
  */
-export class Loop implements Shape {
+export class Loop implements Region, Shape {
   vertices: Point[]
   originInside: boolean = false
   depth: number = 0

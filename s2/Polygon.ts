@@ -16,6 +16,7 @@ import {
   INTERSECTS_RECT_ERROR_UV_DIST
 } from './edge_clipping'
 import { RectBounder } from './RectBounder'
+import type { Region } from './Region'
 
 /**
  * Polygon represents a sequence of zero or more loops; recall that the
@@ -47,7 +48,7 @@ import { RectBounder } from './RectBounder'
  *
  *   - No loop may be empty. The full loop may appear only in the full polygon.
  */
-export class Polygon {
+export class Polygon implements Region {
   loops: Loop[] = []
 
   /** index is a spatial index of all the polygon loops. */

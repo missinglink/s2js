@@ -1,6 +1,7 @@
 import { Vector } from '../r3/Vector'
 import type { Angle } from '../s1/angle'
 import type { ChordAngle } from '../s1/chordangle'
+import { Cell } from './Cell'
 import { LatLng } from './LatLng'
 import type { Matrix3x3 } from './matrix3x3'
 import { getFrame, fromFrame } from './matrix3x3'
@@ -224,6 +225,48 @@ export class Point {
     }
 
     return vertices
+  }
+
+  // /** Returns a bounding cap for this point. */
+  // capBound(): Cap {
+  //   return Cap.fromPoint(this)
+  // }
+
+  // /** Returns a bounding latitude-longitude rectangle from this point. */
+  // rectBound(): Rect {
+  //   return Rect.fromLatLng(LatLng.fromPoint(this))
+  // }
+
+  /** Returns false as Points do not contain any other S2 types. */
+  containsCell(_c: Cell): boolean {
+    return false
+  }
+
+  /** Reports whether this Point intersects the given cell. */
+  intersectsCell(c: Cell): boolean {
+    return c.containsPoint(this)
+  }
+
+  /**
+   * Reports if this Point contains the other Point.
+   * (This method is named to satisfy the Region interface.)
+   */
+  containsPoint(other: Point): boolean {
+    return this.contains(other)
+  }
+
+  // /** Computes a covering of the Point. */
+  // cellUnionBound(): CellID[] {
+  //   return this.capBound().cellUnionBound()
+  // }
+
+  /**
+   * Reports if this Point contains the other Point.
+   * (This method matches all other S2 types where the reflexive Contains
+   * method does not contain the type's name.)
+   */
+  contains(other: Point): boolean {
+    return this.equals(other)
   }
 
   /**
