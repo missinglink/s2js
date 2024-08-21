@@ -678,7 +678,7 @@ export class Loop implements Shape {
 
 export const containsCenterMatches = (a: ShapeIndexClippedShape, target: CrossingTarget): boolean => {
   return (
-    (!a.containsCenter && target === CROSSING_TARGET_DONT_CARE) ||
+    (!a.containsCenter && target === CROSSING_TARGET_DONT_CROSS) ||
     (a.containsCenter && target === CROSSING_TARGET_CROSS)
   )
 }
@@ -773,7 +773,7 @@ class ContainsRelation implements LoopRelation {
   foundSharedVertex = false
 
   aCrossingTarget(): CrossingTarget {
-    return CROSSING_TARGET_DONT_CARE
+    return CROSSING_TARGET_DONT_CROSS
   }
 
   bCrossingTarget(): CrossingTarget {
@@ -821,7 +821,7 @@ export class CompareBoundaryRelation implements LoopRelation {
     return CROSSING_TARGET_DONT_CARE
   }
 
-  wedgesCross(a0: Point, ab1: Point, a2: Point, b0: Point, b2: Point): boolean {
+  wedgesCross(a0: Point, ab1: Point, a2: Point, _b0: Point, b2: Point): boolean {
     this.foundSharedVertex = true
     if (wedgeContainsSemiwedge(a0, ab1, a2, b2, this.reverse)) {
       this.containsEdge = true
