@@ -17,6 +17,7 @@ import {
 } from './edge_clipping'
 import { RectBounder } from './RectBounder'
 import type { Region } from './Region'
+import type { Shape } from './Shape'
 
 /**
  * Polygon represents a sequence of zero or more loops; recall that the
@@ -48,7 +49,7 @@ import type { Region } from './Region'
  *
  *   - No loop may be empty. The full loop may appear only in the full polygon.
  */
-export class Polygon implements Region {
+export class Polygon implements Region, Shape {
   loops: Loop[] = []
 
   /** index is a spatial index of all the polygon loops. */

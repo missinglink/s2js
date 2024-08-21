@@ -25,13 +25,14 @@ import {
   TypeTagPolyline
 } from './Shape'
 import type { Region } from './Region'
+import type { Shape } from './Shape'
 
 /**
  * Represents a sequence of zero or more vertices connected by
  * straight edges (geodesics). Edges of length 0 and 180 degrees are not
  * allowed, i.e. adjacent vertices should not be identical or antipodal.
  */
-export class Polyline implements Region {
+export class Polyline implements Region, Shape {
   points: Point[]
 
   /**
