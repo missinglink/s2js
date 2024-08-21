@@ -36,7 +36,7 @@ export class RectBounder {
    * Returns the maximum error in RectBound provided that the result does not include either pole.
    * It is only used for testing purposes.
    */
-  maxErrorForTests(): LatLng {
+  static maxErrorForTests(): LatLng {
     // The maximum error in the latitude calculation is
     //    3.84 * DBL_EPSILON   for the PointCross calculation
     //    0.96 * DBL_EPSILON   for the Latitude calculation

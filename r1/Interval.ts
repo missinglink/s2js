@@ -141,10 +141,10 @@ export class Interval {
    * Reports whether the interval can be transformed into the given interval by moving each endpoint a small distance.
    * The empty interval is considered to be positioned arbitrarily on the real line, so any interval with a small enough length will match the empty interval.
    */
-  approxEqual(oi: Interval): boolean {
-    if (this.isEmpty()) return oi.length() <= 2 * 1e-15
-    if (oi.isEmpty()) return this.length() <= 2 * 1e-15
-    return Math.abs(oi.lo - this.lo) <= 1e-15 && Math.abs(oi.hi - this.hi) <= 1e-15
+  approxEqual(oi: Interval, epsilon = 1e-15): boolean {
+    if (this.isEmpty()) return oi.length() <= 2 * epsilon
+    if (oi.isEmpty()) return this.length() <= 2 * epsilon
+    return Math.abs(oi.lo - this.lo) <= epsilon && Math.abs(oi.hi - this.hi) <= epsilon
   }
 
   /**
