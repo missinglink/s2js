@@ -30,7 +30,7 @@ const { s2 } = require('s2js')
 
 ```html
 <script type="module">
-  import { s2 } from 'https://esm.sh/s2js/dist/index.js'
+  import { s2 } from 'https://esm.sh/s2js'
 </script>
 ```
 
