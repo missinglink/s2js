@@ -1,3 +1,8 @@
+import { findLSBSetNonZero64 } from '../r1/math'
+import { Vector } from '../r3/Vector'
+import { MAX_LEVEL, MAX_SIZE } from './cellid_constants'
+import { Point } from './Point'
+
 /**
  * This file contains documentation of the various coordinate systems used throughout the library.
  * Most importantly, S2 defines a framework for decomposing the unit sphere into a hierarchy of "cells".
@@ -119,10 +124,6 @@
  * For Go we have chosen to use only the Quadratic approach. Other language
  * implementations may offer other choices.
  */
-import { findLSBSetNonZero64 } from '../r1/math'
-import { Vector } from '../r3/Vector'
-import { MAX_LEVEL, MAX_SIZE } from './cellid_constants'
-import { Point } from './Point'
 
 /**
  * The maximum value of an si- or ti-coordinate.

@@ -104,6 +104,13 @@ export class Interval {
   }
 
   /**
+   * Returns true iff the interval equals oi.
+   */
+  equals(oi: Interval): boolean {
+    return (this.lo == oi.lo && this.hi == oi.hi) || (this.isEmpty() && oi.isEmpty())
+  }
+
+  /**
    * Returns the interval with endpoints swapped.
    */
   invert(): Interval {

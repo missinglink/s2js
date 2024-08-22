@@ -65,9 +65,16 @@ export class Rect implements Region {
    * Constructs a rectangle with the given size and center.
    * @category Constructors
    */
-  static rectFromCenterSize(center: LatLng, size: LatLng): Rect {
+  static fromCenterSize(center: LatLng, size: LatLng): Rect {
     const half = new LatLng(size.lat / 2, size.lng / 2)
     return Rect.fromLatLng(center).expanded(half)
+  }
+
+  /**
+   * Reports whether this rect equals another rect.
+   */
+  equals(or: Rect): boolean {
+    return this.lat.equals(or.lat) && this.lng.equals(or.lng)
   }
 
   /**
@@ -382,7 +389,7 @@ export class Rect implements Region {
     const alpha = 0.5 * this.lng.length()
     const r0 = Math.sin(alpha) * (r2 * z2 - r1 * z1 + this.lat.length())
     const lng = this.lng.center()
-    const z = alpha * (z2 + z1) * (z2 - z1)
+    const z = alpha * (z2 + z1) * (z2 - z1) // scaled by the area
 
     return new Point(r0 * Math.cos(lng), r0 * Math.sin(lng), z)
   }
@@ -445,7 +452,7 @@ export class Rect implements Region {
  * Reports whether the edge AB intersects the given edge of constant latitude.
  * Requires the points to have unit length.
  */
-const intersectsLatEdge = (a: Point, b: Point, lat: Angle, lng: S1Interval): boolean => {
+export const intersectsLatEdge = (a: Point, b: Point, lat: Angle, lng: S1Interval): boolean => {
   // Unfortunately, lines of constant latitude are curves on the sphere.
   // They can intersect a straight edge in 0, 1, or 2 points.
 
@@ -503,7 +510,7 @@ const intersectsLatEdge = (a: Point, b: Point, lat: Angle, lng: S1Interval): boo
  * Reports whether the edge AB intersects the given edge of constant longitude.
  * Requires the points to have unit length.
  */
-const intersectsLngEdge = (a: Point, b: Point, lat: R1Interval, lng: Angle): boolean => {
+export const intersectsLngEdge = (a: Point, b: Point, lat: R1Interval, lng: Angle): boolean => {
   // The nice thing about edges of constant longitude is that they are straight lines on the sphere (geodesics).
   return (
     crossingSign(a, b, Point.fromLatLng(new LatLng(lat.lo, lng)), Point.fromLatLng(new LatLng(lat.hi, lng))) === CROSS
