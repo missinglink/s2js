@@ -5,9 +5,9 @@
   "author": "Peter Johnson",
   "license": "AGPL",
   "repository": "github:missinglink/s2js",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "module": "dist/s2.esm.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/s2.esm.js",
   "scripts": {
     "build": "npx tsdx build --entry index.ts",
     "docs": "npx typedoc",
@@ -27,8 +27,5 @@
   },
   "lint-staged": {
     "*.{ts,md}": "prettier --write"
-  },
-  "esm.sh": {
-    "bundle": false
   }
 }
