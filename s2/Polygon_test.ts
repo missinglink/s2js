@@ -162,9 +162,9 @@ const farSouthHemiPolygon = makePolygon(FAR_HEMI_SOUTH_HEMI_LOOP, true)
 
 describe('s2.Polygon', () => {
   test('init single loop', () => {
-    ok(Polygon.fromLoops([Loop.emptyLoop()]).isEmpty())
-    ok(Polygon.fromLoops([Loop.fullLoop()]).isFull())
-    const p = Polygon.fromLoops([makeLoop('0:0, 0:10, 10:0')])
+    ok(new Polygon([Loop.emptyLoop()]).isEmpty())
+    ok(new Polygon([Loop.fullLoop()]).isFull())
+    const p = new Polygon([makeLoop('0:0, 0:10, 10:0')])
     equal(p.numVertices, 3)
   })
 
@@ -199,7 +199,7 @@ describe('s2.Polygon', () => {
     // max (0, -70.02).  So this poly would have a bounds of
     //   Lo: [0, -70.05],     Hi: [12.58, 0]]      instead of:
     //   Lo: [12.55, -70.05], Hi: [12.58, -70.02]]
-    const p = Polygon.fromLoops([
+    const p = new Polygon([
       makeLoop('12.55:-70.05, 12.55:-70.02, 12.58:-70.02, 12.58:-70.05'),
       makeLoop('12.56:-70.04, 12.56:-70.03, 12.58:-70.03, 12.58:-70.04')
     ])
@@ -257,7 +257,7 @@ describe('s2.Polygon', () => {
   })
 
   test('parent', () => {
-    const p1 = Polygon.fromLoops([new Loop([])])
+    const p1 = new Polygon([new Loop([])])
     const tests = [
       { p: fullPolygon, have: 0, want: -1, ok: false },
       { p: p1, have: 0, want: -1, ok: false }
@@ -271,7 +271,7 @@ describe('s2.Polygon', () => {
   })
 
   test('last descendant', () => {
-    const p1 = Polygon.fromLoops([new Loop([])])
+    const p1 = new Polygon([new Loop([])])
 
     const tests = [
       { p: fullPolygon, have: 0, want: 0 },
@@ -461,7 +461,7 @@ describe('s2.Polygon', () => {
   test('invert', () => {
     const origin = Point.fromLatLng(LatLng.fromDegrees(0, 0))
     const pt = Point.fromLatLng(LatLng.fromDegrees(30, 30))
-    const p = Polygon.fromLoops([Loop.regularLoop(origin, 1000 / EARTH_RADIUS_KM, 100)])
+    const p = new Polygon([Loop.regularLoop(origin, 1000 / EARTH_RADIUS_KM, 100)])
 
     ok(!p.containsPoint(pt))
 
@@ -536,7 +536,7 @@ const checkPolygonInvalid = (label: string, loops: Loop[], initOriented: boolean
   if (initOriented) {
     polygon = Polygon.fromOrientedLoops(loops)
   } else {
-    polygon = Polygon.fromLoops(loops)
+    polygon = new Polygon(loops)
   }
 
   if (f) {

@@ -222,5 +222,5 @@ export const concentricLoopsPolygon = (center: Point, numLoops: number, vertices
     loops.push(Loop.regularLoop(Point.fromVector(center.vector), radius, verticesPerLoop))
   }
 
-  return Polygon.fromLoops(loops)
+  return new Polygon(loops)
 }

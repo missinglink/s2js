@@ -39,7 +39,7 @@ export class Polyline implements Region, Shape {
    * Returns a new Polyline.
    * @category Constructors
    */
-  constructor(points: Point[]) {
+  constructor(points: Point[] = []) {
     this.points = points
   }
 

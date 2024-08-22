@@ -135,7 +135,7 @@ export const makePolygon = (s: string, normalize: boolean): Polygon => {
   // Avoid the case where split on empty string will still return
   // one empty value, where we want no values.
   if (s === 'empty' || s === '') {
-    return Polygon.fromLoops(loops)
+    return new Polygon(loops)
   }
 
   s.split(';')
@@ -147,5 +147,5 @@ export const makePolygon = (s: string, normalize: boolean): Polygon => {
       loops.push(loop)
     })
 
-  return Polygon.fromLoops(loops)
+  return new Polygon(loops)
 }

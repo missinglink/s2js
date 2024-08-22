@@ -97,15 +97,13 @@ export class Polygon implements Region, Shape {
    * can be traversed using Parent, LastDescendant and the loops depths.
    * @category Constructors
    */
-  static fromLoops(loops: Loop[]): Polygon {
-    const p = new Polygon()
+  constructor(loops: Loop[] = []) {
     if (loops.length === 1 && loops[0].isEmpty()) {
-      p.initLoopProperties()
-      return p
+      this.initLoopProperties()
+      return
     }
-    p.loops = loops
-    p.initNested()
-    return p
+    this.loops = loops
+    this.initNested()
   }
 
   /**
@@ -168,7 +166,7 @@ export class Polygon implements Region, Shape {
       }
     }
 
-    const p = Polygon.fromLoops(loops)
+    const p = new Polygon(loops)
 
     if (p.numLoops() > 0) {
       let originLoop = p.loop(0)
@@ -285,7 +283,7 @@ export class Polygon implements Region, Shape {
    * @category Constructors
    */
   static fromCell(cell: Cell): Polygon {
-    return Polygon.fromLoops([Loop.fromCell(cell)])
+    return new Polygon([Loop.fromCell(cell)])
   }
 
   /**
