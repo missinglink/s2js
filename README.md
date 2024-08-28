@@ -1,8 +1,8 @@
 # s2js
 
-s2js is a Javascript port of the s2 spherical geometry library originally written in C++ at Google.
+s2js is a Javascript port of the s2 spherical geometry library.
 
-| [github](https://github.com/missinglink/s2js) | [npm](https://www.npmjs.com/package/s2js) | [documentation](https://missinglink.github.io/s2js) |
+| [github](https://github.com/missinglink/s2js) | [npm](https://www.npmjs.com/package/s2js) | [documentation](https://missinglink.github.io/s2js) | [demo](https://bdon.github.io/s2js-demos/) |
 
 ### Installation
 
@@ -34,11 +34,7 @@ const { s2 } = require('s2js')
 </script>
 ```
 
-### Completeness
-
-The C++ library is quite large, I'm slowly chipping away at it one struct at a time.
-
-I would like to have `s2.RegionCoverer` working from the browser, I'd then like to add conversion functions for `GeoJSON`.
+### Contributing
 
 If you'd like to contribute a module please open an Issue to discuss.
 
@@ -46,4 +42,4 @@ If you'd like to contribute a module please open an Issue to discuss.
 
 © 2024 Peter Johnson &lt;github:missinglink&gt;
 
-This source code is published under the AGPL-3.0 license.
+This source code is published under the Apache-2.0 license.
