@@ -19,6 +19,10 @@ describe('s1.angle', () => {
     // Check negative angles.
     equal(angle.degrees((-Math.PI / 2) * RADIAN), -90, '(-π/2 * Radian).Degrees() was %v, want -90')
     equal(angle.radians(-45 * DEGREE), -Math.PI / 4, '(-45 * Degree).Radians() was %v, want -π/4')
+
+    // zero(s)
+    equal(angle.degrees(0), 0, 'positive zero')
+    equal(angle.degrees(-0), 0, 'negative zero')
   })
 
   test('E5/E6/E7 representation', (t) => {

@@ -46,7 +46,7 @@ export const radians = (a: Angle): number => a
 /**
  * Returns the angle in degrees.
  */
-export const degrees = (a: Angle): number => a / DEGREE
+export const degrees = (a: Angle): number => a / DEGREE || 0
 
 /**
  * Returns the value rounded to nearest as an int32.
