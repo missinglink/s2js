@@ -15,7 +15,6 @@
     "coverage": "npx c8 npm test",
     "lint": "npx prettier --check .",
     "format": "npx prettier --write .",
-    "hooks": "git config core.hooksPath .githooks",
     "pre-commit": "npx lint-staged"
   },
   "devDependencies": {
