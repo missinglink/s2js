@@ -46,10 +46,10 @@ export interface RegionCovererOptions extends S2RegionCovererOptions {
  * @beta unstable API
  */
 export class RegionCoverer {
-  coverer: S2RegionCoverer
-  memberCoverer: S2RegionCoverer
-  compactAt: number
-  smallAreaEpsilon: number
+  private coverer: S2RegionCoverer
+  private memberCoverer: S2RegionCoverer
+  private compactAt: number
+  private smallAreaEpsilon: number
 
   /**
    * Returns a new RegionCoverer with the appropriate defaults.
@@ -106,7 +106,7 @@ export class RegionCoverer {
   }
 
   /** Computes the area of a shape */
-  static area(shape: Region): number {
+  private static area(shape: Region): number {
     if (shape instanceof Polygon) return shape.area()
     if (shape instanceof Polyline) shape.capBound().area()
     return 0
