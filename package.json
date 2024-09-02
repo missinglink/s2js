@@ -18,6 +18,7 @@
     "pre-commit": "npx lint-staged"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.14",
     "@types/node": "^20.14.11",
     "tsx": "^4.16.2"
   },

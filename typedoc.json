@@ -1,7 +1,7 @@
 {
   "out": "docs",
   "cleanOutputDir": true,
-  "excludeExternals": true,
+  "excludeExternals": false,
   "theme": "default",
   "readme": "none",
   "hideGenerator": true,
