@@ -6,6 +6,9 @@ import { LatLng } from './LatLng'
 import type { Matrix3x3 } from './matrix3x3'
 import { getFrame, fromFrame } from './matrix3x3'
 import { CLOCKWISE, COUNTERCLOCKWISE, EPSILON, robustSign } from './predicates'
+import type { CellID } from './cellid'
+import * as cellid from './cellid'
+import type { Region } from './Region'
 
 /**
  * Point represents a point on the unit sphere as a normalized 3D vector.
@@ -13,7 +16,7 @@ import { CLOCKWISE, COUNTERCLOCKWISE, EPSILON, robustSign } from './predicates'
  *
  * @beta incomplete
  */
-export class Point {
+export class Point implements Region {
   vector: Vector
 
   /**
@@ -255,10 +258,10 @@ export class Point {
     return this.contains(other)
   }
 
-  // /** Computes a covering of the Point. */
-  // cellUnionBound(): CellID[] {
-  //   return this.capBound().cellUnionBound()
-  // }
+  /** Computes a covering of the Point. */
+  cellUnionBound(): CellID[] {
+    return [cellid.fromPoint(this)]
+  }
 
   /**
    * Reports if this Point contains the other Point.

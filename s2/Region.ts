@@ -5,12 +5,12 @@ import { Point } from './Point'
 import type { CellID } from './cellid'
 
 export interface Region {
-  // Returns a bounding spherical cap. This is not guaranteed to be exact.
-  capBound(): Cap
+  // // Returns a bounding spherical cap. This is not guaranteed to be exact.
+  // capBound(): Cap
 
-  // Returns a bounding latitude-longitude rectangle that contains
-  // the region. The bounds are not guaranteed to be tight.
-  rectBound(): Rect
+  // // Returns a bounding latitude-longitude rectangle that contains
+  // // the region. The bounds are not guaranteed to be tight.
+  // rectBound(): Rect
 
   // Reports whether the region completely contains the given region.
   // It returns false if containment could not be determined.
