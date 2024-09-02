@@ -372,7 +372,7 @@ describe('s2.Cap', () => {
       }
 
       for (let capFace = 0; capFace < 6; capFace++) {
-        const center = unitNorm(capFace)
+        const center = Point.fromVector(unitNorm(capFace))
         const covering = Cap.fromCenterAngle(center, faceRadius + EPSILON)
         equal(
           covering.containsCell(rootCell),
@@ -431,7 +431,7 @@ describe('s2.Cap', () => {
 
       const antiFace = (face + 3) % 6
       for (let capFace = 0; capFace < 6; capFace++) {
-        const center = unitNorm(capFace)
+        const center = Point.fromVector(unitNorm(capFace))
         const covering = Cap.fromCenterAngle(center, faceRadius + EPSILON)
         equal(
           covering.intersectsCell(rootCell),
@@ -487,11 +487,7 @@ describe('s2.Cap', () => {
   })
 
   test('centroid', () => {
-    ok(
-      Cap.emptyCap()
-        .centroid()
-        .approxEqual(new Point(0, 0, 0))
-    )
+    ok(Cap.emptyCap().centroid().approxEqual(new Point(0, 0, 0)))
     ok(Cap.fullCap().centroid().vector.norm() <= 1e-15)
 
     for (let i = 0; i < 100; i++) {

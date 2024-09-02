@@ -1,7 +1,6 @@
 import { findLSBSetNonZero64 } from '../r1/math'
 import { Vector } from '../r3/Vector'
 import { MAX_LEVEL, MAX_SIZE } from './cellid_constants'
-import { Point } from './Point'
 
 /**
  * This file contains documentation of the various coordinate systems used throughout the library.
@@ -174,17 +173,17 @@ export const uvToST = (u: number): number => {
  * Returns face ID from 0 to 5 containing the r. For points on the
  * boundary between faces, the result is arbitrary but deterministic.
  */
-export const face = (r: Vector): number => {
-  let f = r.largestComponent()
+export const face = (v: Vector): number => {
+  let f = v.largestComponent()
   switch (f) {
     case Vector.X_AXIS:
-      if (r.x < 0) f += 3
+      if (v.x < 0) f += 3
       break
     case Vector.Y_AXIS:
-      if (r.y < 0) f += 3
+      if (v.y < 0) f += 3
       break
     case Vector.Z_AXIS:
-      if (r.z < 0) f += 3
+      if (v.z < 0) f += 3
       break
   }
   return f
@@ -244,66 +243,66 @@ export const faceUVToXYZ = (face: number, u: number, v: number): Vector => {
  * Returns the u and v values (which may lie outside the range [-1, 1]).
  * If the dot product of the point p with the given face normal is positive.
  */
-export const faceXYZToUV = (face: number, p: Point): [number, number, boolean] => {
+export const faceXYZToUV = (face: number, vect: Vector): [number, number, boolean] => {
   switch (face) {
     case 0:
-      if (p.x <= 0) return [0, 0, false]
+      if (vect.x <= 0) return [0, 0, false]
       break
     case 1:
-      if (p.y <= 0) return [0, 0, false]
+      if (vect.y <= 0) return [0, 0, false]
       break
     case 2:
-      if (p.z <= 0) return [0, 0, false]
+      if (vect.z <= 0) return [0, 0, false]
       break
     case 3:
-      if (p.x >= 0) return [0, 0, false]
+      if (vect.x >= 0) return [0, 0, false]
       break
     case 4:
-      if (p.y >= 0) return [0, 0, false]
+      if (vect.y >= 0) return [0, 0, false]
       break
     default:
-      if (p.z >= 0) return [0, 0, false]
+      if (vect.z >= 0) return [0, 0, false]
       break
   }
 
-  const [u, v] = validFaceXYZToUV(face, p.vector)
+  const [u, v] = validFaceXYZToUV(face, vect)
   return [u, v, true]
 }
 
 /**
  * Transforms the given point P to the (u,v,w) coordinate frame of the given face where the w-axis represents the face normal.
  */
-export const faceXYZtoUVW = (face: number, p: Point): Point => {
+export const faceXYZtoUVW = (face: number, v: Vector): Vector => {
   // The result coordinates are simply the dot products of P with the (u,v,w)
   // axes for the given face (see faceUVWAxes).
   switch (face) {
     case 0:
-      return new Point(p.y, p.z, p.x)
+      return new Vector(v.y, v.z, v.x)
     case 1:
-      return new Point(-p.x, p.z, p.y)
+      return new Vector(-v.x, v.z, v.y)
     case 2:
-      return new Point(-p.x, -p.y, p.z)
+      return new Vector(-v.x, -v.y, v.z)
     case 3:
-      return new Point(-p.z, -p.y, -p.x)
+      return new Vector(-v.z, -v.y, -v.x)
     case 4:
-      return new Point(-p.z, p.x, -p.y)
+      return new Vector(-v.z, v.x, -v.y)
     default:
-      return new Point(p.y, p.x, -p.z)
+      return new Vector(v.y, v.x, -v.z)
   }
 }
 
 /**
  * Transforms the (si, ti) coordinates to a (not necessarily unit length) Point on the given face.
  */
-export const faceSiTiToXYZ = (face: number, si: number, ti: number): Point => {
-  return Point.fromVector(faceUVToXYZ(face, stToUV(siTiToST(si)), stToUV(siTiToST(ti))))
+export const faceSiTiToXYZ = (face: number, si: number, ti: number): Vector => {
+  return faceUVToXYZ(face, stToUV(siTiToST(si)), stToUV(siTiToST(ti)))
 }
 
 /**
  * Transforms the (not necessarily unit length) Point to (face, si, ti) coordinates and the level the Point is at.
  */
-export const xyzToFaceSiTi = (p: Point): [number, number, number, number] => {
-  const [face, u, v] = xyzToFaceUV(p.vector)
+export const xyzToFaceSiTi = (vect: Vector): [number, number, number, number] => {
+  const [face, u, v] = xyzToFaceUV(vect)
   const si = stToSiTi(uvToST(u))
   const ti = stToSiTi(uvToST(v))
 
@@ -323,7 +322,7 @@ export const xyzToFaceSiTi = (p: Point): [number, number, number, number] => {
   // not idempotent. On the other hand, the center is computed exactly the same
   // way p was originally computed (if it is indeed the center of a Cell);
   // the comparison can be exact.
-  if (p.vector.equals(faceSiTiToXYZ(face, si, ti).vector.normalize())) {
+  if (vect.equals(faceSiTiToXYZ(face, si, ti).normalize())) {
     return [face, si, ti, level]
   }
 
@@ -377,12 +376,12 @@ export const vNorm = (face: number, v: number): Vector => {
 
 /** The U, V, and W axes for each face. */
 const faceUVWAxes = [
-  [new Point(0, 1, 0), new Point(0, 0, 1), new Point(1, 0, 0)],
-  [new Point(-1, 0, 0), new Point(0, 0, 1), new Point(0, 1, 0)],
-  [new Point(-1, 0, 0), new Point(0, -1, 0), new Point(0, 0, 1)],
-  [new Point(0, 0, -1), new Point(0, -1, 0), new Point(-1, 0, 0)],
-  [new Point(0, 0, -1), new Point(1, 0, 0), new Point(0, -1, 0)],
-  [new Point(0, 1, 0), new Point(1, 0, 0), new Point(0, 0, -1)]
+  [new Vector(0, 1, 0), new Vector(0, 0, 1), new Vector(1, 0, 0)],
+  [new Vector(-1, 0, 0), new Vector(0, 0, 1), new Vector(0, 1, 0)],
+  [new Vector(-1, 0, 0), new Vector(0, -1, 0), new Vector(0, 0, 1)],
+  [new Vector(0, 0, -1), new Vector(0, -1, 0), new Vector(-1, 0, 0)],
+  [new Vector(0, 0, -1), new Vector(1, 0, 0), new Vector(0, -1, 0)],
+  [new Vector(0, 1, 0), new Vector(1, 0, 0), new Vector(0, 0, -1)]
 ]
 
 /** The precomputed neighbors of each face. */
@@ -422,7 +421,7 @@ const faceUVWFaces = [
 /**
  * Returns the given axis of the given face.
  */
-export const uvwAxis = (face: number, axis: number): Point => {
+export const uvwAxis = (face: number, axis: number): Vector => {
   return faceUVWAxes[face][axis]
 }
 
@@ -436,14 +435,14 @@ export const uvwFace = (face: number, axis: number, direction: number): number =
 /**
  * Returns the u-axis for the given face.
  */
-export const uAxis = (face: number): Point => uvwAxis(face, 0)
+export const uAxis = (face: number): Vector => uvwAxis(face, 0)
 
 /**
  * Returns the v-axis for the given face.
  */
-export const vAxis = (face: number): Point => uvwAxis(face, 1)
+export const vAxis = (face: number): Vector => uvwAxis(face, 1)
 
 /**
  * Returns the unit-length normal for the given face.
  */
-export const unitNorm = (face: number): Point => uvwAxis(face, 2)
+export const unitNorm = (face: number): Vector => uvwAxis(face, 2)

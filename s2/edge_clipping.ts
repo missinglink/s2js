@@ -1,3 +1,4 @@
+import { Vector } from '../r3/Vector'
 import { Point } from './Point'
 import { Point as R2Point } from '../r2/Point'
 import { Interval as R1Interval } from '../r1/Interval'
@@ -50,9 +51,9 @@ export const clipToPaddedFace = (
   // product) can produce different results in different coordinate systems
   // when one argument is a linear multiple of the other, due to the use of
   // symbolic perturbations.
-  let normUVW = new PointUVW(faceXYZtoUVW(f, a.pointCross(b)))
-  const aUVW = new PointUVW(faceXYZtoUVW(f, a))
-  const bUVW = new PointUVW(faceXYZtoUVW(f, b))
+  let normUVW = new PointUVW(faceXYZtoUVW(f, a.pointCross(b).vector))
+  const aUVW = new PointUVW(faceXYZtoUVW(f, a.vector))
+  const bUVW = new PointUVW(faceXYZtoUVW(f, b.vector))
 
   // Padding is handled by scaling the u- and v-components of the normal.
   // Letting R=1+padding, this means that when we compute the dot product of
@@ -120,7 +121,7 @@ export const AXIS_V: Axis = 1
  * Represents a Point in (u,v,w) coordinate space of a cube face.
  */
 export class PointUVW extends Point {
-  constructor(point: Point) {
+  constructor(point: Point | Vector) {
     super(point.x, point.y, point.z)
   }
 
@@ -380,7 +381,7 @@ export const faceSegments = (a: Point, b: Point): FaceSegment[] => {
 
   for (let face = newAFace; face !== newBFace; ) {
     // Complete the current segment by finding the point where AB exits the current face.
-    const z = faceXYZtoUVW(face, ab)
+    const z = faceXYZtoUVW(face, ab.vector)
     const n = new PointUVW(z)
 
     const exitAxis = n.exitAxis()
@@ -392,7 +393,7 @@ export const faceSegments = (a: Point, b: Point): FaceSegment[] => {
     // next face. This becomes the first point of the next segment.
     const exitXyz = faceUVToXYZ(face, segment.b.x, segment.b.y)
     face = nextFace(face, segment.b, exitAxis, n, newBFace)
-    const exitUvw = faceXYZtoUVW(face, Point.fromVector(exitXyz))
+    const exitUvw = faceXYZtoUVW(face, exitXyz)
     segment.face = face
     segment.a = new R2Point(exitUvw.x, exitUvw.y)
   }
@@ -424,7 +425,7 @@ export const moveOriginToValidFace = (face: number, a: Point, ab: Point, aUV: R2
   if (Math.max(Math.abs(aUV.x), Math.abs(aUV.y)) <= maxSafeUVCoord) return [face, aUV]
 
   // Otherwise check whether the normal AB even intersects this face.
-  const z = faceXYZtoUVW(face, ab)
+  const z = faceXYZtoUVW(face, ab.vector)
   const n = new PointUVW(z)
 
   if (n.intersectsFace()) {

@@ -185,7 +185,7 @@ describe('s2.CrossingEdgeQuery', () => {
       const v = scale * 2 * randomUniformInt(2) - 1
 
       const a = Point.fromVector(faceUVToXYZ(face, u, v))
-      const b = Point.fromVector(a.vector.sub(unitNorm(face).vector.mul(2)))
+      const b = Point.fromVector(a.vector.sub(unitNorm(face).mul(2)))
 
       const edges = generatePerturbedSubEdges(a, b, 30)
       testCrossingEdgeQueryAllCrossings(edges)
@@ -197,8 +197,8 @@ describe('s2.CrossingEdgeQuery', () => {
       const face = randomUniformInt(6)
       const scale = Math.pow(1e-15, randomFloat64())
       const axis = uvwAxis(face, randomUniformInt(2))
-      const a = Point.fromVector(axis.vector.mul(scale).add(unitNorm(face).vector))
-      const b = Point.fromVector(axis.vector.mul(scale).sub(unitNorm(face).vector))
+      const a = Point.fromVector(axis.mul(scale).add(unitNorm(face)))
+      const b = Point.fromVector(axis.mul(scale).sub(unitNorm(face)))
       const edges = generatePerturbedSubEdges(a, b, 30)
       testCrossingEdgeQueryAllCrossings(edges)
     }

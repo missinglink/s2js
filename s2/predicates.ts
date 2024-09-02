@@ -148,25 +148,25 @@ export const stableSign = (a: Point, b: Point, c: Point): Direction => {
   // The two shortest edges, pointing away from their common point.
   let e1: Vector
   let e2: Vector
-  let op: Vector
+  let ov: Vector
   if (ab2 >= bc2 && ab2 >= ca2) {
     // AB is the longest edge.
     e1 = ca
     e2 = bc
-    op = c.vector
+    ov = c.vector
   } else if (bc2 >= ca2) {
     // BC is the longest edge.
     e1 = ab
     e2 = ca
-    op = a.vector
+    ov = a.vector
   } else {
     // CA is the longest edge.
     e1 = bc
     e2 = ab
-    op = b.vector
+    ov = b.vector
   }
 
-  const det = -e1.cross(e2).dot(op)
+  const det = -e1.cross(e2).dot(ov)
   const maxErr = DET_ERROR_MULTIPLIER * Math.sqrt(e1.norm2() * e2.norm2())
 
   // If the determinant isn't zero, within maxErr, we know definitively the point ordering.

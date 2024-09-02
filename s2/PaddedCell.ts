@@ -113,7 +113,7 @@ export class PaddedCell {
     const ijSize = cellid.sizeIJ(this.level)
     const si = 2 * this.iLo + ijSize
     const ti = 2 * this.jLo + ijSize
-    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), si, ti).vector.normalize())
+    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), si, ti).normalize())
   }
 
   /** Returns the rectangle in the middle of this cell that belongs to all four of its children in (u,v)-space. */
@@ -150,7 +150,7 @@ export class PaddedCell {
       i += ijSize
       j += ijSize
     }
-    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), 2 * i, 2 * j).vector.normalize())
+    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), 2 * i, 2 * j).normalize())
   }
 
   /** Returns the vertex where the space-filling curve exits this cell. */
@@ -163,7 +163,7 @@ export class PaddedCell {
     } else {
       j += ijSize
     }
-    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), 2 * i, 2 * j).vector.normalize())
+    return Point.fromVector(faceSiTiToXYZ(cellid.face(this.id), 2 * i, 2 * j).normalize())
   }
 
   /** Returns the smallest CellID that contains all descendants of this padded cell whose bounds intersect the given rect. */

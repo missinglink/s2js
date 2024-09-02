@@ -2,7 +2,6 @@ import { test, describe } from 'node:test'
 import { equal, ok } from 'node:assert/strict'
 import { randomCellIDForLevel, randomUint32, randomUniformFloat64, randomUniformInt } from './testing'
 import { Vector } from '../r3/Vector'
-import { Point } from './Point'
 import { MAX_LEVEL, NUM_FACES } from './cellid_constants'
 import * as cellid from './cellid'
 import {
@@ -25,6 +24,7 @@ import {
   uvwFace,
   MAX_SiTi
 } from './stuv'
+import { Point } from './Point'
 
 // Define epsilon for floating point comparisons
 const EPSILON = 1e-14
@@ -39,20 +39,8 @@ describe('s2.stuv', () => {
     const step = 1 / 1024.0
     for (let face = 0; face < 6; face++) {
       for (let x = -1.0; x <= 1; x += step) {
-        ok(
-          Math.abs(
-            faceUVToXYZ(face, x, -1)
-              .cross(faceUVToXYZ(face, x, 1))
-              .angle(uNorm(face, x))
-          ) < EPSILON
-        )
-        ok(
-          Math.abs(
-            faceUVToXYZ(face, -1, x)
-              .cross(faceUVToXYZ(face, 1, x))
-              .angle(vNorm(face, x))
-          ) < EPSILON
-        )
+        ok(Math.abs(faceUVToXYZ(face, x, -1).cross(faceUVToXYZ(face, x, 1)).angle(uNorm(face, x))) < EPSILON)
+        ok(Math.abs(faceUVToXYZ(face, -1, x).cross(faceUVToXYZ(face, 1, x)).angle(vNorm(face, x))) < EPSILON)
       }
     }
   })
@@ -61,7 +49,7 @@ describe('s2.stuv', () => {
     let sum = new Vector(0, 0, 0)
     for (let face = 0; face < 6; face++) {
       const center = faceUVToXYZ(face, 0, 0)
-      ok(center.approxEqual(unitNorm(face).vector))
+      ok(center.approxEqual(unitNorm(face)))
       switch (center.largestComponent()) {
         case Vector.X_AXIS:
           equal(Math.abs(center.x), 1)
@@ -75,7 +63,7 @@ describe('s2.stuv', () => {
       sum = sum.add(center.abs())
 
       // Check that each face has a right-handed coordinate system.
-      equal(uAxis(face).vector.cross(vAxis(face).vector).dot(unitNorm(face).vector), 1)
+      equal(uAxis(face).cross(vAxis(face)).dot(unitNorm(face)), 1)
 
       // Check that the Hilbert curves on each face combine to form a continuous curve over the entire cube.
       const sign = face & 1 ? -1 : 1
@@ -85,8 +73,8 @@ describe('s2.stuv', () => {
   })
 
   test('face XYZ to UV', () => {
-    const point = new Point(1.1, 1.2, 1.3)
-    const pointNeg = new Point(-1.1, -1.2, -1.3)
+    const point = new Vector(1.1, 1.2, 1.3)
+    const pointNeg = new Vector(-1.1, -1.2, -1.3)
 
     const tests = [
       { face: 0, point: point, u: 1 + 1.0 / 11, v: 1 + 2.0 / 11, ok: true },
@@ -110,39 +98,31 @@ describe('s2.stuv', () => {
   })
 
   test('face XYZ to UVW', () => {
-    const origin = new Point(0, 0, 0)
-    const posX = new Point(1, 0, 0)
-    const negX = new Point(-1, 0, 0)
-    const posY = new Point(0, 1, 0)
-    const negY = new Point(0, -1, 0)
-    const posZ = new Point(0, 0, 1)
-    const negZ = new Point(0, 0, -1)
+    const origin = new Vector(0, 0, 0)
+    const posX = new Vector(1, 0, 0)
+    const negX = new Vector(-1, 0, 0)
+    const posY = new Vector(0, 1, 0)
+    const negY = new Vector(0, -1, 0)
+    const posZ = new Vector(0, 0, 1)
+    const negZ = new Vector(0, 0, -1)
 
     for (let face = 0; face < 6; face++) {
       ok(faceXYZtoUVW(face, origin).equals(origin))
       ok(faceXYZtoUVW(face, uAxis(face)).equals(posX))
-      ok(faceXYZtoUVW(face, Point.fromVector(uAxis(face).vector.mul(-1))).equals(negX))
+      ok(faceXYZtoUVW(face, uAxis(face).mul(-1)).equals(negX))
       ok(faceXYZtoUVW(face, vAxis(face)).equals(posY))
-      ok(faceXYZtoUVW(face, Point.fromVector(vAxis(face).vector.mul(-1))).equals(negY))
+      ok(faceXYZtoUVW(face, vAxis(face).mul(-1)).equals(negY))
       ok(faceXYZtoUVW(face, unitNorm(face)).equals(posZ))
-      ok(faceXYZtoUVW(face, Point.fromVector(unitNorm(face).vector.mul(-1))).equals(negZ))
+      ok(faceXYZtoUVW(face, unitNorm(face).mul(-1)).equals(negZ))
     }
   })
 
   test('UVW axis', () => {
     for (let face = 0; face < 6; face++) {
-      ok(
-        faceUVToXYZ(face, 1, 0)
-          .sub(faceUVToXYZ(face, 0, 0))
-          .equals(uAxis(face).vector)
-      )
-      ok(
-        faceUVToXYZ(face, 0, 1)
-          .sub(faceUVToXYZ(face, 0, 0))
-          .equals(vAxis(face).vector)
-      )
-      ok(faceUVToXYZ(face, 0, 0).equals(unitNorm(face).vector))
-      equal(uAxis(face).vector.cross(vAxis(face).vector).dot(unitNorm(face).vector), 1)
+      ok(faceUVToXYZ(face, 1, 0).sub(faceUVToXYZ(face, 0, 0)).equals(uAxis(face)))
+      ok(faceUVToXYZ(face, 0, 1).sub(faceUVToXYZ(face, 0, 0)).equals(vAxis(face)))
+      ok(faceUVToXYZ(face, 0, 0).equals(unitNorm(face)))
+      equal(uAxis(face).cross(vAxis(face)).dot(unitNorm(face)), 1)
       ok(uAxis(face).equals(uvwAxis(face, 0)))
       ok(vAxis(face).equals(uvwAxis(face, 1)))
       ok(unitNorm(face).equals(uvwAxis(face, 2)))
@@ -163,8 +143,8 @@ describe('s2.stuv', () => {
   test('UVW face', () => {
     for (let f = 0; f < 6; f++) {
       for (let axis = 0; axis < 3; axis++) {
-        equal(face(uvwAxis(f, axis).vector.mul(-1)), uvwFace(f, axis, 0))
-        equal(face(uvwAxis(f, axis).vector), uvwFace(f, axis, 1))
+        equal(face(uvwAxis(f, axis).mul(-1)), uvwFace(f, axis, 0))
+        equal(face(uvwAxis(f, axis)), uvwFace(f, axis, 1))
       }
     }
   })
@@ -176,13 +156,13 @@ describe('s2.stuv', () => {
         equal(cellid.level(ci), level)
         ok(cellid.valid(ci))
 
-        const [f, si, ti, gotLevel] = xyzToFaceSiTi(cellid.point(ci))
+        const [f, si, ti, gotLevel] = xyzToFaceSiTi(cellid.point(ci).vector)
         equal(gotLevel, level, `level of CellID ${ci} = ${gotLevel}, want ${level}`)
         const gotID = cellid.parent(cellid.fromFaceIJ(f, si / 2, ti / 2), level)
         equal(gotID, ci, `CellID = ${gotID.toString(2)}, want ${ci.toString(2)}`)
 
         const pMoved = cellid.point(ci).vector.add(new Vector(1e-13, 1e-13, 1e-13))
-        const [fMoved, siMoved, tiMoved, gotLevelMoved] = xyzToFaceSiTi(Point.fromVector(pMoved))
+        const [fMoved, siMoved, tiMoved, gotLevelMoved] = xyzToFaceSiTi(pMoved)
         equal(gotLevelMoved, -1, `level of ${pMoved} = ${gotLevelMoved}, want -1`)
         equal(f, fMoved, `face of ${pMoved} = ${fMoved}, want ${f}`)
         equal(si, siMoved, `si of ${pMoved} = ${siMoved}, want ${si}`)
@@ -210,7 +190,7 @@ describe('s2.stuv', () => {
         equal(tiRandom, tiRand, `${level}|${i} / ${siRand}|${tiRand}`)
         if (gotLevelRand >= 0) {
           const got = cellid.point(cellid.parent(cellid.fromFaceIJ(fRand, siRand / 2, tiRand / 2), gotLevelRand))
-          ok(pRandom.approxEqual(got))
+          ok(pRandom.approxEqual(got.vector))
         }
       }
     }
@@ -220,9 +200,9 @@ describe('s2.stuv', () => {
     for (let level = 0; level < MAX_LEVEL; level++) {
       for (let i = 0; i < 1000; i++) {
         const ci = randomCellIDForLevel(level)
-        const [f, si, ti] = xyzToFaceSiTi(cellid.point(ci))
+        const [f, si, ti] = xyzToFaceSiTi(cellid.point(ci).vector)
         const op = faceSiTiToXYZ(f, si, ti)
-        ok(cellid.point(ci).approxEqual(op))
+        ok(cellid.point(ci).approxEqual(Point.fromVector(op)))
       }
     }
   })

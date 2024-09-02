@@ -403,7 +403,7 @@ export class Cell implements Region {
     // For the face opposite c.face, the sign of the UV coordinates of P will be
     // flipped so it will automatically fall outside the cell boundary as no cells
     // cross the origin.
-    const [x, y, ok] = faceXYZToUV(this.face, p)
+    const [x, y, ok] = faceXYZToUV(this.face, p.vector)
     if (!ok) return false
 
     // Expand the (u,v) bound to ensure that
@@ -477,7 +477,7 @@ export class Cell implements Region {
    * the cell if toInterior is true or to the boundary of the cell otherwise.
    */
   distanceInternal(targetXYZ: Point, toInterior: boolean): ChordAngle {
-    const target = faceXYZtoUVW(this.face, targetXYZ)
+    const target = Point.fromVector(faceXYZtoUVW(this.face, targetXYZ.vector))
 
     const dir00 = target.x - target.z * this.uv.x.lo
     const dir01 = target.x - target.z * this.uv.x.hi
@@ -533,7 +533,7 @@ export class Cell implements Region {
    * given point.
    */
   maxDistance(target: Point): ChordAngle {
-    const targetUVW = faceXYZtoUVW(this.face, target)
+    const targetUVW = Point.fromVector(faceXYZtoUVW(this.face, target.vector))
     let maxDist = maxChordAngle(
       this.vertexChordDist2(targetUVW, false, false),
       this.vertexChordDist2(targetUVW, true, false),

@@ -477,7 +477,7 @@ export const ijLevelToBoundUV = (i: number, j: number, level: number): Rect => {
  */
 export const rawPoint = (ci: CellID): Vector => {
   const { face, si, ti } = faceSiTi(ci)
-  return faceSiTiToXYZ(face, si, ti).vector
+  return faceSiTiToXYZ(face, si, ti)
 }
 
 /**
