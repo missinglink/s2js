@@ -1,7 +1,7 @@
 import type * as geojson from 'geojson'
 import { MAX_LEVEL } from '../s2/cellid_constants'
 import { CellUnion } from '../s2/CellUnion'
-import * as geometry from './geometry'
+import { fromGeoJSON } from './geometry'
 import { Polyline } from '../s2/Polyline'
 import { Polygon } from '../s2/Polygon'
 import type { Region } from '../s2/Region'
@@ -99,8 +99,8 @@ export class RegionCoverer {
   }
 
   /** Returns a CellUnion that covers the given GeoJSON geometry and satisfies the various restrictions. */
-  covering(geom: geojson.Geometry): CellUnion {
-    const shape = geometry.fromGeoJSON(geom)
+  covering(geometry: geojson.Geometry): CellUnion {
+    const shape = fromGeoJSON(geometry)
     if (Array.isArray(shape)) return this.mutliMemberCovering(shape as Region[])
     return this.coverer.covering(shape)
   }
