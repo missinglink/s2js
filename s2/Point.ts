@@ -223,7 +223,7 @@ export class Point implements Region {
 
     for (let i = 0; i < numVertices; i++) {
       const angle = i * radianStep
-      const p = Point.fromVector(new Vector(r * Math.cos(angle), r * Math.sin(angle), z))
+      const p = new Point(r * Math.cos(angle), r * Math.sin(angle), z)
       vertices.push(Point.fromVector(fromFrame(frame, p).vector.normalize()))
     }
 

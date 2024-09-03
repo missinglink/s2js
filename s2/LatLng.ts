@@ -27,7 +27,7 @@ export class LatLng {
    * Returns a LatLng for the coordinates given in degrees.
    * @category Constructors
    */
-  static fromDegrees(lat: Angle, lng: Angle): LatLng {
+  static fromDegrees(lat: number, lng: number): LatLng {
     return new LatLng(lat * DEGREE, lng * DEGREE)
   }
 

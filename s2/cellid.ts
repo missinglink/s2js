@@ -633,8 +633,6 @@ export const prevWrap = (ci: CellID): CellID => {
 
 /**
  * Returns the level of the common ancestor of the two S2 CellIDs.
- * @param other The other CellID to compare with.
- * @returns A tuple where the first element is the level and the second element is a boolean indicating success.
  */
 export const commonAncestorLevel = (ci: CellID, other: CellID): [number, boolean] => {
   let bits = ci ^ other

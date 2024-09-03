@@ -43,8 +43,7 @@ export class CellUnion extends Array<CellID> implements Region {
    * @category Constructors
    */
   static fromUnion(...cellUnions: CellUnion[]): CellUnion {
-    const cu = new CellUnion()
-    for (const cellUnion of cellUnions) cu.push(...cellUnion)
+    const cu = new CellUnion(...cellUnions.flat(1))
     cu.normalize()
     return cu
   }
