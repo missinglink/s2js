@@ -5,5 +5,5 @@
   "theme": "default",
   "readme": "README.md",
   "hideGenerator": true,
-  "entryPoints": ["index.ts"]
+  "entryPoints": ["index.ts", "node_modules/@types/geojson/index.d.ts"]
 }

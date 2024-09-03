@@ -9,7 +9,7 @@ import { Loop } from '../s2/Loop'
 export const marshal = (loop: Loop, ordinal: number): geojson.Position[] => {
   const ring = loop.vertices.map(position.marshal)
   if (ordinal > 0) ring.reverse() // outer ring remains CCW, inner rings become CW
-  ring.push(ring.at(0)!) // add matching start/end points
+  ring.push(ring[0]) // add matching start/end points
   return ring
 }
 
