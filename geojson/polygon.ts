@@ -22,3 +22,25 @@ export const unmarshal = (geometry: geojson.Polygon, rewind = true): Polygon => 
   if (rewind) rewindPolygon(geometry.coordinates, false)
   return new Polygon(geometry.coordinates.map(loop.unmarshal))
 }
+
+/**
+ * Returns a geojson MultiPolygon geometry given s2 Polygons.
+ * @category Constructors
+ */
+export const marshalMulti = (polygons: Polygon[]): geojson.MultiPolygon => {
+  return {
+    type: 'MultiPolygon',
+    coordinates: polygons.map((polygon) => polygon.loops.map(loop.marshal))
+  }
+}
+
+/**
+ * Constructs s2 Polygons given a geojson MultiPolygon geometry.
+ * @category Constructors
+ */
+export const unmarshalMulti = (geometry: geojson.MultiPolygon, rewind = true): Polygon[] => {
+  return geometry.coordinates.map((coords) => {
+    if (rewind) rewindPolygon(coords, false)
+    return new Polygon(coords.map(loop.unmarshal))
+  })
+}

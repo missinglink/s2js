@@ -100,7 +100,7 @@ export class RegionCoverer {
 
   /** Returns a CellUnion that covers the given GeoJSON geometry and satisfies the various restrictions. */
   covering(geom: geojson.Geometry): CellUnion {
-    const shape = geometry.unmarshal(geom)
+    const shape = geometry.fromGeoJSON(geom)
     if (Array.isArray(shape)) return this.mutliMemberCovering(shape as Region[])
     return this.coverer.covering(shape)
   }

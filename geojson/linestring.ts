@@ -20,3 +20,22 @@ export const marshal = (polyline: Polyline): geojson.LineString => {
 export const unmarshal = (geometry: geojson.LineString): Polyline => {
   return new Polyline(geometry.coordinates.map(position.unmarshal))
 }
+
+/**
+ * Returns a geojson MultiLineString geometry given s2 Polylines.
+ * @category Constructors
+ */
+export const marshalMulti = (polylines: Polyline[]): geojson.MultiLineString => {
+  return {
+    type: 'MultiLineString',
+    coordinates: polylines.map((polyline) => polyline.points.map(position.marshal))
+  }
+}
+
+/**
+ * Constructs s2 Polylines given a geojson MultiLineString geometry.
+ * @category Constructors
+ */
+export const unmarshalMulti = (geometry: geojson.MultiLineString): Polyline[] => {
+  return geometry.coordinates.map((polyline) => new Polyline(polyline.map(position.unmarshal)))
+}

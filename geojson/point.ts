@@ -20,3 +20,22 @@ export const marshal = (point: Point): geojson.Point => {
 export const unmarshal = (geometry: geojson.Point): Point => {
   return position.unmarshal(geometry.coordinates)
 }
+
+/**
+ * Returns a geojson MultiPoint geometry given s2 Points.
+ * @category Constructors
+ */
+export const marshalMulti = (points: Point[]): geojson.MultiPoint => {
+  return {
+    type: 'MultiPoint',
+    coordinates: points.map(position.marshal)
+  }
+}
+
+/**
+ * Constructs s2 Points given a geojson MultiPoint geometry.
+ * @category Constructors
+ */
+export const unmarshalMulti = (geometry: geojson.MultiPoint): Point[] => {
+  return geometry.coordinates.map(position.unmarshal)
+}
