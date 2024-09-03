@@ -3,7 +3,7 @@
   "cleanOutputDir": true,
   "excludeExternals": false,
   "theme": "default",
-  "readme": "none",
+  "readme": "README.md",
   "hideGenerator": true,
   "entryPoints": ["index.ts"]
 }

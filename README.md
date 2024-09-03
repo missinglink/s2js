@@ -14,19 +14,19 @@ npm install s2js
 
 The library is available as both ESM & CJS modules:
 
-###### ESM
+**ESM**
 
 ```js
 import { s2 } from 's2js'
 ```
 
-###### CJS
+**CJS**
 
 ```js
 const { s2 } = require('s2js')
 ```
 
-###### CDN
+**CDN**
 
 ```html
 <script type="module">
