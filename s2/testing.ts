@@ -3,6 +3,7 @@ import { MAX_LEVEL, NUM_FACES, POS_BITS } from './cellid_constants'
 import type { Matrix3x3 } from './matrix3x3'
 import * as matrix from './matrix3x3'
 import { Point } from './Point'
+import { Vector } from '../r3/Vector'
 import { Point as R2Point } from '../r2/Point'
 import * as cellid from './cellid'
 import type { CellID } from './cellid'
@@ -40,8 +41,8 @@ export const randomPoint = (): Point => {
  * Returns a right-handed coordinate frame using the given point as the z-axis.
  */
 export const randomFrameAtPoint = (z: Point): Matrix3x3 => {
-  const x = Point.fromVector(z.vector.cross(randomPoint().vector).normalize())
-  const y = Point.fromVector(z.vector.cross(x.vector).normalize())
+  const x = z.vector.cross(randomPoint().vector).normalize()
+  const y = z.vector.cross(x).normalize()
   const m = [
     [0, 0, 0],
     [0, 0, 0],
@@ -49,7 +50,7 @@ export const randomFrameAtPoint = (z: Point): Matrix3x3 => {
   ]
   matrix.setCol(m, 0, x)
   matrix.setCol(m, 1, y)
-  matrix.setCol(m, 2, z)
+  matrix.setCol(m, 2, z.vector)
   return m
 }
 
@@ -123,7 +124,7 @@ export const randomCellID = (): CellID => {
 export const samplePointFromCap = (c: Cap): Point => {
   // We consider the cap axis to be the "z" axis. We choose two other axes to
   // complete the coordinate frame.
-  const m = matrix.getFrame(c.center)
+  const m = matrix.getFrame(c.center.vector)
 
   // The surface area of a spherical cap is directly proportional to its height.
   // First, we choose a random height, and then we choose a random point along the circle at that height.
@@ -133,9 +134,7 @@ export const samplePointFromCap = (c: Cap): Point => {
 
   // The result should already be very close to unit-length, but we might as
   // well make it as accurate as possible.
-  return Point.fromVector(
-    matrix.fromFrame(m, Point.fromCoords(Math.cos(theta) * r, Math.sin(theta) * r, 1 - h)).vector.normalize()
-  )
+  return Point.fromVector(matrix.fromFrame(m, new Vector(Math.cos(theta) * r, Math.sin(theta) * r, 1 - h)).normalize())
 }
 
 /** Returns true with a probability of 1/n. */

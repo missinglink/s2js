@@ -1,4 +1,4 @@
-import { Point } from './Point'
+import { Vector } from '../r3/Vector'
 
 /**
  * Represents a traditional 3x3 matrix of floating point values.
@@ -10,34 +10,34 @@ export type Matrix3x3 = number[][]
 /**
  * Returns the given column as a Point.
  */
-export const col = (m: Matrix3x3, col: number): Point => {
-  return new Point(m[0][col], m[1][col], m[2][col])
+export const col = (m: Matrix3x3, col: number): Vector => {
+  return new Vector(m[0][col], m[1][col], m[2][col])
 }
 
 /**
  * Returns the given row as a Point.
  */
-export const row = (m: Matrix3x3, row: number): Point => {
-  return new Point(m[row][0], m[row][1], m[row][2])
+export const row = (m: Matrix3x3, row: number): Vector => {
+  return new Vector(m[row][0], m[row][1], m[row][2])
 }
 
 /**
  * Sets the specified column to the value in the given Point.
  */
-export const setCol = (m: Matrix3x3, col: number, p: Point): Matrix3x3 => {
-  m[0][col] = p.x
-  m[1][col] = p.y
-  m[2][col] = p.z
+export const setCol = (m: Matrix3x3, col: number, v: Vector): Matrix3x3 => {
+  m[0][col] = v.x
+  m[1][col] = v.y
+  m[2][col] = v.z
   return m
 }
 
 /**
  * Sets the specified row to the value in the given Point.
  */
-export const setRow = (m: Matrix3x3, row: number, p: Point): Matrix3x3 => {
-  m[row][0] = p.x
-  m[row][1] = p.y
-  m[row][2] = p.z
+export const setRow = (m: Matrix3x3, row: number, v: Vector): Matrix3x3 => {
+  m[row][0] = v.x
+  m[row][1] = v.y
+  m[row][2] = v.z
   return m
 }
 
@@ -56,11 +56,11 @@ export const scale = (m: Matrix3x3, f: number): Matrix3x3 => {
  * Returns the multiplication of m by the Point p and converts the
  * resulting 1x3 matrix into a Point.
  */
-export const mul = (m: Matrix3x3, p: Point): Point => {
-  return new Point(
-    m[0][0] * p.x + m[0][1] * p.y + m[0][2] * p.z,
-    m[1][0] * p.x + m[1][1] * p.y + m[1][2] * p.z,
-    m[2][0] * p.x + m[2][1] * p.y + m[2][2] * p.z
+export const mul = (m: Matrix3x3, v: Vector): Vector => {
+  return new Vector(
+    m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z,
+    m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z,
+    m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z
   )
 }
 
@@ -106,7 +106,7 @@ export const toString = (m: Matrix3x3): string => {
 /**
  * Returns the orthonormal frame for the given point on the unit sphere.
  */
-export const getFrame = (p: Point): Matrix3x3 => {
+export const getFrame = (v: Vector): Matrix3x3 => {
   // Given the point p on the unit sphere, extend this into a right-handed
   // coordinate frame of unit-length column vectors m = (x,y,z). Note that
   // the vectors (x,y) are an orthonormal frame for the tangent space at point p,
@@ -116,9 +116,9 @@ export const getFrame = (p: Point): Matrix3x3 => {
     [0, 0, 0],
     [0, 0, 0]
   ]
-  setCol(m, 2, p)
-  setCol(m, 1, Point.ortho(p))
-  setCol(m, 0, Point.fromVector(col(m, 1).vector.cross(p.vector)))
+  setCol(m, 2, v)
+  setCol(m, 1, v.ortho(new Vector(0.012, 0.0053, 0.00457))) // emulates Point.ortho()
+  setCol(m, 0, col(m, 1).cross(v))
   return m
 }
 
@@ -128,11 +128,11 @@ export const getFrame = (p: Point): Matrix3x3 => {
  *
  * The inverse of an orthonormal matrix is its transpose.
  */
-export const toFrame = (m: Matrix3x3, p: Point): Point => mul(transpose(m), p)
+export const toFrame = (m: Matrix3x3, v: Vector): Vector => mul(transpose(m), v)
 
 /**
  * Returns the coordinates of the given point in standard axis-aligned basis
  * from its orthonormal basis m.
  * The resulting point p satisfies the identity (p == m * q).
  */
-export const fromFrame = (m: Matrix3x3, q: Point): Point => mul(m, q)
+export const fromFrame = (m: Matrix3x3, q: Vector): Vector => mul(m, q)

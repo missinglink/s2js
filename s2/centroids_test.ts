@@ -38,21 +38,21 @@ describe('s2.centroids', () => {
       const y = matrix.col(f, 2)
       const d = 1e-4 * Math.pow(1e-4, Math.random())
 
-      let p0 = Point.fromVector(p.vector.sub(x.vector.mul(d)).normalize())
-      let p1 = Point.fromVector(p.vector.add(x.vector.mul(d)).normalize())
-      let p2 = Point.fromVector(p.vector.add(y.vector.mul(d * 3)).normalize())
-      let want = Point.fromVector(p.vector.add(y.vector.mul(d)).normalize())
+      let p0 = Point.fromVector(p.sub(x.mul(d)).normalize())
+      let p1 = Point.fromVector(p.add(x.mul(d)).normalize())
+      let p2 = Point.fromVector(p.add(y.mul(d * 3)).normalize())
+      let want = Point.fromVector(p.add(y.mul(d)).normalize())
 
-      let got = trueCentroid(p0, p1, p2).vector.normalize()
-      ok(got.distance(want.vector) < 2e-8, `TrueCentroid(${p0}, ${p1}, ${p2}).Normalize() = ${got}, want ${want}`)
+      let got = Point.fromVector(trueCentroid(p0, p1, p2).vector.normalize())
+      ok(got.distance(want) < 2e-8, `TrueCentroid(${p0}, ${p1}, ${p2}).Normalize() = ${got}, want ${want}`)
 
-      p0 = Point.fromVector(p.vector)
-      p1 = Point.fromVector(p.vector.add(x.vector.mul(d * 3)).normalize())
-      p2 = Point.fromVector(p.vector.add(y.vector.mul(d * 6)).normalize())
-      want = Point.fromVector(p.vector.add(x.vector.add(y.vector.mul(2)).mul(d)).normalize())
+      p0 = Point.fromVector(p)
+      p1 = Point.fromVector(p.add(x.mul(d * 3)).normalize())
+      p2 = Point.fromVector(p.add(y.mul(d * 6)).normalize())
+      want = Point.fromVector(p.add(x.add(y.mul(2)).mul(d)).normalize())
 
-      got = trueCentroid(p0, p1, p2).vector.normalize()
-      ok(got.distance(want.vector) < 2e-8, `TrueCentroid(${p0}, ${p1}, ${p2}).Normalize() = ${got}, want ${want}`)
+      got = Point.fromVector(trueCentroid(p0, p1, p2).vector.normalize())
+      ok(got.distance(want) < 2e-8, `TrueCentroid(${p0}, ${p1}, ${p2}).Normalize() = ${got}, want ${want}`)
     }
   })
 
@@ -77,14 +77,14 @@ describe('s2.centroids', () => {
 
       let centroid = new Point(0, 0, 0)
 
-      let v0 = x
+      let v0 = Point.fromVector(x)
       for (let theta = 0.0; theta < 2 * Math.PI; theta += Math.pow(Math.random(), 10)) {
-        const v1 = Point.fromVector(x.vector.mul(Math.cos(theta)).add(y.vector.mul(Math.sin(theta))))
+        const v1 = Point.fromVector(x.mul(Math.cos(theta)).add(y.mul(Math.sin(theta))))
         centroid = Point.fromVector(centroid.vector.add(edgeTrueCentroid(v0, v1).vector))
         v0 = v1
       }
 
-      centroid = Point.fromVector(centroid.vector.add(edgeTrueCentroid(v0, x).vector))
+      centroid = Point.fromVector(centroid.vector.add(edgeTrueCentroid(v0, Point.fromVector(x)).vector))
       ok(centroid.vector.norm() <= 2e-14, `${centroid}.Norm() = ${centroid.vector.norm()}, want <= 2e-14`)
     }
   })

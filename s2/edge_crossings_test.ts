@@ -31,12 +31,12 @@ describe('s2.edge_crossings', () => {
 
     for (let iter = 0; iter < 5000; iter++) {
       const f = randomFrame()
-      const p = matrix.col(f, 0)
+      const v = matrix.col(f, 0)
       let d1 = matrix.col(f, 1)
       let d2 = matrix.col(f, 2)
 
       const slope = 1e-15 * Math.pow(1e30, randomFloat64())
-      d2 = Point.fromVector(d1.vector.add(d2.vector.mul(slope)).normalize())
+      d2 = d1.add(d2.mul(slope)).normalize()
       let a: Point, b: Point, c: Point, d: Point
 
       for (;;) {
@@ -46,13 +46,14 @@ describe('s2.edge_crossings', () => {
         if (oneIn(2)) aFraction = 1 - aFraction
         let cFraction = Math.pow(1e-5, randomFloat64())
         if (oneIn(2)) cFraction = 1 - cFraction
-        a = Point.fromVector(p.vector.sub(d1.vector.mul(aFraction * abLen)).normalize())
-        b = Point.fromVector(p.vector.add(d1.vector.mul((1 - aFraction) * abLen)).normalize())
-        c = Point.fromVector(p.vector.sub(d2.vector.mul(cFraction * cdLen)).normalize())
-        d = Point.fromVector(p.vector.add(d2.vector.mul((1 - cFraction) * cdLen)).normalize())
+        a = Point.fromVector(v.sub(d1.mul(aFraction * abLen)).normalize())
+        b = Point.fromVector(v.add(d1.mul((1 - aFraction) * abLen)).normalize())
+        c = Point.fromVector(v.sub(d2.mul(cFraction * cdLen)).normalize())
+        d = Point.fromVector(v.add(d2.mul((1 - cFraction) * cdLen)).normalize())
         if (new EdgeCrosser(a, b).crossingSign(c, d) === CROSS) break
       }
 
+      const p = Point.fromVector(v)
       ok(distanceFromSegment(p, a, b) <= 1.5 * DBL_EPSILON + DISTANCE_ABS_ERROR)
       ok(distanceFromSegment(p, c, d) <= 1.5 * DBL_EPSILON + DISTANCE_ABS_ERROR)
 

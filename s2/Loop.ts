@@ -457,7 +457,7 @@ export class Loop implements Region, Shape {
   }
 
   static regularLoop(center: Point, radius: Angle, numVertices: number): Loop {
-    return Loop.regularLoopForFrame(getFrame(center), radius, numVertices)
+    return Loop.regularLoopForFrame(getFrame(center.vector), radius, numVertices)
   }
 
   static regularLoopForFrame(frame: Matrix3x3, radius: Angle, numVertices: number): Loop {

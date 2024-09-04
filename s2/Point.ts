@@ -208,7 +208,7 @@ export class Point implements Region {
    * all located on a circle of the specified angular radius around the center.
    */
   static regularPoints(center: Point, radius: Angle, numVertices: number): Point[] {
-    return this.regularPointsForFrame(getFrame(center), radius, numVertices)
+    return this.regularPointsForFrame(getFrame(center.vector), radius, numVertices)
   }
 
   /**
@@ -224,7 +224,7 @@ export class Point implements Region {
     for (let i = 0; i < numVertices; i++) {
       const angle = i * radianStep
       const p = new Point(r * Math.cos(angle), r * Math.sin(angle), z)
-      vertices.push(Point.fromVector(fromFrame(frame, p).vector.normalize()))
+      vertices.push(Point.fromVector(fromFrame(frame, p.vector).normalize()))
     }
 
     return vertices

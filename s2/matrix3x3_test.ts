@@ -1,5 +1,6 @@
 import { test, describe } from 'node:test'
 import { deepEqual, equal, ok } from 'node:assert/strict'
+import { Vector } from '../r3/Vector'
 import { Point } from './Point'
 import * as matrix from './matrix3x3'
 import { float64Near } from '../r1/math'
@@ -14,7 +15,7 @@ describe('s2.matrix3x3', () => {
           [0, 0, 0]
         ],
         column: 0,
-        want: Point.originPoint()
+        want: Point.originPoint().vector
       },
       {
         have: [
@@ -23,7 +24,7 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         column: 0,
-        want: new Point(1, 4, 7)
+        want: new Vector(1, 4, 7)
       },
       {
         have: [
@@ -32,13 +33,13 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         column: 2,
-        want: new Point(3, 6, 9)
+        want: new Vector(3, 6, 9)
       }
     ]
 
     tests.forEach(({ have, column, want }) => {
       const got = matrix.col(have, column)
-      ok(got.approxEqual(want))
+      ok(Point.fromVector(got).approxEqual(Point.fromVector(want)))
     })
   })
 
@@ -51,7 +52,7 @@ describe('s2.matrix3x3', () => {
           [0, 0, 0]
         ],
         row: 0,
-        want: Point.originPoint()
+        want: Point.originPoint().vector
       },
       {
         have: [
@@ -60,7 +61,7 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         row: 0,
-        want: new Point(1, 2, 3)
+        want: new Vector(1, 2, 3)
       },
       {
         have: [
@@ -69,13 +70,13 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         row: 2,
-        want: new Point(7, 8, 9)
+        want: new Vector(7, 8, 9)
       }
     ]
 
     tests.forEach(({ have, row, want }) => {
       const got = matrix.row(have, row)
-      ok(got.approxEqual(want))
+      ok(Point.fromVector(got).approxEqual(Point.fromVector(want)), JSON.stringify({ got, want }))
     })
   })
 
@@ -88,7 +89,7 @@ describe('s2.matrix3x3', () => {
           [0, 0, 0]
         ],
         col: 0,
-        point: new Point(1, 1, 0),
+        point: new Vector(1, 1, 0),
         want: [
           [1, 0, 0],
           [1, 0, 0],
@@ -102,7 +103,7 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         col: 2,
-        point: new Point(1, 1, 0),
+        point: new Vector(1, 1, 0),
         want: [
           [1, 2, 1],
           [4, 5, 1],
@@ -125,7 +126,7 @@ describe('s2.matrix3x3', () => {
           [0, 0, 0]
         ],
         row: 0,
-        point: new Point(1, 1, 0),
+        point: new Vector(1, 1, 0),
         want: [
           [1, 1, 0],
           [0, 0, 0],
@@ -139,7 +140,7 @@ describe('s2.matrix3x3', () => {
           [7, 8, 9]
         ],
         row: 2,
-        point: new Point(1, 1, 0),
+        point: new Vector(1, 1, 0),
         want: [
           [1, 2, 3],
           [4, 5, 6],
@@ -208,8 +209,8 @@ describe('s2.matrix3x3', () => {
           [4, 5, 6],
           [7, 8, 9]
         ],
-        point: new Point(1, 1, 1),
-        want: new Point(6, 15, 24)
+        point: new Vector(1, 1, 1),
+        want: new Vector(6, 15, 24)
       }
     ]
     tests.forEach(({ m, point, want }) => {
@@ -296,26 +297,26 @@ describe('s2.matrix3x3', () => {
   })
 
   test('frames', () => {
-    const z = Point.fromCoords(0.2, 0.5, -3.3)
+    const z = Point.fromCoords(0.2, 0.5, -3.3).vector
     const m = matrix.getFrame(z)
 
-    ok(matrix.col(m, 0).vector.isUnit())
-    ok(matrix.col(m, 0).vector.isUnit())
-    ok(matrix.col(m, 1).vector.isUnit())
+    ok(matrix.col(m, 0).isUnit())
+    ok(matrix.col(m, 0).isUnit())
+    ok(matrix.col(m, 1).isUnit())
     ok(float64Near(matrix.det(m), 1))
 
     const tests = [
       { a: matrix.col(m, 2), b: z },
-      { a: matrix.toFrame(m, matrix.col(m, 0)), b: new Point(1, 0, 0) },
-      { a: matrix.toFrame(m, matrix.col(m, 1)), b: new Point(0, 1, 0) },
-      { a: matrix.toFrame(m, matrix.col(m, 2)), b: new Point(0, 0, 1) },
-      { a: matrix.fromFrame(m, new Point(1, 0, 0)), b: matrix.col(m, 0) },
-      { a: matrix.fromFrame(m, new Point(0, 1, 0)), b: matrix.col(m, 1) },
-      { a: matrix.fromFrame(m, new Point(0, 0, 1)), b: matrix.col(m, 2) }
+      { a: matrix.toFrame(m, matrix.col(m, 0)), b: new Vector(1, 0, 0) },
+      { a: matrix.toFrame(m, matrix.col(m, 1)), b: new Vector(0, 1, 0) },
+      { a: matrix.toFrame(m, matrix.col(m, 2)), b: new Vector(0, 0, 1) },
+      { a: matrix.fromFrame(m, new Vector(1, 0, 0)), b: matrix.col(m, 0) },
+      { a: matrix.fromFrame(m, new Vector(0, 1, 0)), b: matrix.col(m, 1) },
+      { a: matrix.fromFrame(m, new Vector(0, 0, 1)), b: matrix.col(m, 2) }
     ]
 
     tests.forEach(({ a, b }) => {
-      ok(a.approxEqual(b))
+      ok(Point.fromVector(a).approxEqual(Point.fromVector(b)))
     })
   })
 })

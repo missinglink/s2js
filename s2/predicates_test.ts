@@ -196,14 +196,14 @@ describe('s2.predicates', () => {
       const a = matrix.col(f, 0)
       const x = matrix.col(f, 1)
 
-      const b = Point.fromVector(a.vector.sub(x.vector.mul(m)).normalize())
-      const c = Point.fromVector(a.vector.add(x.vector.mul(m)).normalize())
-      const sign = stableSign(a, b, c)
+      const b = Point.fromVector(a.sub(x.mul(m)).normalize())
+      const c = Point.fromVector(a.add(x.mul(m)).normalize())
+      const sign = stableSign(Point.fromVector(a), b, c)
       if (sign !== INDETERMINATE) {
         equal(
-          exactSign(a, b, c, true),
+          exactSign(Point.fromVector(a), b, c, true),
           sign,
-          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(a, b, c, true)}, want ${sign}`
+          `exactSign(${a}, ${b}, ${c}, true) = ${exactSign(Point.fromVector(a), b, c, true)}, want ${sign}`
         )
       } else {
         failureCount++

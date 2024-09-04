@@ -265,7 +265,7 @@ export class Polyline implements Region, Shape {
    */
   static findEndVertex(p: Polyline, tolerance: Angle, index: number): number {
     const origin = p.points[index]
-    const frame = getFrame(origin)
+    const frame = getFrame(origin.vector)
 
     let currentWedge = S1Interval.fullInterval()
     let lastDistance = 0
@@ -282,7 +282,7 @@ export class Polyline implements Region, Shape {
 
       if (distance <= tolerance) continue
 
-      const direction = toFrame(frame, candidate)
+      const direction = toFrame(frame, candidate.vector)
       const center = Math.atan2(direction.y, direction.x)
       if (!currentWedge.contains(center)) break
 

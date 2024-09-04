@@ -99,8 +99,7 @@ export class Vector {
    * Returns a unit vector that is orthogonal to v.
    * ortho(-v) = -ortho(v) for all v.
    */
-  ortho(): Vector {
-    const ov = new Vector(0, 0, 0)
+  ortho(ov = new Vector(0, 0, 0)): Vector {
     const lc = this.largestComponent()
     if (lc === Vector.X_AXIS) ov.z = 1
     else if (lc === Vector.Y_AXIS) ov.x = 1

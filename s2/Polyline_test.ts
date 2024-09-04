@@ -64,8 +64,8 @@ describe('s2.Polyline', () => {
         const p = Point.fromVector(
           matrix
             .row(f, 0)
-            .vector.mul(Math.cos(theta))
-            .add(matrix.row(f, 1).vector.mul(Math.sin(theta)))
+            .mul(Math.cos(theta))
+            .add(matrix.row(f, 1).mul(Math.sin(theta)))
         )
         if (line.points.length === 0 || !p.approxEqual(line.points[line.points.length - 1])) {
           line.points.push(p)
