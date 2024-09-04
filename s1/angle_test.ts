@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test'
 import { equal, ok } from 'node:assert/strict'
 import * as angle from './angle'
-import { DEGREE, RADIAN, E5, E6, E7 } from './angle_constants'
+import { DEGREE, E5, E6, E7 } from './angle_constants'
 
 describe('s1.angle', () => {
   test('empty', (t) => {
@@ -9,15 +9,15 @@ describe('s1.angle', () => {
   })
 
   test('PI radians exactly 180 degrees', (t) => {
-    equal(angle.radians(Math.PI * RADIAN), Math.PI, '(π * Radian).Radians() was %v, want π')
-    equal(angle.degrees(Math.PI * RADIAN), 180, '(π * Radian).Degrees() was %v, want 180')
+    equal(angle.radians(Math.PI), Math.PI, '(π * Radian).Radians() was %v, want π')
+    equal(angle.degrees(Math.PI), 180, '(π * Radian).Degrees() was %v, want 180')
     equal(angle.radians(180 * DEGREE), Math.PI, '(180 * Degree).Radians() was %v, want π')
     equal(angle.degrees(180 * DEGREE), 180, '(180 * Degree).Degrees() was %v, want 180')
 
-    equal(angle.degrees((Math.PI / 2) * RADIAN), 90, '(π/2 * Radian).Degrees() was %v, want 90')
+    equal(angle.degrees(Math.PI / 2), 90, '(π/2 * Radian).Degrees() was %v, want 90')
 
     // Check negative angles.
-    equal(angle.degrees((-Math.PI / 2) * RADIAN), -90, '(-π/2 * Radian).Degrees() was %v, want -90')
+    equal(angle.degrees(-Math.PI / 2), -90, '(-π/2 * Radian).Degrees() was %v, want -90')
     equal(angle.radians(-45 * DEGREE), -Math.PI / 4, '(-45 * Degree).Radians() was %v, want -π/4')
 
     // zero(s)
@@ -77,7 +77,7 @@ describe('s1.angle', () => {
   test('degrees vs. radians', (t) => {
     // This test tests the exactness of specific values between degrees and radians.
     for (let k = -8; k <= 8; k++) {
-      equal(45 * k * DEGREE, ((k * Math.PI) / 4) * RADIAN)
+      equal(45 * k * DEGREE, (k * Math.PI) / 4)
       equal(angle.degrees(45 * k * DEGREE), 45 * k)
     }
 

@@ -1,10 +1,10 @@
 import type { Angle } from '../s1/angle'
-import { DEGREE, RADIAN } from '../s1/angle_constants'
+import { DEGREE } from '../s1/angle_constants'
 import * as angle from '../s1/angle'
 import { remainder } from '../r1/math'
 import { Point } from './Point'
 
-const NORTH_POLE_LAT: Angle = (Math.PI / 2) * RADIAN
+const NORTH_POLE_LAT: Angle = Math.PI / 2
 const SOUTH_POLE_LAT: Angle = -NORTH_POLE_LAT
 
 /**
@@ -70,7 +70,7 @@ export class LatLng {
     let lat = this.lat
     if (lat > NORTH_POLE_LAT) lat = NORTH_POLE_LAT
     else if (lat < SOUTH_POLE_LAT) lat = SOUTH_POLE_LAT
-    const lng = remainder(this.lng, 2 * Math.PI) * RADIAN
+    const lng = remainder(this.lng, 2 * Math.PI)
     return new LatLng(lat, lng)
   }
 

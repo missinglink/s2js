@@ -5,7 +5,7 @@ import { Interval as R1Interval } from '../r1/Interval'
 import { Interval as S1Interval } from '../s1/Interval'
 import { Point as R2Point } from '../r2/Point'
 import { Point } from './Point'
-import { DEGREE, RADIAN } from '../s1/angle_constants'
+import { DEGREE } from '../s1/angle_constants'
 import { float64Eq, oneIn, randomUniformFloat64, rectsApproxEqual } from './testing'
 import { Cell } from './Cell'
 import * as cellid from './cellid'
@@ -88,17 +88,17 @@ describe('s2.Rect', () => {
       },
       {
         input: rectFromDegrees(0, 0, 0, 0),
-        point: new LatLng(0 * RADIAN, (-Math.PI / 2) * RADIAN),
+        point: new LatLng(0, -Math.PI / 2),
         want: rectFromDegrees(0, -90, 0, 0)
       },
       {
         input: rectFromDegrees(0, -90, 0, 0),
-        point: new LatLng((Math.PI / 4) * RADIAN, -Math.PI * RADIAN),
+        point: new LatLng(Math.PI / 4, -Math.PI),
         want: rectFromDegrees(0, -180, 45, 0)
       },
       {
         input: rectFromDegrees(0, -180, 45, 0),
-        point: new LatLng((Math.PI / 2) * RADIAN, 0 * RADIAN),
+        point: new LatLng(Math.PI / 2, 0),
         want: rectFromDegrees(0, -180, 90, 0)
       }
     ]
@@ -799,12 +799,7 @@ describe('s2.Rect', () => {
   })
 
   test('centroid empty and full', () => {
-    equal(
-      Rect.emptyRect()
-        .centroid()
-        .approxEqual(new Point(0, 0, 0)),
-      true
-    )
+    equal(Rect.emptyRect().centroid().approxEqual(new Point(0, 0, 0)), true)
     equal(Rect.fullRect().centroid().vector.norm() <= EPSILON, true)
   })
 

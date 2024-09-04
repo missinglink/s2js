@@ -76,7 +76,6 @@
 
 import type { Angle } from './angle'
 import * as _angle from './angle'
-import { RADIAN } from './angle_constants'
 import { MAX_LENGTH2, NEGATIVE_CHORDANGLE, STRAIGHT_CHORDANGLE } from './chordangle_constants'
 import { DBL_EPSILON } from './Interval_constants'
 import { nextAfter } from '../r1/math'
@@ -118,7 +117,7 @@ export const expanded = (c: ChordAngle, e: number): ChordAngle => {
 
 /** Converts this chordangle to an angle. */
 export const angle = (c: ChordAngle): Angle => {
-  if (c < 0) return -1 * RADIAN
+  if (c < 0) return -1
   if (isInfinity(c)) return _angle.infAngle()
   return 2 * Math.asin(0.5 * Math.sqrt(c))
 }

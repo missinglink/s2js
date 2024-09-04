@@ -5,7 +5,6 @@ import type { Angle } from '../s1/angle'
 import { LatLng } from './LatLng'
 import { Point } from './Point'
 import { Cap } from './Cap'
-import { RADIAN } from '../s1/angle_constants'
 import { remainder } from '../r1/math'
 import type { CellID } from './cellid'
 import { Cell } from './Cell'
@@ -135,35 +134,35 @@ export class Rect implements Region {
         break
     }
 
-    return new LatLng(lat * RADIAN, lng * RADIAN)
+    return new LatLng(lat, lng)
   }
 
   /**
    * Returns one corner of the rectangle.
    */
   lo(): LatLng {
-    return new LatLng(this.lat.lo * RADIAN, this.lng.lo * RADIAN)
+    return new LatLng(this.lat.lo, this.lng.lo)
   }
 
   /**
    * Returns the other corner of the rectangle.
    */
   hi(): LatLng {
-    return new LatLng(this.lat.hi * RADIAN, this.lng.hi * RADIAN)
+    return new LatLng(this.lat.hi, this.lng.hi)
   }
 
   /**
    * Returns the center of the rectangle.
    */
   center(): LatLng {
-    return new LatLng(this.lat.center() * RADIAN, this.lng.center() * RADIAN)
+    return new LatLng(this.lat.center(), this.lng.center())
   }
 
   /**
    * Returns the size of the Rect.
    */
   size(): LatLng {
-    return new LatLng(this.lat.length() * RADIAN, this.lng.length() * RADIAN)
+    return new LatLng(this.lat.length(), this.lng.length())
   }
 
   /**
@@ -250,7 +249,7 @@ export class Rect implements Region {
       poleZ = 1
       poleAngle = Math.PI / 2 - this.lat.lo
     }
-    const poleCap = Cap.fromCenterAngle(new Point(0, 0, poleZ), poleAngle * RADIAN)
+    const poleCap = Cap.fromCenterAngle(new Point(0, 0, poleZ), poleAngle)
 
     if (remainder(this.lng.hi - this.lng.lo, 2 * Math.PI) >= 0 && this.lng.hi - this.lng.lo < 2 * Math.PI) {
       const midCap = Cap.fromPoint(Point.fromLatLng(this.center()))

@@ -1,4 +1,3 @@
-import { RADIAN } from '../s1/angle_constants'
 import { LatLng } from './LatLng'
 import { Point } from './Point'
 import { DBL_EPSILON } from './predicates'
@@ -47,7 +46,7 @@ export class RectBounder {
     // The maximum error in the longitude calculation is DBL_EPSILON. RectBound
     // does not do any expansion because this isn't necessary in order to
     // bound the *rounded* longitudes of contained points.
-    return new LatLng(10 * DBL_EPSILON * RADIAN, 1 * DBL_EPSILON * RADIAN)
+    return new LatLng(10 * DBL_EPSILON, 1 * DBL_EPSILON)
   }
 
   /**

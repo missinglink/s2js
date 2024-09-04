@@ -2,7 +2,6 @@ import { test, describe } from 'node:test'
 import { equal, ok, deepEqual } from 'node:assert/strict'
 import { Interval } from './Interval'
 import * as angle from './angle'
-import { RADIAN } from './angle_constants'
 import { DBL_EPSILON } from './Interval_constants'
 
 // Some standard intervals for use throughout the tests.
@@ -1212,10 +1211,10 @@ describe('s1.Interval', () => {
       {
         i: Interval.fromEndpoints(-0.139626, 0.349066),
         y: Interval.fromEndpoints(0.139626, 0.139626),
-        want: 0.279252 * RADIAN
+        want: 0.279252
       },
-      { i: Interval.fromEndpoints(0.2, 0.4), y: Interval.fromEndpoints(0.1, 0.5), want: 0 * RADIAN },
-      { i: Interval.fromEndpoints(0, 0), y: Interval.emptyInterval(), want: Math.PI * RADIAN },
+      { i: Interval.fromEndpoints(0.2, 0.4), y: Interval.fromEndpoints(0.1, 0.5), want: 0 },
+      { i: Interval.fromEndpoints(0, 0), y: Interval.emptyInterval(), want: Math.PI },
       { i: Interval.emptyInterval(), y: Interval.emptyInterval(), want: 0.0 },
       { i: Interval.emptyInterval(), y: MID12, want: 0.0 },
       { i: MID12, y: Interval.emptyInterval(), want: Math.PI },
