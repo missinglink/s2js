@@ -94,7 +94,6 @@ export class RegionCoverer {
     })
 
     // reduce the global covering to maxCells
-    if (union.length < this.coverer.maxCells) return union
     return this.coverer.covering(union)
   }
 
