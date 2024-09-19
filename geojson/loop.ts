@@ -20,6 +20,7 @@ export const marshal = (loop: Loop, ordinal: number): geojson.Position[] => {
 export const unmarshal = (ring: geojson.Position[], ordinal: number): Loop => {
   ring = ring.slice() // make a copy to avoid mutating input
   ring.length -= 1 // remove matching start/end points
+  ring = ring.filter((p, i) => !i || !position.equal(ring.at(i - 1)!, p, 0)) // remove equal+adjacent vertices
   if (ordinal > 0) ring.reverse() // ensure all rings are CCW
   return new Loop(ring.map(position.unmarshal))
 }

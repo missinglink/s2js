@@ -19,3 +19,10 @@ export const marshal = (point: Point): geojson.Position => {
 export const unmarshal = (position: geojson.Position): Point => {
   return Point.fromLatLng(LatLng.fromDegrees(position[1], position[0]))
 }
+
+/**
+ * Returns true IFF the two positions are equal.
+ */
+export const equal = (a: geojson.Position, b: geojson.Position, epsilon = 0) => {
+  return Math.abs(a[0] - b[0]) <= epsilon && Math.abs(a[1] - b[1]) <= epsilon
+}

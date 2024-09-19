@@ -1,11 +1,8 @@
 import type * as geojson from 'geojson'
+import * as position from './position'
 
 // default distance threshold for approx equality
 const EPSILON = 1e-13
-
-export const approxEqualPosition = (a: geojson.Position, b: geojson.Position, epsilon = EPSILON) => {
-  return Math.abs(a[0] - b[0]) <= epsilon && Math.abs(a[1] - b[1]) <= epsilon
-}
 
 export const approxEqual = (a: geojson.Geometry, b: geojson.Geometry, epsilon = EPSILON) => {
   if (a?.type !== b?.type) return false
@@ -13,14 +10,14 @@ export const approxEqual = (a: geojson.Geometry, b: geojson.Geometry, epsilon = 
     case 'Point': {
       const aa = a as geojson.Point
       const bb = b as geojson.Point
-      return approxEqualPosition(aa.coordinates, bb.coordinates, epsilon)
+      return position.equal(aa.coordinates, bb.coordinates, epsilon)
     }
 
     case 'LineString': {
       const aa = a as geojson.LineString
       const bb = b as geojson.LineString
       if (aa.coordinates.length !== bb.coordinates.length) return false
-      return aa.coordinates.every((c, i) => approxEqualPosition(c, bb.coordinates[i], epsilon))
+      return aa.coordinates.every((c, i) => position.equal(c, bb.coordinates[i], epsilon))
     }
 
     case 'Polygon': {
@@ -29,7 +26,7 @@ export const approxEqual = (a: geojson.Geometry, b: geojson.Geometry, epsilon = 
       if (aa.coordinates.length !== bb.coordinates.length) return false
       return aa.coordinates.every((r, ri) => {
         if (r.length !== bb.coordinates[ri].length) return false
-        return r.every((c, ci) => approxEqualPosition(c, bb.coordinates[ri][ci], epsilon))
+        return r.every((c, ci) => position.equal(c, bb.coordinates[ri][ci], epsilon))
       })
     }
 
