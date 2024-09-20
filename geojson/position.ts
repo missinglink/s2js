@@ -24,5 +24,6 @@ export const unmarshal = (position: geojson.Position): Point => {
  * Returns true IFF the two positions are equal.
  */
 export const equal = (a: geojson.Position, b: geojson.Position, epsilon = 0) => {
+  if (epsilon == 0) return a[0] === b[0] && a[1] === b[1]
   return Math.abs(a[0] - b[0]) <= epsilon && Math.abs(a[1] - b[1]) <= epsilon
 }
