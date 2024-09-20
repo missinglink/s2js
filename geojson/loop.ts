@@ -45,5 +45,5 @@ export const removeAdjacentDuplicateVertices = (ring: geojson.Position[], epsilo
  * Returns true IFF ring contains duplicate vertices at any position.
  */
 export const containsDuplicateVertices = (ring: geojson.Position[]): boolean => {
-  return ring.some((A, i) => ring.slice(i + 1).some((B) => position.equal(A, B)))
+  return new Set(ring.map((c) => `${c[0]}|${c[1]}`)).size !== ring.length
 }
