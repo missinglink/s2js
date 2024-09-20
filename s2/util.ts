@@ -26,6 +26,9 @@ export const min = <T extends number | bigint>(first: T, ...others: T[]): T => {
   return min
 }
 
+/** Returns the absolute value of a bigint. */
+export const abs = (n: bigint): bigint => (n < 0n ? -n : n)
+
 /** Returns the largest of the given Angle values. */
 export const maxAngle = (first: Angle, ...others: Angle[]) => max<Angle>(first, ...others)
 

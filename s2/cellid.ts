@@ -4,7 +4,7 @@ import { faceSiTiToXYZ, faceUVToXYZ, siTiToST, stToUV, uvToST, xyzToFaceUV } fro
 import { FACE_BITS, MAX_LEVEL, MAX_SIZE, NUM_FACES, POS_BITS, WRAP_OFFSET } from './cellid_constants'
 import { LatLng } from './LatLng'
 import { Point } from './Point'
-import { clampInt } from './util'
+import { abs, clampInt } from './util'
 import { Vector } from '../r3/Vector'
 import { Interval } from '../r1/Interval'
 import { Rect } from '../r2/Rect'
@@ -40,12 +40,12 @@ import { Rect as R2Rect } from '../r2/Rect'
 export type CellID = bigint
 
 /**
- * An invalid cell ID guaranteed to be larger than any
- * valid cell ID. It is used primarily by ShapeIndex. The value is also used
- * by some S2 types when encoding data.
+ * An invalid cell ID guaranteed to be larger than any valid cell ID.
+ * It is used primarily by ShapeIndex.
+ * The value is also used by some S2 types when encoding data.
  * Note that the sentinel's RangeMin == RangeMax == itself.
  */
-export const SentinelCellID = 18446744073709551615n
+export const SentinelCellID = (1n << 64n) - 1n
 
 /**
  * Returns the cube face for this cell id, in the range [0,5].
@@ -58,7 +58,7 @@ export const face = (ci: CellID): number => {
  * Returns the position along the Hilbert curve of this cell id, in the range [0,2^POS_BITS-1].
  */
 export const pos = (ci: CellID): CellID => {
-  return ci & (~0n >> BigInt(FACE_BITS))
+  return ci & (SentinelCellID >> BigInt(FACE_BITS))
 }
 
 /**
@@ -100,6 +100,15 @@ export const valid = (ci: CellID): boolean => {
  * Returns whether this cell ID is at the deepest level; that is, the level at which the cells are smallest.
  */
 export const isLeaf = (ci: CellID): boolean => (ci & 1n) != 0n
+
+/**
+ * Returns the child position (0..3) of this cell's ancestor at the given level, relative to its parent.
+ * The argument should be in the range 1..MaxLevel.
+ * For example, childPosition(1) returns the position of this cell's level-1 ancestor within its top-level face cell.
+ */
+export const childPosition = (ci: CellID, level: number): number => {
+  return Number(ci >> (2n * BigInt(MAX_LEVEL - level) + 1n)) & 0b11
+}
 
 // Bitwise
 
@@ -213,7 +222,7 @@ export const intersects = (ci: CellID, oci: CellID) => {
  * Returns a hex-encoded string of the uint64 cell id, with leading zeros included but trailing zeros stripped
  */
 export const toToken = (ci: CellID): string => {
-  const s = ci.toString(16).replace(/0+$/, '')
+  const s = ci.toString(16).padStart(16, '0').replace(/0+$/, '')
   if (s.length === 0) return 'X'
   return s
 }
@@ -224,9 +233,20 @@ export const toToken = (ci: CellID): string => {
  */
 export const fromToken = (t: string): CellID => {
   if (t.length > 16) return 0n
+  if (!/^[A-F0-9]+$/i.test(t)) return 0n
   let ci = BigInt('0x' + t)
   if (t.length < 16) ci = ci << BigInt(4 * (16 - t.length))
   return ci
+}
+
+/**
+ * Returns the string representation of the cell ID in the form "1/3210".
+ */
+export const toString = (ci: CellID): string => {
+  if (!valid(ci)) return `Invalid: ${ci.toString(16)}`
+  let result = `${face(ci)}/`
+  for (let l = 1; l <= level(ci); l++) result += childPosition(ci, l)
+  return result
 }
 
 /**
@@ -238,12 +258,12 @@ export const fromString = (s: string): CellID => {
   if (level < 0 || level > MAX_LEVEL) return 0n
 
   const face = parseInt(s[0], 10)
-  if (face < 0 || face > 5 || s[1] !== '/') return 0n
+  if (isNaN(face) || face < 0 || face > 5 || s[1] !== '/') return 0n
 
   let cid = fromFace(face)
   for (let i = 2; i < s.length; i++) {
     const childPos = parseInt(s[i], 10)
-    if (childPos < 0 || childPos > 3) return 0n
+    if (isNaN(childPos) || childPos < 0 || childPos > 3) return 0n
     cid = children(cid)[childPos]
   }
 
@@ -303,7 +323,7 @@ export const stToIJ = (s: number): number => {
 }
 
 export const sizeIJ = (level: number): number => {
-  return 1 << (MAX_LEVEL - level)
+  return 1 << clampInt(MAX_LEVEL - level, 0, MAX_LEVEL)
 }
 
 /** Returns the edge length of this CellID in (s,t)-space at the given level. */
@@ -472,6 +492,16 @@ export const ijLevelToBoundUV = (i: number, j: number, level: number): Rect => {
 }
 
 /**
+ * Returns the number of steps along the Hilbert curve that this cell is from the first node
+ * in the S2 hierarchy at our level. (i.e., FromFace(0).ChildBeginAtLevel(ci.Level())).
+ * This is analogous to Pos(), but for this cell's level.
+ * The return value is always non-negative.
+ */
+export const distanceFromBegin = (ci: CellID): bigint => {
+  return ci >> (2n * BigInt(MAX_LEVEL - level(ci)) + 1n)
+}
+
+/**
  * Returns an unnormalized r3 vector from the origin through the center
  * of the s2 cell on the sphere.
  */
@@ -603,12 +633,12 @@ export const childEndAtLevel = (ci: CellID, level: number): CellID => {
  * or ChildBeginAtLevel and ChildEndAtLevel.
  */
 export const next = (ci: CellID): CellID => {
-  return ci + (lsb(ci) << 1n)
+  return (ci + (lsb(ci) << 1n)) & SentinelCellID
 }
 
 /** Returns the previous cell along the Hilbert curve. */
 export const prev = (ci: CellID): CellID => {
-  return ci - (lsb(ci) << 1n)
+  return (ci - (lsb(ci) << 1n)) & SentinelCellID
 }
 
 /**
@@ -618,7 +648,7 @@ export const prev = (ci: CellID): CellID => {
 export const nextWrap = (ci: CellID): CellID => {
   const n = next(ci)
   if (n < WRAP_OFFSET) return n
-  return n - WRAP_OFFSET
+  return (n - WRAP_OFFSET) & SentinelCellID
 }
 
 /**
@@ -628,7 +658,44 @@ export const nextWrap = (ci: CellID): CellID => {
 export const prevWrap = (ci: CellID): CellID => {
   const p = prev(ci)
   if (p < WRAP_OFFSET) return p
-  return p + WRAP_OFFSET
+  return (p + WRAP_OFFSET) & SentinelCellID
+}
+
+/**
+ * Advances or retreats the indicated number of steps along the
+ * Hilbert curve at the current level and returns the new position. The
+ * position wraps between the first and last faces as necessary.
+ */
+export const advanceWrap = (ci: CellID, steps: bigint): CellID => {
+  if (steps === 0n) return ci
+
+  // We clamp the number of steps if necessary to ensure that we do not
+  // advance past the End() or before the Begin() of this level.
+  const shift = BigInt(2 * (MAX_LEVEL - level(ci)) + 1)
+  if (steps < 0n) {
+    const min = -(ci >> shift)
+    if (steps < min) {
+      const wrap = WRAP_OFFSET >> shift
+      steps %= wrap
+      if (steps < min) {
+        steps += wrap
+      }
+    }
+  } else {
+    // Unlike Advance(), we don't want to return End(level).
+    const max = (WRAP_OFFSET - ci) >> shift
+    if (steps > max) {
+      const wrap = WRAP_OFFSET >> shift
+      steps %= wrap
+      if (steps > max) {
+        steps -= wrap
+      }
+    }
+  }
+
+  // If steps is negative, then shifting it left has undefined behavior.
+  // Cast to uint64 for a 2's complement answer.
+  return ci + (steps << abs(shift))
 }
 
 /**
@@ -640,9 +707,7 @@ export const commonAncestorLevel = (ci: CellID, other: CellID): [number, boolean
   if (bits < lsb(other)) bits = lsb(other)
 
   const msbPos = findMSBSetNonZero64(bits)
-  if (msbPos > 60) {
-    return [0, false]
-  }
+  if (msbPos > 60) return [0, false]
   return [(60 - msbPos) >> 1, true]
 }
 
@@ -691,7 +756,7 @@ export const maxTile = (ci: CellID, limit: CellID): CellID => {
  * Hilbert curve at the current level, and returns the new position. The
  * position is never advanced past End() or before Begin().
  */
-export const advance = (ci: CellID, steps: CellID): CellID => {
+export const advance = (ci: CellID, steps: bigint): CellID => {
   if (steps === 0n) return ci
 
   // We clamp the number of steps if necessary to ensure that we do not
@@ -699,12 +764,12 @@ export const advance = (ci: CellID, steps: CellID): CellID => {
   const stepShift = BigInt(2 * (MAX_LEVEL - level(ci)) + 1)
 
   if (steps < 0n) {
-    const minSteps = -((ci >> stepShift) as bigint)
+    const minSteps = -(ci >> stepShift)
     if (steps < minSteps) {
       steps = minSteps
     }
   } else {
-    const maxSteps = ((WRAP_OFFSET + lsb(ci) - ci) >> stepShift) as bigint
+    const maxSteps = (WRAP_OFFSET + lsb(ci) - ci) >> stepShift
     if (steps > maxSteps) {
       steps = maxSteps
     }
