@@ -110,4 +110,84 @@ describe('RegionCoverer', () => {
     const union = cov.covering(mpolygon)
     deepEqual([...union.map(cellid.toToken)], []) // cannot be fixed, return []
   })
+
+  test('polygon - should not generate global covering', (t) => {
+    const polygon: geojson.Polygon = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-77.053846, 38.906842],
+          [-77.053847, 38.90684000000001],
+          [-77.053849, 38.906836000000006],
+          [-77.053846, 38.906842]
+        ]
+      ]
+    }
+    const cov = new RegionCoverer()
+    const union = cov.covering(polygon)
+    deepEqual([...union.map(cellid.toToken)], [])
+  })
+
+  test('multipolygon - should not generate global covering', (t) => {
+    const mpolygon: geojson.MultiPolygon = {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [
+            [-77.053846, 38.906842],
+            [-77.053847, 38.90684000000001],
+            [-77.053849, 38.906836000000006],
+            [-77.053846, 38.906842]
+          ]
+        ]
+      ]
+    }
+    const cov = new RegionCoverer()
+    const union = cov.covering(mpolygon)
+    deepEqual([...union.map(cellid.toToken)], [])
+  })
+
+  test('linestring - should generate covering', (t) => {
+    const linestring: geojson.LineString = {
+      type: 'LineString',
+      coordinates: [
+        [-77.053846, 38.906842],
+        [-77.053847, 38.90684000000001],
+        [-77.053849, 38.906836000000006]
+      ]
+    }
+    const cov = new RegionCoverer()
+    const union = cov.covering(linestring)
+    deepEqual(
+      [...union.map(cellid.toToken)],
+      [
+        '89b7b7b50b756d',
+        '89b7b7b50b7571',
+        '89b7b7b50b75724',
+        '89b7b7b50b757b',
+        '89b7b7b50b757c04',
+        '89b7b7b50b757f',
+        '89b7b7b50b9fd35',
+        '89b7b7b50b9fd5'
+      ]
+    )
+  })
+
+  test('polygon - should generate global covering', (t) => {
+    const polygon: geojson.Polygon = {
+      type: 'Polygon',
+      coordinates: [
+        [
+          [-170, 69],
+          [170, 70],
+          [170, -70],
+          [-170, -70],
+          [-170, 69]
+        ]
+      ]
+    }
+    const cov = new RegionCoverer()
+    const union = cov.covering(polygon)
+    deepEqual([...union.map(cellid.toToken)], ['1', '3', '5', '7', '9', 'b'])
+  })
 })

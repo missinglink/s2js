@@ -7,6 +7,7 @@ import { Polygon } from '../s2/Polygon'
 import type { Region } from '../s2/Region'
 import type { RegionCovererOptions as S2RegionCovererOptions } from '../s2/RegionCoverer'
 import { RegionCoverer as S2RegionCoverer } from '../s2/RegionCoverer'
+import * as cellid from '../s2/cellid'
 
 /**
  * RegionCovererOptions allows the RegionCoverer to be configured.
@@ -82,12 +83,13 @@ export class RegionCoverer {
     shapes.forEach((shape: Region) => {
       // optionally elect to use a fast covering method for small areas
       const fast = union.length >= this.memberCoverer.maxCells && RegionCoverer.area(shape) < this.smallAreaEpsilon
+      const cov = fast ? this.memberCoverer.fastCovering(shape) : this.memberCoverer.covering(shape)
+
+      // discard errorneous members which cover the entire planet
+      if (!RegionCoverer.validCovering(shape, cov)) return
 
       // append covering to union
-      union = CellUnion.fromUnion(
-        union,
-        fast ? this.memberCoverer.fastCovering(shape) : this.memberCoverer.covering(shape)
-      )
+      union = CellUnion.fromUnion(union, cov)
 
       // force compact large coverings to avoid OOM errors
       if (union.length >= this.compactAt) union = this.coverer.covering(union)
@@ -101,7 +103,11 @@ export class RegionCoverer {
   covering(geometry: geojson.Geometry): CellUnion {
     const shape = fromGeoJSON(geometry)
     if (Array.isArray(shape)) return this.mutliMemberCovering(shape as Region[])
-    return this.coverer.covering(shape)
+
+    // discard errorneous shapes which cover the entire planet
+    const cov = this.coverer.covering(shape)
+    if (!RegionCoverer.validCovering(shape, cov)) return new CellUnion()
+    return cov
   }
 
   /** Computes the area of a shape */
@@ -109,5 +115,19 @@ export class RegionCoverer {
     if (shape instanceof Polygon) return shape.area()
     if (shape instanceof Polyline) shape.capBound().area()
     return 0
+  }
+
+  /** Attempts to detect invalid geometries which produce global coverings */
+  private static validCovering(shape: Region, covering: CellUnion): boolean {
+    if (covering.length !== 6 || !covering.every(cellid.isFace)) return true
+
+    // compare the polygon covering with a covering of the outer ring as a linestring
+    if (shape instanceof Polygon) {
+      const union = new Polyline(shape.loop(0).vertices).cellUnionBound()
+      return union.length === 6 && union.every(cellid.isFace)
+    }
+
+    // area is too small to have a global covering
+    return this.area(shape) < Math.PI * 2
   }
 }
