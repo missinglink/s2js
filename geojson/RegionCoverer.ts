@@ -4,6 +4,7 @@ import { CellUnion } from '../s2/CellUnion'
 import { fromGeoJSON } from './geometry'
 import { Polyline } from '../s2/Polyline'
 import { Polygon } from '../s2/Polygon'
+import { Rect } from '../s2/Rect'
 import type { Region } from '../s2/Region'
 import type { RegionCovererOptions as S2RegionCovererOptions } from '../s2/RegionCoverer'
 import { RegionCoverer as S2RegionCoverer } from '../s2/RegionCoverer'
@@ -81,8 +82,14 @@ export class RegionCoverer {
 
     let union = new CellUnion()
     shapes.forEach((shape: Region) => {
+      const area = RegionCoverer.area(shape)
+      const isPolygon = shape instanceof Polygon
+
+      // discard zero-area polygons
+      if (isPolygon && area <= 0) return
+
       // optionally elect to use a fast covering method for small areas
-      const fast = union.length >= this.memberCoverer.maxCells && RegionCoverer.area(shape) < this.smallAreaEpsilon
+      const fast = union.length >= this.memberCoverer.maxCells && area < this.smallAreaEpsilon
       const cov = fast ? this.memberCoverer.fastCovering(shape) : this.memberCoverer.covering(shape)
 
       // discard errorneous members which cover the entire planet
@@ -104,9 +111,13 @@ export class RegionCoverer {
     const shape = fromGeoJSON(geometry)
     if (Array.isArray(shape)) return this.mutliMemberCovering(shape as Region[])
 
+    // discard zero-area polygons
+    if (shape instanceof Polygon && RegionCoverer.area(shape) <= 0) return new CellUnion()
+
     // discard errorneous shapes which cover the entire planet
     const cov = this.coverer.covering(shape)
     if (!RegionCoverer.validCovering(shape, cov)) return new CellUnion()
+
     return cov
   }
 
@@ -114,6 +125,7 @@ export class RegionCoverer {
   private static area(shape: Region): number {
     if (shape instanceof Polygon) return shape.area()
     if (shape instanceof Polyline) shape.capBound().area()
+    if (shape instanceof Rect) shape.capBound().area()
     return 0
   }
 
