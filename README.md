@@ -34,6 +34,43 @@ const { s2 } = require('s2js')
 </script>
 ```
 
+### GeoJSON support
+
+The supplementary `geojson` module provides convenience functions for working with GeoJSON data in S2:
+
+```js
+import { geojson } from 's2js'
+
+const s2Polyline = geojson.fromGeoJSON({
+  type: 'LineString',
+  coordinates: [
+    [102.0, 0.0],
+    [103.0, 1.0],
+    [104.0, 0.0],
+    [105.0, 1.0]
+  ]
+})
+```
+
+The `RegionCoverer` supports all geometry types including multi-geometries:
+
+```js
+const coverer = new geojson.RegionCoverer({ maxCells: 30 })
+
+const union = coverer.covering({
+  type: 'Polygon',
+  coordinates: [
+    [
+      [100.0, 0.0],
+      [101.0, 0.0],
+      [101.0, 1.0],
+      [100.0, 1.0],
+      [100.0, 0.0]
+    ]
+  ]
+})
+```
+
 ### Contributing
 
 If you'd like to contribute a module please open an Issue to discuss.
