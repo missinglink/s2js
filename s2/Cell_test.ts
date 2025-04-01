@@ -409,26 +409,26 @@ describe('s2.Cell', () => {
     }
   })
 
-  // function chooseEdgeNearCell(cell: Cell): [Point, Point] {
-  //   const c = cell.capBound()
-  //   let a: Point, b: Point
+  function chooseEdgeNearCell(cell: Cell): [Point, Point] {
+    const c = cell.capBound()
+    let a: Point, b: Point
 
-  //   if (Math.random() < 0.2) {
-  //     a = randomPoint()
-  //   } else {
-  //     a = samplePointFromCap(Cap.fromCenterChordAngle(c.center, 1.5 * c.rad))
-  //   }
+    if (Math.random() < 0.2) {
+      a = randomPoint()
+    } else {
+      a = samplePointFromCap(Cap.fromCenterChordAngle(c.center, 1.5 * c.rad))
+    }
 
-  //   const maxLength = Math.min(100 * Math.pow(1e-4, Math.random()) * c.radius(), Math.PI / 2)
-  //   b = samplePointFromCap(Cap.fromCenterAngle(a, maxLength))
+    const maxLength = Math.min(100 * Math.pow(1e-4, Math.random()) * c.radius(), Math.PI / 2)
+    b = samplePointFromCap(Cap.fromCenterAngle(a, maxLength))
 
-  //   if (Math.random() < 0.05) {
-  //     a = Point.fromVector(a.vector.mul(-1))
-  //     b = Point.fromVector(b.vector.mul(-1))
-  //   }
+    if (Math.random() < 0.05) {
+      a = Point.fromVector(a.vector.mul(-1))
+      b = Point.fromVector(b.vector.mul(-1))
+    }
 
-  //   return [a, b]
-  // }
+    return [a, b]
+  }
 
   function minDistanceToPointBruteForce(cell: Cell, target: Point): ChordAngle {
     let minDistance = chordangle.infChordAngle()
@@ -449,22 +449,22 @@ describe('s2.Cell', () => {
     return maxDistance
   }
 
-  // function minDistanceToEdgeBruteForce(cell: Cell, a: Point, b: Point): ChordAngle {
-  //   if (cell.containsPoint(a) || cell.containsPoint(b)) return 0
+  function minDistanceToEdgeBruteForce(cell: Cell, a: Point, b: Point): ChordAngle {
+    if (cell.containsPoint(a) || cell.containsPoint(b)) return 0
 
-  //   let minDist = chordangle.infChordAngle()
-  //   for (let i = 0; i < 4; i++) {
-  //     const v0 = cell.vertex(i)
-  //     const v1 = cell.vertex((i + 1) % 4)
+    let minDist = chordangle.infChordAngle()
+    for (let i = 0; i < 4; i++) {
+      const v0 = cell.vertex(i)
+      const v1 = cell.vertex((i + 1) % 4)
 
-  //     if (crossingSign(a, b, v0, v1) !== DO_NOT_CROSS) return 0
+      if (crossingSign(a, b, v0, v1) !== DO_NOT_CROSS) return 0
 
-  //     minDist = updateMinDistance(a, v0, v1, minDist)[0]
-  //     minDist = updateMinDistance(b, v0, v1, minDist)[0]
-  //     minDist = updateMinDistance(v0, a, b, minDist)[0]
-  //   }
-  //   return minDist
-  // }
+      minDist = updateMinDistance(a, v0, v1, minDist).dist
+      minDist = updateMinDistance(b, v0, v1, minDist).dist
+      minDist = updateMinDistance(v0, a, b, minDist).dist
+    }
+    return minDist
+  }
 
   function maxDistanceToEdgeBruteForce(cell: Cell, a: Point, b: Point): ChordAngle {
     if (
@@ -479,44 +479,48 @@ describe('s2.Cell', () => {
       const v0 = cell.vertex(i)
       const v1 = cell.vertex((i + 1) % 4)
 
+      // If the antipodal edge crosses through the cell, min distance is Pi.
       if (
         crossingSign(Point.fromVector(a.vector.mul(-1)), Point.fromVector(b.vector.mul(-1)), v0, v1) !== DO_NOT_CROSS
       ) {
         return STRAIGHT_CHORDANGLE
       }
 
-      maxDist = updateMaxDistance(a, v0, v1, maxDist)[0]
-      maxDist = updateMaxDistance(b, v0, v1, maxDist)[0]
-      maxDist = updateMaxDistance(v0, a, b, maxDist)[0]
+      maxDist = updateMaxDistance(a, v0, v1, maxDist).dist
+      maxDist = updateMaxDistance(b, v0, v1, maxDist).dist
+      maxDist = updateMaxDistance(v0, a, b, maxDist).dist
     }
     return maxDist
   }
 
-  // test('distanceToEdge', () => {
-  //   for (let iter = 0; iter < 1000; iter++) {
-  //     const cell = Cell.fromCellID(randomCellID())
+  test('distanceToEdge', () => {
+    for (let iter = 0; iter < 1000; iter++) {
+      const cell = Cell.fromCellID(randomCellID())
 
-  //     const [a, b] = chooseEdgeNearCell(cell)
-  //     const expectedMin = chordangle.angle(minDistanceToEdgeBruteForce(cell, a, b))
-  //     const expectedMax = chordangle.angle(maxDistanceToEdgeBruteForce(cell, a, b))
-  //     const actualMin = chordangle.angle(cell.distanceToEdge(a, b))
-  //     const actualMax = chordangle.angle(cell.maxDistanceToEdge(a, b))
+      const [a, b] = chooseEdgeNearCell(cell)
+      const expectedMin = chordangle.angle(minDistanceToEdgeBruteForce(cell, a, b))
+      const expectedMax = chordangle.angle(maxDistanceToEdgeBruteForce(cell, a, b))
+      const actualMin = chordangle.angle(cell.distanceToEdge(a, b))
+      const actualMax = chordangle.angle(cell.maxDistanceToEdge(a, b))
 
-  //     let expectedError = 1e-12
-  //     if (expectedMin > Math.PI / 2) {
-  //       expectedError = 2e-8
-  //     } else if (expectedMin <= Math.PI / 3) {
-  //       expectedError = 1e-15
-  //     }
+      // The error has a peak near Pi/2 for edge distance, and another peak near
+      // Pi for vertex distance.
+      let expectedError = 1e-12
+      if (expectedMin > Math.PI / 2) {
+        // Max error for ChordAngle as it approaches Pi is about 3e-8.
+        expectedError = 3e-8
+      } else if (expectedMin <= Math.PI / 3) {
+        expectedError = 1e-15
+      }
 
-  //     ok(float64Near(expectedMin, actualMin, expectedError))
-  //     ok(float64Near(expectedMax, actualMax, 1e-12))
+      ok(float64Near(expectedMin, actualMin, expectedError))
+      ok(float64Near(expectedMax, actualMax, 1e-12))
 
-  //     if (expectedMax <= Math.PI / 3) {
-  //       ok(float64Near(expectedMax, actualMax, 1e-15))
-  //     }
-  //   }
-  // })
+      if (expectedMax <= Math.PI / 3) {
+        ok(float64Near(expectedMax, actualMax, 1e-15))
+      }
+    }
+  })
 
   test('maxDistanceToEdge', () => {
     const cell = Cell.fromCellID(cellid.fromFacePosLevel(0, 0n, 20))
