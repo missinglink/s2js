@@ -34,6 +34,14 @@ const { s2 } = require('s2js')
 </script>
 ```
 
+### Typescript Support
+
+The library is written in Typescript and exports type definitions.
+
+### Feature Completeness
+
+The library is essentially feature compatible with the Golang library: https://github.com/golang/geo
+
 ### GeoJSON support
 
 The supplementary `geojson` module provides convenience functions for working with GeoJSON data in S2:
