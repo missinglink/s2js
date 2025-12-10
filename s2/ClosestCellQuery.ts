@@ -541,7 +541,9 @@ export class ClosestCellQuery {
    * or equal to "limit".
    */
   isConservativeDistanceLessOrEqual(target: ClosestCellQueryTarget, limit: ChordAngle): boolean {
-    return this.isDistanceLess(target, chordangle.successor(chordangle.expanded(limit, chordangle.maxPointError(limit))))
+    return this.isDistanceLess(
+      target,
+      chordangle.successor(chordangle.expanded(limit, chordangle.maxPointError(limit)))
+    )
   }
 }
-

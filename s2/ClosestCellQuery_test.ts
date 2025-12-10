@@ -108,10 +108,7 @@ describe('S2ClosestCellQuery', () => {
     // Postcondition: isDistanceLess returns false for zero, but isDistanceLessOrEqual returns true.
     ok(!query.isDistanceLess(target0, dist0), 'isDistanceLess should return false for exact distance')
     ok(query.isDistanceLessOrEqual(target0, dist0), 'isDistanceLessOrEqual should return true for exact distance')
-    ok(
-      query.isConservativeDistanceLessOrEqual(target0, dist0),
-      'isConservativeDistanceLessOrEqual should return true'
-    )
+    ok(query.isConservativeDistanceLessOrEqual(target0, dist0), 'isConservativeDistanceLessOrEqual should return true')
 
     // Under test: Distance comparison with non-zero distance between different cells.
     const target1 = new CellTarget(Cell.fromCellID(id1))
@@ -122,10 +119,7 @@ describe('S2ClosestCellQuery', () => {
     // Postcondition: Same pattern for non-zero distance.
     ok(!query.isDistanceLess(target1, dist1), 'isDistanceLess should return false for exact distance')
     ok(query.isDistanceLessOrEqual(target1, dist1), 'isDistanceLessOrEqual should return true for exact distance')
-    ok(
-      query.isConservativeDistanceLessOrEqual(target1, dist1),
-      'isConservativeDistanceLessOrEqual should return true'
-    )
+    ok(query.isConservativeDistanceLessOrEqual(target1, dist1), 'isConservativeDistanceLessOrEqual should return true')
   })
 
   test('TargetPointInsideIndexedCell', () => {
@@ -388,4 +382,3 @@ describe('S2ClosestCellQuery', () => {
     ok(Math.abs(distance - expectedDistance) < 0.1, 'Distance should be approximately to closest cell')
   })
 })
-
