@@ -13,7 +13,21 @@
 export * as cellid from './cellid'
 export { Cap } from './Cap'
 export { Cell } from './Cell'
+export { CellIndex, CellIndexRangeIterator, CellIndexContentsIterator } from './CellIndex'
 export { CellUnion } from './CellUnion'
+export {
+  ClosestCellQuery,
+  ClosestCellQueryOptions,
+  ClosestCellQueryResult,
+  ClosestCellQueryTarget,
+  PointTarget,
+  EdgeTarget,
+  CellTarget,
+  CellUnionTarget,
+  ShapeIndexTarget,
+  emptyClosestCellQueryResult,
+  isEmptyResult
+} from './ClosestCellQuery'
 // export { ContainsPointQuery } from './ContainsPointQuery'
 // export { ContainsVertexQuery } from './ContainsVertexQuery'
 // export { CrossingEdgeQuery } from './CrossingEdgeQuery'
