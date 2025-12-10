@@ -49,6 +49,7 @@ s2js is a full-featured JavaScript/TypeScript port of Google's S2 Geometry libra
 | **Polygon contains/intersects**  | ✅        | Point-in-polygon & shape intersection |
 | **Union, Intersection, Difference** | ✅    | Basic boolean polygon operations |
 | **BigInt cell/token conversion** | ✅        | Handles full 64-bit cell IDs |
+| **CellIndex, ClosestCellQuery** | ✅ | Query a list of cells with various shapes|
 
 ### Feature Completeness
 
