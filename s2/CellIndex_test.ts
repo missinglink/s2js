@@ -1,11 +1,6 @@
 import { test, describe } from 'node:test'
 import { equal, ok, deepEqual } from 'node:assert/strict'
-import {
-  CellIndex,
-  CellIndexRangeIterator,
-  CellIndexContentsIterator,
-  type CellIndexNode
-} from './CellIndex'
+import { CellIndex, CellIndexRangeIterator, CellIndexContentsIterator, type CellIndexNode } from './CellIndex'
 import type { CellID } from './cellid'
 import * as cellid from './cellid'
 import { MAX_LEVEL } from './cellid_constants'
@@ -123,10 +118,18 @@ const verifyCellIndexRangeIterators = (desc: string, index: CellIndex): void => 
     const nonEmpty2 = new CellIndexRangeIterator(index, true)
     const nonEmptyStart = nonEmpty.startID()
     nonEmpty2.seek(it.startID())
-    equal(nonEmpty2.startID(), nonEmptyStart, `${desc}: nonEmpty2.startID() = ${nonEmpty2.startID()}, want ${nonEmptyStart}`)
+    equal(
+      nonEmpty2.startID(),
+      nonEmptyStart,
+      `${desc}: nonEmpty2.startID() = ${nonEmpty2.startID()}, want ${nonEmptyStart}`
+    )
 
     nonEmpty2.seek(cellid.prev(it.limitID()))
-    equal(nonEmpty2.startID(), nonEmptyStart, `${desc}: nonEmpty2.startID() = ${nonEmpty2.startID()}, want ${nonEmptyStart}`)
+    equal(
+      nonEmpty2.startID(),
+      nonEmptyStart,
+      `${desc}: nonEmpty2.startID() = ${nonEmpty2.startID()}, want ${nonEmptyStart}`
+    )
 
     // Test prev() and next().
     if (it2.prev()) {
@@ -390,4 +393,3 @@ describe('s2.CellIndex', () => {
     cellIndexQuadraticValidate('Random Cell Unions', index)
   })
 })
-
