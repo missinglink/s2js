@@ -358,10 +358,12 @@ export class ClosestCellQuery {
     private options: ClosestCellQueryOptions = new ClosestCellQueryOptions()
   ) {}
 
-  /**
-   * This version can be more efficient when this method is called many times,
-   * since it does not require allocating a new array on each call.
-   */
+  
+  /** 
+   * Find the closest cells to the target.
+   * @param target - The target to find the closest cells to.
+   * @returns An array of ClosestCellQueryResult objects.
+  */
   findClosestCells(target: ClosestCellQueryTarget): ClosestCellQueryResult[] {
     // Iterate through all cells in the index and compute distances.
     const rangeIter = new CellIndexRangeIterator(this.index, true)

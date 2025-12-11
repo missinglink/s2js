@@ -12,15 +12,36 @@ import {
 } from './ClosestCellQuery'
 import { Cell } from './Cell'
 import { CellUnion } from './CellUnion'
-import { Point } from './Point'
-import { ShapeIndex } from './ShapeIndex'
 import { LatLng } from './LatLng'
+import { Loop } from './Loop'
+import { Point } from './Point'
+import { Polygon } from './Polygon'
+import { ShapeIndex } from './ShapeIndex'
 import * as cellid from './cellid'
 import * as chordangle from '../s1/chordangle'
 import { parsePoint } from './testing_textformat'
 import { randomCellID, samplePointFromCap, randomPoint } from './testing'
 import { Cap } from './Cap'
 import { RegionCoverer } from './RegionCoverer'
+
+/**
+ * Creates a rectangular S2Polygon from lat/lng bounds in degrees.
+ * The loop is oriented counter-clockwise (interior on the left).
+ */
+const makeRectPolygon = (
+  bottomLeftLat: number,
+  bottomLeftLng: number,
+  topRightLat: number,
+  topRightLng: number
+): Polygon => {
+  const bottomLeft = Point.fromLatLng(LatLng.fromDegrees(bottomLeftLat, bottomLeftLng))
+  const bottomRight = Point.fromLatLng(LatLng.fromDegrees(bottomLeftLat, topRightLng))
+  const topRight = Point.fromLatLng(LatLng.fromDegrees(topRightLat, topRightLng))
+  const topLeft = Point.fromLatLng(LatLng.fromDegrees(topRightLat, bottomLeftLng))
+  // CCW order: bottomLeft -> topLeft -> topRight -> bottomRight
+  const loop = new Loop([bottomLeft, bottomRight, topRight, topLeft])
+  return new Polygon([loop])
+}
 
 /**
  * Helper to create a CellID from a lat:lng string.
@@ -272,6 +293,87 @@ describe('S2ClosestCellQuery', () => {
     // Postcondition: The closest cell is found.
     // The cell at 0:0 should be closest to the covering near 0:1.
     equal(result.label, 0)
+  })
+
+  describe('ShapeIndexTarget', () => {
+    // Precondition: A CellIndex with cells covering the Bay Area region.
+    const index = new CellIndex()
+    const s2Tokens = [
+      '808fb7dc',
+      '808fb7d4',
+      '808fb7c4',
+      '808fb7bc',
+      '808fb7b4',
+      '808fb7cc',
+      '808fb7ac',
+      '808fb7a4',
+      '808fb7ec',
+      '808fb794'
+    ]
+    for (const token of s2Tokens) {
+      index.add(cellid.fromToken(token), 0)
+    }
+    index.build()
+
+    test('ShouldReturnNoTiles', () => {
+      // Precondition: A polygon target that does not intersect any indexed cells.
+      const polygon = makeRectPolygon(-78.01263, 43.7272, -78.0126, 43.72733)
+      const targetIndex = new ShapeIndex()
+      targetIndex.add(polygon)
+      const target = new ShapeIndexTarget(targetIndex)
+
+      // Under test: Query with a ShapeIndex target far from the indexed cells.
+      const options = new ClosestCellQueryOptions()
+      options.setInclusiveMaxDistance(0)
+      const query = new ClosestCellQuery(index, options)
+      const results = query.findClosestCells(target)
+
+      // Postcondition: No cells intersect the target polygon.
+      equal(results.length, 0)
+    })
+
+    test('ShouldReturnSomeTiles', () => {
+      // Precondition: A polygon target that intersects some of the indexed cells.
+      const polygon = makeRectPolygon(37.4074034, -122.0187345, 37.4149719, -122.0092462)
+      console.log("bound", polygon.rectBound().toString())
+
+      const targetIndex = new ShapeIndex()
+      targetIndex.add(polygon)
+      const target = new ShapeIndexTarget(targetIndex)
+
+      // Under test: Query with a ShapeIndex target that overlaps some indexed cells.
+      const options = new ClosestCellQueryOptions()
+      options.setInclusiveMaxDistance(0)
+      const query = new ClosestCellQuery(index, options)
+      const results = query.findClosestCells(target)
+
+      // Postcondition: Should contain the expected S2 cells.
+      ok(results.length === 3, "Should return 3 cells")
+      // And they should be the expected cells.
+      const expectedTokens = ['808fb7bc', '808fb7c4', '808fb7cc']
+      const resultTokens = results.map(r => cellid.toToken(r.cellID))
+      expectedTokens.forEach(token =>
+        ok(resultTokens.includes(token), `results should contain cell: ${token}`)
+      )
+    })
+
+    test('ShouldReturnAllTiles', () => {
+      // Precondition: A polygon target that covers all the indexed cells.
+      const polygon = makeRectPolygon(28.3911156, -133.2602933, 46.417598, -110.7676874)
+      console.log("bound", polygon.rectBound().toString())
+      const targetIndex = new ShapeIndex()
+      targetIndex.add(polygon)
+      const target = new ShapeIndexTarget(targetIndex)
+
+      // Under test: Query with a ShapeIndex target that covers all indexed cells.
+      const options = new ClosestCellQueryOptions()
+      options.setInclusiveMaxDistance(0)
+      const query = new ClosestCellQuery(index, options)
+      const results = query.findClosestCells(target)
+
+      // Postcondition: All cells intersect the target polygon.
+      equal(results.length, s2Tokens.length)
+    })
   })
 
   describe('InclusiveMaxDistance', () => {
