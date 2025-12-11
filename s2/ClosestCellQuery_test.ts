@@ -9,8 +9,6 @@ import {
   CellTarget,
   CellUnionTarget,
   ShapeIndexTarget,
-  emptyClosestCellQueryResult,
-  isEmptyResult
 } from './ClosestCellQuery'
 import { Cell } from './Cell'
 import { CellUnion } from './CellUnion'
@@ -54,7 +52,6 @@ describe('S2ClosestCellQuery', () => {
     equal(result.distance, chordangle.infChordAngle())
     equal(result.cellID, 0n)
     equal(result.label, -1)
-    ok(isEmptyResult(result))
     equal(query.getDistance(target), chordangle.infChordAngle())
   })
 
@@ -251,7 +248,6 @@ describe('S2ClosestCellQuery', () => {
     const result = query.findClosestCell(target)
 
     // Postcondition: The cell is found.
-    ok(!isEmptyResult(result), 'Should find the cell')
     equal(result.label, 0)
   })
 
@@ -274,7 +270,6 @@ describe('S2ClosestCellQuery', () => {
     const result = query.findClosestCell(target)
 
     // Postcondition: The closest cell is found.
-    ok(!isEmptyResult(result), 'Should find a cell')
     // The cell at 0:0 should be closest to the covering near 0:1.
     equal(result.label, 0)
   })

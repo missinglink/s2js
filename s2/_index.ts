@@ -25,8 +25,6 @@ export {
   CellTarget,
   CellUnionTarget,
   ShapeIndexTarget,
-  emptyClosestCellQueryResult,
-  isEmptyResult
 } from './ClosestCellQuery'
 // export { ContainsPointQuery } from './ContainsPointQuery'
 // export { ContainsVertexQuery } from './ContainsVertexQuery'

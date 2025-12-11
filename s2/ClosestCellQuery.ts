@@ -49,6 +49,8 @@ import { Cell } from './Cell'
 import { CellUnion } from './CellUnion'
 import { Point } from './Point'
 import * as chordangle from '../s1/chordangle'
+import { updateMinDistance } from './edge_distances'
+import { CellIndexRangeIterator,CellIndexContentsIterator } from './CellIndex'
 
 /**
  * Represents a closest (cellID, label) pair result from the query.
@@ -67,7 +69,7 @@ export interface ClosestCellQueryResult {
 /**
  * Returns an empty result indicating no cell was found.
  */
-export function emptyClosestCellQueryResult(): ClosestCellQueryResult {
+ function emptyClosestCellQueryResult(): ClosestCellQueryResult {
   return {
     distance: chordangle.infChordAngle(),
     cellID: 0n,
@@ -78,7 +80,7 @@ export function emptyClosestCellQueryResult(): ClosestCellQueryResult {
 /**
  * Reports whether the result is empty (no cell was found).
  */
-export function isEmptyResult(result: ClosestCellQueryResult): boolean {
+ function isEmptyResult(result: ClosestCellQueryResult): boolean {
   return result.label < 0
 }
 
@@ -152,10 +154,10 @@ export class ClosestCellQueryOptions {
   /**
    * Computes the maximum error for the given distance.
    */
-  private computeMaxDistanceError(_distance: ChordAngle): number {
+  private computeMaxDistanceError(distance: ChordAngle): number {
     // The maximum error depends on the distance computation method.
     // For now, return a conservative estimate.
-    return chordangle.maxPointError(_distance)
+    return chordangle.maxPointError(distance)
   }
 }
 
@@ -225,8 +227,6 @@ export class EdgeTarget implements ClosestCellQueryTarget {
   }
 
   distanceToPoint(point: Point): ChordAngle {
-    // Import edge_distances dynamically to avoid circular dependencies.
-    const { updateMinDistance } = require('./edge_distances')
     return updateMinDistance(point, this.a, this.b, chordangle.infChordAngle()).dist
   }
 }
@@ -348,7 +348,6 @@ export class ShapeIndexTarget implements ClosestCellQueryTarget {
   distanceToPoint(point: Point): ChordAngle {
     // Compute distance from point to all edges in the shape index.
     let minDist = chordangle.infChordAngle()
-    const { updateMinDistance } = require('./edge_distances')
 
     for (const [_shapeId, shape] of this.index.shapes) {
       if (!shape) continue
@@ -376,33 +375,19 @@ export class ClosestCellQuery {
   private readonly _index: CellIndex
   readonly options: ClosestCellQueryOptions
 
-  // Re-export target types for convenience.
-  static PointTarget = PointTarget
-  static EdgeTarget = EdgeTarget
-  static CellTarget = CellTarget
-  static CellUnionTarget = CellUnionTarget
-  static ShapeIndexTarget = ShapeIndexTarget
+  
 
   /**
    * Constructs a new ClosestCellQuery for the given CellIndex.
    * Options may be specified here or changed at any time using the options property.
    *
-   * REQUIRES: "index" must persist for the lifetime of this object.
-   * REQUIRES: reInit() must be called if "index" is modified.
    */
   constructor(index: CellIndex, options: ClosestCellQueryOptions = new ClosestCellQueryOptions()) {
     this._index = index
     this.options = options
   }
 
-  /**
-   * Reinitializes the query. This method must be called if the underlying
-   * CellIndex is modified (by calling clear() and build() again).
-   */
-  reInit(): void {
-    // Currently a no-op since we don't cache any state.
-    // Future implementations may cache internal state that needs to be cleared.
-  }
+
 
   /**
    * Returns a reference to the underlying CellIndex.
@@ -412,24 +397,13 @@ export class ClosestCellQuery {
   }
 
   /**
-   * Returns the closest cells to the given target that satisfy the current
-   * options. This method may be called multiple times.
-   */
-  findClosestCells(target: ClosestCellQueryTarget): ClosestCellQueryResult[] {
-    const results: ClosestCellQueryResult[] = []
-    this.findClosestCellsToResults(target, results)
-    return results
-  }
-
-  /**
    * This version can be more efficient when this method is called many times,
    * since it does not require allocating a new array on each call.
    */
-  findClosestCellsToResults(target: ClosestCellQueryTarget, results: ClosestCellQueryResult[]): void {
-    results.length = 0
+  findClosestCells(target: ClosestCellQueryTarget): ClosestCellQueryResult[] {
+    const results: ClosestCellQueryResult[] = []
 
     // Iterate through all cells in the index and compute distances.
-    const { CellIndexRangeIterator, CellIndexContentsIterator } = require('./CellIndex')
     const rangeIter = new CellIndexRangeIterator(this._index, true)
     const contentsIter = new CellIndexContentsIterator(this._index)
 
@@ -465,13 +439,7 @@ export class ClosestCellQuery {
 
     // Apply maxResults limit.
     const limit = Math.min(candidates.length, this.options.maxResults)
-    for (let i = 0; i < limit; i++) {
-      results.push({
-        distance: candidates[i].distance,
-        cellID: candidates[i].cellID,
-        label: candidates[i].label
-      })
-    }
+    return candidates.slice(0, limit);
   }
 
   /**
