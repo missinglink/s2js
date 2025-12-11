@@ -8,7 +8,7 @@ import {
   EdgeTarget,
   CellTarget,
   CellUnionTarget,
-  ShapeIndexTarget,
+  ShapeIndexTarget
 } from './ClosestCellQuery'
 import { Cell } from './Cell'
 import { CellUnion } from './CellUnion'

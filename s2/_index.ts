@@ -24,7 +24,7 @@ export {
   EdgeTarget,
   CellTarget,
   CellUnionTarget,
-  ShapeIndexTarget,
+  ShapeIndexTarget
 } from './ClosestCellQuery'
 // export { ContainsPointQuery } from './ContainsPointQuery'
 // export { ContainsVertexQuery } from './ContainsVertexQuery'

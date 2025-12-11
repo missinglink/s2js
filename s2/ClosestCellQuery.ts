@@ -50,7 +50,7 @@ import { CellUnion } from './CellUnion'
 import { Point } from './Point'
 import * as chordangle from '../s1/chordangle'
 import { updateMinDistance } from './edge_distances'
-import { CellIndexRangeIterator,CellIndexContentsIterator } from './CellIndex'
+import { CellIndexRangeIterator, CellIndexContentsIterator } from './CellIndex'
 
 /**
  * Represents a closest (cellID, label) pair result from the query.
@@ -69,7 +69,7 @@ export interface ClosestCellQueryResult {
 /**
  * Returns an empty result indicating no cell was found.
  */
- function emptyClosestCellQueryResult(): ClosestCellQueryResult {
+function emptyClosestCellQueryResult(): ClosestCellQueryResult {
   return {
     distance: chordangle.infChordAngle(),
     cellID: 0n,
@@ -80,7 +80,7 @@ export interface ClosestCellQueryResult {
 /**
  * Reports whether the result is empty (no cell was found).
  */
- function isEmptyResult(result: ClosestCellQueryResult): boolean {
+function isEmptyResult(result: ClosestCellQueryResult): boolean {
   return result.label < 0
 }
 
@@ -375,8 +375,6 @@ export class ClosestCellQuery {
   private readonly _index: CellIndex
   readonly options: ClosestCellQueryOptions
 
-  
-
   /**
    * Constructs a new ClosestCellQuery for the given CellIndex.
    * Options may be specified here or changed at any time using the options property.
@@ -386,8 +384,6 @@ export class ClosestCellQuery {
     this._index = index
     this.options = options
   }
-
-
 
   /**
    * Returns a reference to the underlying CellIndex.
@@ -439,7 +435,7 @@ export class ClosestCellQuery {
 
     // Apply maxResults limit.
     const limit = Math.min(candidates.length, this.options.maxResults)
-    return candidates.slice(0, limit);
+    return candidates.slice(0, limit)
   }
 
   /**

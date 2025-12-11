@@ -13,7 +13,7 @@ export const CELL_INDEX_DONE_CONTENTS = -1
  * Represents a node in the CellIndex. Cells are organized in a tree such that
  * the ancestors of a given node contain that node.
  */
- interface CellIndexNode {
+interface CellIndexNode {
   cellID: CellID
   label: number
   parent: number
@@ -22,7 +22,7 @@ export const CELL_INDEX_DONE_CONTENTS = -1
 /**
  * Returns a new CellIndexNode with appropriate default values.
  */
- function newCellIndexNode(): CellIndexNode {
+function newCellIndexNode(): CellIndexNode {
   return {
     cellID: 0n,
     label: CELL_INDEX_DONE_CONTENTS,
@@ -35,11 +35,10 @@ export const CELL_INDEX_DONE_CONTENTS = -1
  * and ends at the startID field of the next RangeNode. contents points to the
  * node of the CellIndex cellTree representing the cells that overlap this range.
  */
- interface RangeNode {
+interface RangeNode {
   startID: CellID
   contents: number
 }
-
 
 /**
  * An iterator that seeks and iterates over a set of non-overlapping leaf cell
@@ -510,5 +509,4 @@ export class CellIndex {
       this.rangeNodes.push({ startID, contents })
     }
   }
-
 }
