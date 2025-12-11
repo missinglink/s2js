@@ -274,7 +274,6 @@ describe('S2ClosestCellQuery', () => {
     equal(result.label, 0)
   })
 
-
   describe('InclusiveMaxDistance', () => {
     test('RegularMaxDistanceExcludesExactDistance', () => {
       // Precondition: An index with one cell and options with regular max distance.
@@ -330,8 +329,6 @@ describe('S2ClosestCellQuery', () => {
       equal(results.length, 1, 'Exact distance should be included with inclusive maxDistance')
     })
   })
-
-  
 
   test('MultipleLabelsForSameCell', () => {
     // Precondition: An index with the same cell added multiple times with different labels.

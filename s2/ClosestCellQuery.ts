@@ -210,7 +210,10 @@ export class PointTarget implements ClosestCellQueryTarget {
  * Target subtype that computes the closest distance to an edge.
  */
 export class EdgeTarget implements ClosestCellQueryTarget {
-  constructor(readonly a: Point, readonly b: Point) {}
+  constructor(
+    readonly a: Point,
+    readonly b: Point
+  ) {}
 
   maxBruteForceIndexSize(): number {
     return 100
@@ -292,7 +295,6 @@ export class CellUnionTarget implements ClosestCellQueryTarget {
 export class ShapeIndexTarget implements ClosestCellQueryTarget {
   constructor(readonly index: ShapeIndex) {}
 
-
   maxBruteForceIndexSize(): number {
     // For shape index targets, prefer hierarchical search.
     return 30
@@ -346,16 +348,15 @@ export class ShapeIndexTarget implements ClosestCellQueryTarget {
  * given point, edge, S2Cell, S2CellUnion, or geometry collection.
  */
 export class ClosestCellQuery {
-
-
   /**
    * Constructs a new ClosestCellQuery for the given CellIndex.
    * Options may be specified here or changed at any time using the options property.
    *
    */
-  constructor(private readonly index: CellIndex, private options: ClosestCellQueryOptions = new ClosestCellQueryOptions()) {
-  }
-
+  constructor(
+    private readonly index: CellIndex,
+    private options: ClosestCellQueryOptions = new ClosestCellQueryOptions()
+  ) {}
 
   /**
    * This version can be more efficient when this method is called many times,

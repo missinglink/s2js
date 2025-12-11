@@ -19,8 +19,6 @@ interface CellIndexNode {
   parent: number
 }
 
-
-
 /**
  * Represents a range of leaf CellIDs. The range starts at startID (a leaf cell)
  * and ends at the startID field of the next RangeNode. contents points to the
@@ -46,7 +44,10 @@ export class CellIndexRangeIterator {
    * The iterator is initially *unpositioned*; you must call a positioning
    * method such as begin() or seek() before accessing its contents.
    */
-  constructor(index: CellIndex, private nonEmpty: boolean = false) {
+  constructor(
+    index: CellIndex,
+    private nonEmpty: boolean = false
+  ) {
     this.rangeNodes = index.rangeNodes
     this.pos = 0
   }
