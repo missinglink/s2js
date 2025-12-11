@@ -19,16 +19,7 @@ interface CellIndexNode {
   parent: number
 }
 
-/**
- * Returns a new CellIndexNode with appropriate default values.
- */
-function newCellIndexNode(): CellIndexNode {
-  return {
-    cellID: 0n,
-    label: CELL_INDEX_DONE_CONTENTS,
-    parent: -1
-  }
-}
+
 
 /**
  * Represents a range of leaf CellIDs. The range starts at startID (a leaf cell)
@@ -49,17 +40,15 @@ interface RangeNode {
 export class CellIndexRangeIterator {
   rangeNodes: RangeNode[]
   pos: number
-  private nonEmpty: boolean
 
   /**
    * Creates an iterator for the given CellIndex.
    * The iterator is initially *unpositioned*; you must call a positioning
    * method such as begin() or seek() before accessing its contents.
    */
-  constructor(index: CellIndex, nonEmpty: boolean = false) {
+  constructor(index: CellIndex, private nonEmpty: boolean = false) {
     this.rangeNodes = index.rangeNodes
     this.pos = 0
-    this.nonEmpty = nonEmpty
   }
 
   /**

@@ -210,13 +210,7 @@ export class PointTarget implements ClosestCellQueryTarget {
  * Target subtype that computes the closest distance to an edge.
  */
 export class EdgeTarget implements ClosestCellQueryTarget {
-  readonly a: Point
-  readonly b: Point
-
-  constructor(a: Point, b: Point) {
-    this.a = a
-    this.b = b
-  }
+  constructor(readonly a: Point, readonly b: Point) {}
 
   maxBruteForceIndexSize(): number {
     return 100
@@ -236,11 +230,7 @@ export class EdgeTarget implements ClosestCellQueryTarget {
  * (including the interior of the cell).
  */
 export class CellTarget implements ClosestCellQueryTarget {
-  readonly cell: Cell
-
-  constructor(cell: Cell) {
-    this.cell = cell
-  }
+  constructor(readonly cell: Cell) {}
 
   maxBruteForceIndexSize(): number {
     return 100
@@ -259,11 +249,7 @@ export class CellTarget implements ClosestCellQueryTarget {
  * Target subtype that computes the closest distance to an S2CellUnion.
  */
 export class CellUnionTarget implements ClosestCellQueryTarget {
-  readonly cellUnion: CellUnion
-
-  constructor(cellUnion: CellUnion) {
-    this.cellUnion = cellUnion
-  }
+  constructor(readonly cellUnion: CellUnion) {}
 
   maxBruteForceIndexSize(): number {
     return 100
@@ -304,20 +290,8 @@ export class CellUnionTarget implements ClosestCellQueryTarget {
  * polygons in the S2ShapeIndex rather than to polygon boundaries only.
  */
 export class ShapeIndexTarget implements ClosestCellQueryTarget {
-  readonly index: ShapeIndex
-  includeInteriors: boolean
+  constructor(readonly index: ShapeIndex) {}
 
-  constructor(index: ShapeIndex) {
-    this.index = index
-    this.includeInteriors = true
-  }
-
-  /**
-   * Sets whether distances should include polygon interiors.
-   */
-  setIncludeInteriors(include: boolean): void {
-    this.includeInteriors = include
-  }
 
   maxBruteForceIndexSize(): number {
     // For shape index targets, prefer hierarchical search.
@@ -372,36 +346,25 @@ export class ShapeIndexTarget implements ClosestCellQueryTarget {
  * given point, edge, S2Cell, S2CellUnion, or geometry collection.
  */
 export class ClosestCellQuery {
-  private readonly _index: CellIndex
-  readonly options: ClosestCellQueryOptions
+
 
   /**
    * Constructs a new ClosestCellQuery for the given CellIndex.
    * Options may be specified here or changed at any time using the options property.
    *
    */
-  constructor(index: CellIndex, options: ClosestCellQueryOptions = new ClosestCellQueryOptions()) {
-    this._index = index
-    this.options = options
+  constructor(private readonly index: CellIndex, private options: ClosestCellQueryOptions = new ClosestCellQueryOptions()) {
   }
 
-  /**
-   * Returns a reference to the underlying CellIndex.
-   */
-  index(): CellIndex {
-    return this._index
-  }
 
   /**
    * This version can be more efficient when this method is called many times,
    * since it does not require allocating a new array on each call.
    */
   findClosestCells(target: ClosestCellQueryTarget): ClosestCellQueryResult[] {
-    const results: ClosestCellQueryResult[] = []
-
     // Iterate through all cells in the index and compute distances.
-    const rangeIter = new CellIndexRangeIterator(this._index, true)
-    const contentsIter = new CellIndexContentsIterator(this._index)
+    const rangeIter = new CellIndexRangeIterator(this.index, true)
+    const contentsIter = new CellIndexContentsIterator(this.index)
 
     // Collect all candidate cells.
     const candidates: Array<{ cellID: CellID; label: number; distance: ChordAngle }> = []

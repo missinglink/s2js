@@ -274,33 +274,64 @@ describe('S2ClosestCellQuery', () => {
     equal(result.label, 0)
   })
 
-  test('InclusiveMaxDistance', () => {
-    // Precondition: An index with one cell and options with inclusive max distance.
-    const id0 = cellIDFromLatLng('0:0')
-    const id1 = cellIDFromLatLng('1:0')
 
-    const index = new CellIndex()
-    index.add(id0, 0)
-    index.build()
+  describe('InclusiveMaxDistance', () => {
+    test('RegularMaxDistanceExcludesExactDistance', () => {
+      // Precondition: An index with one cell and options with regular max distance.
+      const id0 = cellIDFromLatLng('0:0')
+      const id1 = cellIDFromLatLng('1:0')
 
-    // Compute exact distance between cells.
-    const cell0 = Cell.fromCellID(id0)
-    const cell1 = Cell.fromCellID(id1)
-    const exactDistance = cell0.distanceToCell(cell1)
+      const index = new CellIndex()
+      index.add(id0, 0)
+      index.build()
 
-    const query = new ClosestCellQuery(index)
+      // Compute exact distance between cells.
+      const cell0 = Cell.fromCellID(id0)
+      const cell1 = Cell.fromCellID(id1)
+      const exactDistance = cell0.distanceToCell(cell1)
 
-    // Under test: With regular maxDistance, exact distance is excluded.
-    query.options.maxDistance = exactDistance
-    const target = new CellTarget(cell1)
-    let results = query.findClosestCells(target)
-    equal(results.length, 0, 'Exact distance should be excluded with regular maxDistance')
+      const options = new ClosestCellQueryOptions()
+      options.maxDistance = exactDistance
 
-    // Under test: With inclusive maxDistance, exact distance is included.
-    query.options.setInclusiveMaxDistance(exactDistance)
-    results = query.findClosestCells(target)
-    equal(results.length, 1, 'Exact distance should be included with inclusive maxDistance')
+      const query = new ClosestCellQuery(index, options)
+
+      // Under test: With regular maxDistance, exact distance is excluded.
+      const target = new CellTarget(cell1)
+      const results = query.findClosestCells(target)
+
+      // Postcondition: No results because exact distance is excluded.
+      equal(results.length, 0, 'Exact distance should be excluded with regular maxDistance')
+    })
+
+    test('InclusiveMaxDistanceIncludesExactDistance', () => {
+      // Precondition: An index with one cell and options with inclusive max distance.
+      const id0 = cellIDFromLatLng('0:0')
+      const id1 = cellIDFromLatLng('1:0')
+
+      const index = new CellIndex()
+      index.add(id0, 0)
+      index.build()
+
+      // Compute exact distance between cells.
+      const cell0 = Cell.fromCellID(id0)
+      const cell1 = Cell.fromCellID(id1)
+      const exactDistance = cell0.distanceToCell(cell1)
+
+      const options = new ClosestCellQueryOptions()
+      options.setInclusiveMaxDistance(exactDistance)
+
+      const query = new ClosestCellQuery(index, options)
+
+      // Under test: With inclusive maxDistance, exact distance is included.
+      const target = new CellTarget(cell1)
+      const results = query.findClosestCells(target)
+
+      // Postcondition: One result because exact distance is included.
+      equal(results.length, 1, 'Exact distance should be included with inclusive maxDistance')
+    })
   })
+
+  
 
   test('MultipleLabelsForSameCell', () => {
     // Precondition: An index with the same cell added multiple times with different labels.
