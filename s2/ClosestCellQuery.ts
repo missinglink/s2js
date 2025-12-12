@@ -51,6 +51,8 @@ import { Point } from './Point'
 import * as chordangle from '../s1/chordangle'
 import { updateMinDistance } from './edge_distances'
 import { CellIndexRangeIterator, CellIndexContentsIterator } from './CellIndex'
+import { EdgeCrosser } from './EdgeCrosser'
+import { CROSS, DO_NOT_CROSS, MAYBE_CROSS, vertexCrossing } from './edge_crossings'
 
 /**
  * Represents a closest (cellID, label) pair result from the query.
@@ -291,16 +293,78 @@ export class CellUnionTarget implements ClosestCellQueryTarget {
  *
  * By default, distances are measured to the boundary and interior of
  * polygons in the S2ShapeIndex rather than to polygon boundaries only.
+ * If you wish to change this behavior, you may call:
+ *
+ *   target.setIncludeInteriors(false)
  */
 export class ShapeIndexTarget implements ClosestCellQueryTarget {
+  private includeInteriors: boolean = true
+
   constructor(readonly index: ShapeIndex) {}
+
+  /**
+   * Specifies whether distances should be measured to the boundary and
+   * interior of polygons (true) or only to polygon boundaries (false).
+   * The default is true.
+   */
+  setIncludeInteriors(includeInteriors: boolean): void {
+    this.includeInteriors = includeInteriors
+  }
 
   maxBruteForceIndexSize(): number {
     // For shape index targets, prefer hierarchical search.
     return 30
   }
 
+  /**
+   * Checks if the given point is contained by any polygon in the index.
+   * Uses the ShapeIndex iterator directly to check containment.
+   */
+  private containsPoint(p: Point): boolean {
+    const iter = this.index.iterator()
+    if (!iter.locatePoint(p)) return false
+
+    const cell = iter.indexCell()
+    const center = iter.center()
+
+    for (const clipped of cell.shapes) {
+      let inside = clipped.containsCenter
+      const numEdges = clipped.numEdges()
+      if (numEdges <= 0) {
+        if (inside) return true
+        continue
+      }
+
+      const shape = this.index.shape(clipped.shapeID)
+      // Only polygons (dimension 2) can contain points.
+      if (shape.dimension() !== 2) continue
+
+      // Test containment by counting edge crossings from cell center to point.
+      const crosser = new EdgeCrosser(center, p)
+      for (const edgeID of clipped.edges) {
+        const edge = shape.edge(edgeID)
+        let sign = crosser.crossingSign(edge.v0, edge.v1)
+        if (sign === DO_NOT_CROSS) continue
+        if (sign === MAYBE_CROSS) {
+          if (vertexCrossing(crosser.a, crosser.b, edge.v0, edge.v1)) sign = CROSS
+          else sign = DO_NOT_CROSS
+        }
+        inside = inside !== (sign === CROSS)
+      }
+
+      if (inside) return true
+    }
+
+    return false
+  }
+
   distanceToCell(cell: Cell): ChordAngle {
+    // If includeInteriors is true and the cell center is contained by any
+    // polygon in the index, the distance is zero.
+    if (this.includeInteriors && this.containsPoint(cell.center())) {
+      return 0
+    }
+
     // Compute distance from cell to all edges in the shape index.
     let minDist = chordangle.infChordAngle()
 
@@ -322,6 +386,12 @@ export class ShapeIndexTarget implements ClosestCellQueryTarget {
   }
 
   distanceToPoint(point: Point): ChordAngle {
+    // If includeInteriors is true and the point is contained by any
+    // polygon in the index, the distance is zero.
+    if (this.includeInteriors && this.containsPoint(point)) {
+      return 0
+    }
+
     // Compute distance from point to all edges in the shape index.
     let minDist = chordangle.infChordAngle()
 
