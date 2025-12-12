@@ -335,7 +335,6 @@ describe('S2ClosestCellQuery', () => {
     test('ShouldReturnSomeTiles', () => {
       // Precondition: A polygon target that intersects some of the indexed cells.
       const polygon = makeRectPolygon(37.4074034, -122.0187345, 37.4149719, -122.0092462)
-      console.log("bound", polygon.rectBound().toString())
 
       const targetIndex = new ShapeIndex()
       targetIndex.add(polygon)
@@ -360,7 +359,6 @@ describe('S2ClosestCellQuery', () => {
     test('ShouldReturnAllTiles', () => {
       // Precondition: A polygon target that covers all the indexed cells.
       const polygon = makeRectPolygon(28.3911156, -133.2602933, 46.417598, -110.7676874)
-      console.log("bound", polygon.rectBound().toString())
       const targetIndex = new ShapeIndex()
       targetIndex.add(polygon)
       const target = new ShapeIndexTarget(targetIndex)

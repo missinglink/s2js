@@ -51,8 +51,7 @@ import { Point } from './Point'
 import * as chordangle from '../s1/chordangle'
 import { updateMinDistance } from './edge_distances'
 import { CellIndexRangeIterator, CellIndexContentsIterator } from './CellIndex'
-import { EdgeCrosser } from './EdgeCrosser'
-import { CROSS, DO_NOT_CROSS, MAYBE_CROSS, vertexCrossing } from './edge_crossings'
+import { ShapeIndexTarget as ClosestEdgeShapeIndexTarget } from './ClosestEdgeQuery'
 
 /**
  * Represents a closest (cellID, label) pair result from the query.
@@ -298,9 +297,11 @@ export class CellUnionTarget implements ClosestCellQueryTarget {
  *   target.setIncludeInteriors(false)
  */
 export class ShapeIndexTarget implements ClosestCellQueryTarget {
-  private includeInteriors: boolean = true
+  private edgeTarget: ClosestEdgeShapeIndexTarget
 
-  constructor(readonly index: ShapeIndex) {}
+  constructor(readonly index: ShapeIndex) {
+    this.edgeTarget = new ClosestEdgeShapeIndexTarget(index)
+  }
 
   /**
    * Specifies whether distances should be measured to the boundary and
@@ -308,108 +309,21 @@ export class ShapeIndexTarget implements ClosestCellQueryTarget {
    * The default is true.
    */
   setIncludeInteriors(includeInteriors: boolean): void {
-    this.includeInteriors = includeInteriors
+    this.edgeTarget.setIncludeInteriors(includeInteriors)
   }
 
   maxBruteForceIndexSize(): number {
-    // For shape index targets, prefer hierarchical search.
-    return 30
-  }
-
-  /**
-   * Checks if the given point is contained by any polygon in the index.
-   * Uses the ShapeIndex iterator directly to check containment.
-   */
-  private containsPoint(p: Point): boolean {
-    const iter = this.index.iterator()
-    if (!iter.locatePoint(p)) return false
-
-    const cell = iter.indexCell()
-    const center = iter.center()
-
-    for (const clipped of cell.shapes) {
-      let inside = clipped.containsCenter
-      const numEdges = clipped.numEdges()
-      if (numEdges <= 0) {
-        if (inside) return true
-        continue
-      }
-
-      const shape = this.index.shape(clipped.shapeID)
-      // Only polygons (dimension 2) can contain points.
-      if (shape.dimension() !== 2) continue
-
-      // Test containment by counting edge crossings from cell center to point.
-      const crosser = new EdgeCrosser(center, p)
-      for (const edgeID of clipped.edges) {
-        const edge = shape.edge(edgeID)
-        let sign = crosser.crossingSign(edge.v0, edge.v1)
-        if (sign === DO_NOT_CROSS) continue
-        if (sign === MAYBE_CROSS) {
-          if (vertexCrossing(crosser.a, crosser.b, edge.v0, edge.v1)) sign = CROSS
-          else sign = DO_NOT_CROSS
-        }
-        inside = inside !== (sign === CROSS)
-      }
-
-      if (inside) return true
-    }
-
-    return false
+    return this.edgeTarget.maxBruteForceIndexSize()
   }
 
   distanceToCell(cell: Cell): ChordAngle {
-    // If includeInteriors is true and the cell center is contained by any
-    // polygon in the index, the distance is zero.
-    if (this.includeInteriors && this.containsPoint(cell.center())) {
-      return 0
-    }
-
-    // Compute distance from cell to all edges in the shape index.
-    let minDist = chordangle.infChordAngle()
-
-    for (const [_shapeId, shape] of this.index.shapes) {
-      if (!shape) continue
-      const numEdges = shape.numEdges()
-      for (let i = 0; i < numEdges; i++) {
-        const edge = shape.edge(i)
-        const dist = cell.distanceToEdge(edge.v0, edge.v1)
-        if (dist < minDist) {
-          minDist = dist
-        }
-        if (minDist === 0) break
-      }
-      if (minDist === 0) break
-    }
-
-    return minDist
+    const result = this.edgeTarget.updateMinDistanceToCell(cell, chordangle.infChordAngle())
+    return result.distance
   }
 
   distanceToPoint(point: Point): ChordAngle {
-    // If includeInteriors is true and the point is contained by any
-    // polygon in the index, the distance is zero.
-    if (this.includeInteriors && this.containsPoint(point)) {
-      return 0
-    }
-
-    // Compute distance from point to all edges in the shape index.
-    let minDist = chordangle.infChordAngle()
-
-    for (const [_shapeId, shape] of this.index.shapes) {
-      if (!shape) continue
-      const numEdges = shape.numEdges()
-      for (let i = 0; i < numEdges; i++) {
-        const edge = shape.edge(i)
-        const result = updateMinDistance(point, edge.v0, edge.v1, minDist)
-        if (result.less) {
-          minDist = result.dist
-        }
-        if (minDist === 0) break
-      }
-      if (minDist === 0) break
-    }
-
-    return minDist
+    const result = this.edgeTarget.updateMinDistanceToPoint(point, chordangle.infChordAngle())
+    return result.distance
   }
 }
 
