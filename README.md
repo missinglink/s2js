@@ -51,6 +51,9 @@ s2js is a full-featured JavaScript/TypeScript port of Google's S2 Geometry libra
 | **BigInt cell/token conversion**    |     ✅     | Handles full 64-bit cell IDs               |
 | **CellIndex, ClosestCellQuery**     |     ✅     | Query a list of cells with various shapes  |
 
+
+TODO: ADD CLOSESTEDGEQUERY HERE
+
 ### Feature Completeness
 
 The library is essentially feature compatible with the Golang library: https://github.com/golang/geo
