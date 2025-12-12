@@ -35,11 +35,6 @@ export {
   EdgeTarget as EdgeQueryEdgeTarget,
   CellTarget as EdgeQueryCellTarget,
   ShapeIndexTarget as EdgeQueryShapeIndexTarget,
-  ShapeFilter,
-  ResultVisitor,
-  isInteriorResult,
-  isEmptyResult,
-  emptyClosestEdgeQueryResult
 } from './ClosestEdgeQuery'
 // export { ContainsPointQuery } from './ContainsPointQuery'
 // export { ContainsVertexQuery } from './ContainsVertexQuery'
