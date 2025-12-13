@@ -1092,12 +1092,8 @@ export class ClosestEdgeQuery {
         distanceLimit = this.processIndexCell(target, options, filter, entry.indexCell, distanceLimit, results)
       } else {
         // This is a parent cell; add its children to the queue.
-        const childIds = [
-          cellid.child(entry.id, 0),
-          cellid.child(entry.id, 1),
-          cellid.child(entry.id, 2),
-          cellid.child(entry.id, 3)
-        ]
+        console.log("HEYYYY")
+        const childIds = cellid.children(entry.id)
 
         for (const childId of childIds) {
           const relation = this.iter.locateCellID(childId)
