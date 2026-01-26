@@ -38,17 +38,21 @@ const { s2 } = require('s2js')
 
 s2js is a full-featured JavaScript/TypeScript port of Google's S2 Geometry library. It supports:
 
-| Feature                          | Supported? | Notes |
-|----------------------------------|:---------:|:------|
-| **CellId, Cell**          | ✅        | Encoding, decoding, neighbors |
-| **Point, LatLng**          | ✅        | Spherical & Planar projections |
-| **Loop, Polygon**                    | ✅        | Polygons, potentially with holes |
-| **Polyline**                   | ✅        | Represents linear paths |
-| **RegionCoverer**                | ✅        | Cover regions (loops, polys) with S2 cells |
-| **GeoJSON <> S2 conversions**    | ✅        | Supports all GeoJSON geometry types |
-| **Polygon contains/intersects**  | ✅        | Point-in-polygon & shape intersection |
-| **Union, Intersection, Difference** | ✅    | Basic boolean polygon operations |
-| **BigInt cell/token conversion** | ✅        | Handles full 64-bit cell IDs |
+| Feature                             | Supported? | Notes                                      |
+| ----------------------------------- | :--------: | :----------------------------------------- |
+| **CellId, Cell**                    |     ✅     | Encoding, decoding, neighbors              |
+| **Point, LatLng**                   |     ✅     | Spherical & Planar projections             |
+| **Loop, Polygon**                   |     ✅     | Polygons, potentially with holes           |
+| **Polyline**                        |     ✅     | Represents linear paths                    |
+| **RegionCoverer**                   |     ✅     | Cover regions (loops, polys) with S2 cells |
+| **GeoJSON <> S2 conversions**       |     ✅     | Supports all GeoJSON geometry types        |
+| **Polygon contains/intersects**     |     ✅     | Point-in-polygon & shape intersection      |
+| **Union, Intersection, Difference** |     ✅     | Basic boolean polygon operations           |
+| **BigInt cell/token conversion**    |     ✅     | Handles full 64-bit cell IDs               |
+| **CellIndex, ClosestCellQuery**     |     ✅     | Query a list of cells with various shapes  |
+
+
+TODO: ADD CLOSESTEDGEQUERY HERE
 
 ### Feature Completeness
 
