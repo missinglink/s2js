@@ -9,8 +9,8 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/s2js.esm.js",
   "scripts": {
-    "build": "npx tsdx build --entry index.ts",
-    "docs": "npx typedoc",
+    "build": "npx --yes tsdx@^0 build --entry index.ts",
+    "docs": "npx --yes typedoc",
     "test": "node --import tsx --test [^_]**/[^_]*_test.ts",
     "coverage": "npx c8 npm test",
     "lint": "npx prettier --check .",
