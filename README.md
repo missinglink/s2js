@@ -52,7 +52,6 @@ s2js is a full-featured JavaScript/TypeScript port of Google's S2 Geometry libra
 | **CellIndex, ClosestCellQuery**     |     ✅     | Query a list of cells with various shapes  |
 | **ClosestEdgeQuery**                |     ✅     | Query the edges of 2 geometries            |
 
-TODO: ADD CLOSESTEDGEQUERY HERE
 
 ### Feature Completeness
 
